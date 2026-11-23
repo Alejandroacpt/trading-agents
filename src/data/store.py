@@ -51,6 +51,42 @@ def load_prices(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, index_col="date", parse_dates=["date"])
 
 
+def quitar_vela_incompleta(df: pd.DataFrame, clase: str, ahora_utc: pd.Timestamp | None = None) -> pd.DataFrame:
+    """Elimina la vela del día en curso si el mercado aún no ha cerrado.
+
+    Si el pipeline se ejecuta a mitad de sesión, Yahoo devuelve una vela
+    "a medias" para hoy. Una estrategia nunca debe usarla: el precio y el
+    volumen todavía van a cambiar. Reglas:
+      - cripto: el día de Yahoo va de 00:00 a 24:00 UTC, así que la vela
+        de hoy (UTC) siempre está incompleta.
+      - forex: se da por cerrada a partir de las 22:00 UTC.
+      - bolsa de EEUU (ETFs): cierra a las 16:00 hora de Nueva York;
+        damos margen hasta las 16:30 para que Yahoo publique el cierre.
+    """
+    if df.empty:
+        return df
+    ahora_utc = ahora_utc if ahora_utc is not None else pd.Timestamp.now(tz="UTC")
+    if ahora_utc.tzinfo is None:
+        ahora_utc = ahora_utc.tz_localize("UTC")
+
+    if clase == "crypto":
+        hoy = ahora_utc.tz_localize(None).normalize()
+        return df[df.index < hoy]
+
+    if clase == "forex":
+        hoy = ahora_utc.tz_localize(None).normalize()
+        if ahora_utc.hour < 22:
+            return df[df.index < hoy]
+        return df
+
+    # ETFs de EEUU (renta variable, bonos, materias primas, liquidez)
+    ahora_ny = ahora_utc.tz_convert("America/New_York")
+    hoy_ny = ahora_ny.tz_localize(None).normalize()
+    if (ahora_ny.hour, ahora_ny.minute) < (16, 30):
+        return df[df.index < hoy_ny]
+    return df
+
+
 def decide_replace(old: pd.DataFrame, new: pd.DataFrame) -> tuple[bool, str]:
     """Decide si la descarga nueva sustituye al archivo guardado.
 

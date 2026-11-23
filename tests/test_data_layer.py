@@ -91,6 +91,41 @@ def test_no_se_sustituye_si_la_descarga_es_incompleta():
     assert store.decide_replace(old, old)[0] is True                      # completa
 
 
+def test_quita_vela_incompleta_segun_mercado():
+    df = precios_simulados("crypto", "2026-11-01", "2026-11-23")  # incluye el lunes 23
+    ultimo = lambda d: d.index.max().date().isoformat()  # noqa: E731
+
+    media_sesion = pd.Timestamp("2026-11-23 15:52", tz="UTC")   # 10:52 en Nueva York
+    tras_cierre = pd.Timestamp("2026-11-23 22:07", tz="UTC")    # 17:07 en Nueva York
+
+    # Cripto: la vela de hoy (UTC) nunca está cerrada
+    assert ultimo(store.quitar_vela_incompleta(df, "crypto", tras_cierre)) == "2026-11-22"
+    # ETFs de EEUU: fuera a media sesión, dentro tras el cierre
+    assert ultimo(store.quitar_vela_incompleta(df, "equity", media_sesion)) == "2026-11-22"
+    assert ultimo(store.quitar_vela_incompleta(df, "equity", tras_cierre)) == "2026-11-23"
+    # Forex: cerrado a partir de las 22:00 UTC
+    assert ultimo(store.quitar_vela_incompleta(df, "forex", media_sesion)) == "2026-11-22"
+    assert ultimo(store.quitar_vela_incompleta(df, "forex", tras_cierre)) == "2026-11-23"
+
+
+def test_vela_incompleta_guardada_no_bloquea_la_actualizacion(tmp_path):
+    asset = {"ticker": "SPY", "clase": "equity"}
+    df = precios_simulados("equity", "2020-01-01", "2026-11-23")
+    store.save_prices(df, store.ruta_csv(asset, tmp_path))  # guardado CON la vela a medias
+    res = update_all([asset], data_dir=tmp_path, downloader=lambda a: (df, "simulado"),
+                     hoy=pd.Timestamp("2026-11-23"), pausa_segundos=0,
+                     ahora_utc=pd.Timestamp("2026-11-23 15:52", tz="UTC"))
+    assert res[0]["guardado"] is True
+    assert str(res[0]["hasta"]) == "2026-11-20"  # viernes: la vela del lunes se descarta
+
+
+def test_forex_no_avisa_por_velas_incoherentes():
+    df = precios_simulados("forex")
+    df.iloc[-5, df.columns.get_loc("close")] = df["high"].iloc[-5] * 1.001
+    assert quality.check_prices(df, "forex", HOY, ventana_dias=30) == []
+    assert quality.check_prices(df, "equity", HOY, ventana_dias=30) != []
+
+
 # ---------------------------------------------------------------- calidad
 
 def test_datos_limpios_sin_problemas():

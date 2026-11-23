@@ -24,6 +24,7 @@ def update_all(
     downloader=download_asset,
     hoy: pd.Timestamp | None = None,
     pausa_segundos: float = 0.5,
+    ahora_utc: pd.Timestamp | None = None,
 ) -> list[dict]:
     """Actualiza todos los activos y devuelve una fila de estado por activo.
 
@@ -38,12 +39,16 @@ def update_all(
     for asset in assets:
         ticker = asset["ticker"]
         path = store.ruta_csv(asset, data_dir)
-        old = store.load_prices(path)
-        fila = {"ticker": ticker, "clase": asset["clase"], "nombre": asset.get("nombre", "")}
+        clase = asset["clase"]
+        # Lo guardado también se limpia de velas incompletas (por si se
+        # guardó alguna en una ejecución a mitad de sesión).
+        old = store.quitar_vela_incompleta(store.load_prices(path), clase, ahora_utc)
+        fila = {"ticker": ticker, "clase": clase, "nombre": asset.get("nombre", "")}
 
-        # 1) Descargar
+        # 1) Descargar (y quitar la vela de hoy si aún no ha cerrado)
         try:
             new, fuente = downloader(asset)
+            new = store.quitar_vela_incompleta(new, clase, ahora_utc)
             fila["fuente"] = fuente
         except Exception as e:  # noqa: BLE001
             new, fila["fuente"] = pd.DataFrame(), "-"
@@ -56,6 +61,8 @@ def update_all(
             datos = store.load_prices(path)  # releemos lo guardado (ya redondeado)
         else:
             datos = old
+            if not old.empty:
+                store.save_prices(old, path)  # por si se le quitó una vela incompleta
         fila["guardado"] = reemplazar
         fila["motivo"] = motivo
 

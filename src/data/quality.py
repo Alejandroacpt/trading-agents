@@ -84,13 +84,16 @@ def check_prices(
 
     # 3) Coherencia de la vela: el mínimo no puede superar al cierre, etc.
     #    (se permite un margen mínimo por redondeos)
-    tol = 1e-6 * df["close"].abs()
-    incoherentes = (
-        (df["low"] > df[["open", "close"]].min(axis=1) + tol)
-        | (df["high"] < df[["open", "close"]].max(axis=1) - tol)
-    ).sum()
-    if incoherentes:
-        add("AVISO", f"{int(incoherentes)} velas con high/low incoherentes")
+    #    En forex NO se comprueba: Yahoo da máximos/mínimos poco fiables en
+    #    divisas (~2 % de las velas) y las estrategias solo usan el cierre.
+    if clase != "forex":
+        tol = 1e-6 * df["close"].abs()
+        incoherentes = (
+            (df["low"] > df[["open", "close"]].min(axis=1) + tol)
+            | (df["high"] < df[["open", "close"]].max(axis=1) - tol)
+        ).sum()
+        if incoherentes:
+            add("AVISO", f"{int(incoherentes)} velas con high/low incoherentes")
 
     # 4) Saltos diarios extremos
     rendimientos = df["close"].pct_change().abs()
