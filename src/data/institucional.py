@@ -53,7 +53,14 @@ MERCADOS_COT = {
 }
 
 URL_COT = "https://publicreporting.cftc.gov/resource/6dca-aqww.json"  # informe "legacy", solo futuros
-CABECERA_SEC = {"User-Agent": "trading-agents research (github.com/Alejandroacpt/trading-agents)"}
+# La SEC exige identificarse con nombre y email de contacto en cada petición
+# (si no, responde 403). Se configura con el secreto SEC_USER_AGENT, p. ej.:
+#   "Alejandro trading-agents alejandro@ejemplo.com"
+def cabecera_sec() -> dict | None:
+    import os
+
+    ua = os.getenv("SEC_USER_AGENT", "").strip()
+    return {"User-Agent": ua, "Accept-Encoding": "gzip, deflate"} if "@" in ua else None
 
 
 # ----------------------------------------------------------------------
@@ -162,8 +169,14 @@ def _trimestres(n: int) -> list[str]:
 
 
 def actualizar_directivos(trimestres: int = 12) -> str:
+    import time
+
     import requests
 
+    cabecera = cabecera_sec()
+    if cabecera is None:
+        return ("Directivos: omitido. La SEC exige un email de contacto: crea el secreto SEC_USER_AGENT "
+                "(p. ej. 'Nombre trading-agents tu@email.com') para activarlo.")
     previos = cargar_directivos()
     hechos = set(previos["trimestre"].unique()) if not previos.empty else set()
     nuevos, informe = [], []
@@ -172,7 +185,8 @@ def actualizar_directivos(trimestres: int = 12) -> str:
             continue
         url = f"https://www.sec.gov/files/structureddata/data/insider-transactions-data-sets/{tq}_form345.zip"
         try:
-            r = requests.get(url, headers=CABECERA_SEC, timeout=120)
+            time.sleep(1)  # la SEC limita a 10 peticiones por segundo; vamos muy por debajo
+            r = requests.get(url, headers=cabecera, timeout=120)
             if r.status_code == 404:
                 informe.append(f"{tq}: aún no publicado")
                 continue
