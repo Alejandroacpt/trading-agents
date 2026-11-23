@@ -147,3 +147,61 @@ def test_dual_momentum_elige_la_mejor_bolsa_o_refugio():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ---------------------------------------------------------------- semana 3
+
+def test_control_de_volatilidad_solo_reduce_nunca_apalanca():
+    from src.strategies import control_volatilidad, crypto_trend
+
+    rng = np.random.default_rng(3)
+    idx = pd.date_range("2018-01-01", periods=900, freq="D")
+    p = pd.DataFrame({a: 100 * np.exp(np.cumsum(rng.normal(0.001, 0.04, len(idx)))) for a in crypto_trend.CRIPTOS},
+                     index=idx)
+    base = crypto_trend.senales(p, dias=50)
+    con = control_volatilidad.aplicar(base, p, vol_objetivo=0.40)
+    b, c = base.ffill().fillna(0), con.ffill().fillna(0)
+    assert (c <= b + 1e-12).all().all()          # nunca más que la estrategia base
+    assert (c >= 0).all().all()
+    assert c.sum(axis=1).max() < b.sum(axis=1).max()  # con vol ~75 % recorta exposición
+
+
+def test_cambio_de_mes_gana_las_sesiones_de_la_ventana():
+    from src.backtest.engine import run_backtest
+    from src.strategies import cambio_de_mes
+
+    idx = pd.bdate_range("2024-01-01", "2024-06-30")
+    p = pd.DataFrame({a: 100.0 for a in cambio_de_mes.INDICES}, index=idx)
+    obj = cambio_de_mes.senales(p, antes=1, despues=3)
+    res = run_backtest(p, obj, {a: "equity" for a in p.columns}, retraso=1, multiplicador_costes=0)
+    # días con posición = última sesión del mes + 3 primeras = 4 sesiones al mes
+    dentro = (res.pesos.sum(axis=1).shift(1) > 0)
+    por_mes = dentro.groupby(idx.to_period("M")).sum()
+    assert (por_mes.iloc[1:-1] == 4).all()
+
+
+def test_halloween_invertido_solo_de_noviembre_a_abril():
+    from src.strategies import halloween
+
+    idx = pd.bdate_range("2020-01-01", "2021-12-31")
+    p = pd.DataFrame({a: 100.0 for a in halloween.INDICES}, index=idx)
+    obj = halloween.senales(p)
+    invertido = obj[halloween.INDICES].sum(axis=1) > 0
+    assert invertido[idx.month == 7].sum() == 0
+    assert invertido[idx.month == 1].all()
+
+
+def test_cartera_respeta_el_tope_de_cripto():
+    from src.config import load_universe
+    from src.data.store import close_matrix
+    from src.strategies import cartera
+
+    assets = load_universe()
+    precios = close_matrix(assets)
+    if precios.empty:
+        pytest.skip("sin datos descargados")
+    cols = [c for c in cartera.ESTRATEGIA["universo"] if c in precios.columns]
+    obj = cartera.senales(precios[cols].dropna(how="all"), tope_cripto=0.25).ffill().dropna(how="all")
+    cripto = obj[[c for c in cols if c.endswith("-USD")]].sum(axis=1)
+    assert cripto.max() <= 0.25 + 1e-9
+    assert (obj.abs().sum(axis=1) <= 1 + 1e-9).all()

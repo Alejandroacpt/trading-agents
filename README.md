@@ -9,7 +9,7 @@ Sistema que vigila ~20 activos (ETFs, materias primas, cripto y forex), aplica e
 | Semana | Entregable | Estado |
 |---|---|---|
 | 1 | Repositorio, capa de datos de los 4 mercados, Telegram, conexión con Alpaca paper | ✅ |
-| 2–3 | Motor de backtest + validador de estrategias | ✅ primera validación: [informe](reports/validacion/informe.md) |
+| 2–3 | Motor de backtest + validador; control de volatilidad, nuevas candidatas y cartera combinada | ✅ 1 aprobada, 3 en observación: [informe](reports/validacion/informe.md) |
 | 4 | Escáneres diarios + agente de riesgo + alertas | — |
 | 5 | Paper trading automático + diario + auditor semanal | — |
 

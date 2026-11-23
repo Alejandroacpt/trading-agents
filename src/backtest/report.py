@@ -11,6 +11,7 @@ import matplotlib
 matplotlib.use("Agg")  # sin ventana: solo guardar imágenes
 import matplotlib.ticker  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from src.backtest import metrics  # noqa: E402
@@ -40,7 +41,11 @@ def grafico(v: dict, carpeta: Path) -> Path:
     ax1.plot((1 + rent).cumprod(), color=COLOR_ESTRATEGIA, lw=1.6, label=e["nombre"])
     ax1.plot((1 + ref).cumprod(), color=COLOR_REFERENCIA, lw=1.2, label="Referencia: comprar y mantener el universo")
     ax1.set_yscale("log")
-    ax1.yaxis.set_major_locator(matplotlib.ticker.LogLocator(base=10, subs=(1, 1.5, 2, 3, 5, 7)))
+    # Marcas legibles: muchas si el rango es pequeño, solo potencias de 10 si es grande
+    curvas = pd.concat([(1 + rent).cumprod(), (1 + ref).cumprod()])
+    decadas = np.log10(curvas.max() / curvas.min())
+    subs = (1, 1.5, 2, 3, 5, 7) if decadas < 1.2 else ((1, 2, 5) if decadas < 2.5 else (1,))
+    ax1.yaxis.set_major_locator(matplotlib.ticker.LogLocator(base=10, subs=subs))
     ax1.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda y, _: f"{y:g}"))
     ax1.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax1.axvline(INICIO_TEST, color="#444", ls="--", lw=0.8)
