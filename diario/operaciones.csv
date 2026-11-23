@@ -1,0 +1,6 @@
+fecha_utc,tipo,activo,accion,importe,moneda,peso_antes,peso_despues,precio_ref,estado,order_id,precio_ejecucion,cantidad_ejecutada,coste_ejecucion,estrategias,detalle
+2026-11-23T17:36+00:00,orden,DBC,comprar,104.98,USD,,,29.32,simulada,,,,,,modo simulacion
+2026-11-23T17:36+00:00,orden,EWJ,comprar,88.38,USD,,,83.43,simulada,,,,,,modo simulacion
+2026-11-23T17:36+00:00,orden,SPY,comprar,107.26,USD,,,689.809998,simulada,,,,,,modo simulacion
+2026-11-23T17:36+00:00,orden,TLT,comprar,58.52,USD,,,81.449997,simulada,,,,,,modo simulacion
+2026-11-23T17:36+00:00,orden,VGK,comprar,100.15,USD,,,82.610001,simulada,,,,,,modo simulacion

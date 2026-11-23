@@ -1,4 +1,4 @@
-# Señales y cartera · 2026-11-23T17:23+00:00 UTC
+# Señales y cartera · 2026-11-23T17:36+00:00 UTC
 
 **Cartera virtual:** 1.000 € (inicio 2026-11-23 con 1.000 €) · máximo 1.000 € · kill-switch **NORMAL**
 
