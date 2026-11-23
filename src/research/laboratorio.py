@@ -62,7 +62,9 @@ def experimento(familia_id: str, mercado_id: str) -> dict:
 
 
 def todos_los_experimentos() -> list[dict]:
-    return [experimento(f, m) for m in MERCADOS for f in FAMILIAS]
+    """Cada familia en cada mercado donde tiene sentido (por defecto, todos)."""
+    return [experimento(f, m) for m in MERCADOS for f, fam in FAMILIAS.items()
+            if m in fam.get("mercados", MERCADOS)]
 
 
 def mercado_de_estrategia(estrategia: dict) -> set[str]:

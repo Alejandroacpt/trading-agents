@@ -22,6 +22,7 @@ from src.agents.escaner import POR_ID, cargar_sistema  # noqa: E402
 from src.alerts import telegram  # noqa: E402
 from src.backtest import validator  # noqa: E402
 from src.config import REPORTS_DIR, load_universe  # noqa: E402
+from src.data.macro import cargar_tipos, forex_con_carry  # noqa: E402
 from src.data.store import close_matrix  # noqa: E402
 from src.research import laboratorio, registro  # noqa: E402
 
@@ -40,6 +41,9 @@ def main() -> int:
     universo = load_universe()
     clases = {a["ticker"]: a["clase"] for a in universo}
     precios = close_matrix(universo)
+    # Forex con carry incluido (rentabilidad total), si hay tipos descargados
+    con_carry = not cargar_tipos().empty
+    precios = forex_con_carry(precios)
     experimentos = laboratorio.todos_los_experimentos()
     if "--solo" in sys.argv:
         m = sys.argv[sys.argv.index("--solo") + 1]
@@ -89,6 +93,8 @@ def main() -> int:
     L = [f"# Laboratorio de estrategias · {fecha}", "",
          f"{len(validaciones)} experimentos (familia × mercado). Pruebas acumuladas en el registro: **{total}** "
          "(el Sharpe deflactado se calcula con este total).", "",
+         "Forex medido " + ("**con carry** (diferencial de tipos de interés incluido)." if con_carry
+                            else "**sin carry** (aún no hay tipos de interés descargados)."), "",
          "> Las propuestas no se activan solas: hay que decidir si entran en `config/sistema.yaml`.", ""]
     propuestas, aprobadas_peores, mejores = [], [], {}
     for m_id, mer in laboratorio.MERCADOS.items():

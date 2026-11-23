@@ -139,6 +139,35 @@ def reversion_rsi2(precios, activos, largo_corto=False, umbral=10):
     return _a_objetivos(_senal_diaria(precios, activos, f), precios, activos)
 
 
+def carry_divisas(precios, activos, largo_corto=True, modo="signo"):
+    """Carry en forex: comprar las divisas con tipos de interés altos y vender
+    las de tipos bajos (cada fin de mes).
+      - modo "signo": largo en cada par si su diferencial es positivo, corto si es negativo.
+      - modo "ranking": largo en los 2 pares con más carry, corto en los 2 con menos.
+      - modo "con_tendencia": como "signo", pero solo si la tendencia de 3 meses acompaña.
+    Requiere data/macro/tipos_3m.csv (se descarga semanalmente de FRED)."""
+    from src.data.macro import cargar_tipos, diferencial_diario
+
+    tipos = cargar_tipos()
+    if tipos.empty:
+        return pd.DataFrame(np.nan, index=precios.index, columns=precios.columns)
+    p_m = precios_fin_de_mes(precios[activos])
+    dif = diferencial_diario(tipos, p_m.index).reindex(columns=activos)
+    if modo == "ranking":
+        rango = dif.rank(axis=1)
+        n = dif.notna().sum(axis=1)
+        senal = rango.gt(n - 2, axis=0).astype(float) - (rango <= 2).astype(float)
+        senal = senal.where(dif.notna())
+    else:
+        senal = np.sign(dif)
+        if modo == "con_tendencia":
+            tendencia = np.sign(p_m / p_m.shift(3) - 1)
+            senal = senal.where(senal == tendencia, 0.0)
+    if not largo_corto:
+        senal = senal.clip(lower=0)
+    return _a_objetivos(senal, precios, activos)
+
+
 # ----------------------------------------------------------------------
 # Catálogo (las rejillas se fijan ANTES de ver resultados)
 # ----------------------------------------------------------------------
@@ -187,6 +216,16 @@ FAMILIAS = {
         "publicacion": "2008-01-01",
         "parametros": {"umbral": 10},
         "rejilla": [{"umbral": u} for u in (5, 10, 20)],
+        "anadida": "2026-11-23",
+    },
+    "carry_divisas": {
+        "nombre": "Carry de divisas",
+        "funcion": carry_divisas,
+        "referencia": "Koijen, Moskowitz, Pedersen y Vrugt (2018), Carry, JFE; Lustig, Roussanov y Verdelhan (2011), RFS",
+        "publicacion": "2011-11-01",
+        "parametros": {"modo": "signo"},
+        "rejilla": [{"modo": m} for m in ("signo", "ranking", "con_tendencia")],
+        "mercados": ["forex"],   # solo tiene sentido en divisas
         "anadida": "2026-11-23",
     },
 }

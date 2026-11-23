@@ -36,7 +36,7 @@ def test_registro_no_duplica_y_cuenta_el_total(tmp_path):
 
 # ---------------------------------------------------------------- familias
 
-@pytest.mark.parametrize("nombre", list(familias.FAMILIAS))
+@pytest.mark.parametrize("nombre", [f for f, d in familias.FAMILIAS.items() if "mercados" not in d])
 def test_familias_sin_apalancamiento_y_sin_cortos_si_no_se_permiten(nombre):
     activos = ["A", "B", "C"]
     p = mercado({"A": 0.3, "B": -0.3, "C": 0.05})
@@ -60,10 +60,40 @@ def test_ruptura_entra_en_maximos():
 
 def test_todos_los_experimentos_estan_bien_formados():
     exps = laboratorio.todos_los_experimentos()
-    assert len(exps) == len(familias.FAMILIAS) * len(laboratorio.MERCADOS)
+    esperados = sum(len(d.get("mercados", laboratorio.MERCADOS)) for d in familias.FAMILIAS.values())
+    assert len(exps) == esperados
     assert len({e["id"] for e in exps}) == len(exps)
     for e in exps:
         assert e["parametros"] in e["rejilla"]   # el parámetro por defecto está en la rejilla
+
+
+# ---------------------------------------------------------------- carry
+
+def test_forex_con_carry_acumula_el_diferencial():
+    from src.data import macro
+
+    idx = pd.date_range("2020-01-01", "2021-12-31", freq="D")
+    precios = pd.DataFrame({"EURUSD=X": 1.10, "JPY=X": 110.0}, index=idx)
+    meses = pd.date_range("2019-11-01", "2021-12-01", freq="MS")
+    tipos = pd.DataFrame({"USD": 2.0, "EUR": 4.0, "JPY": 0.0}, index=meses)
+    out = macro.forex_con_carry(precios, tipos)
+    # EUR rinde 2 puntos más que USD: un año largo en EUR/USD gana ~2 %
+    r_eur = out["EURUSD=X"].iloc[-1] / out["EURUSD=X"].iloc[0] - 1
+    assert r_eur == pytest.approx(np.exp(0.02 * 730 / 365) - 1, rel=0.02)
+    # USD/JPY: largo en USD (2 %) frente a JPY (0 %)
+    assert out["JPY=X"].iloc[-1] > out["JPY=X"].iloc[0]
+
+
+def test_sin_tipos_no_cambia_nada():
+    from src.data import macro
+
+    p = pd.DataFrame({"EURUSD=X": [1.1, 1.2]}, index=pd.date_range("2020-01-01", periods=2))
+    assert macro.forex_con_carry(p, pd.DataFrame()).equals(p)
+
+
+def test_carry_solo_en_forex():
+    exps = laboratorio.todos_los_experimentos()
+    assert {e["mercado"] for e in exps if e["familia"] == "carry_divisas"} == {"forex"}
 
 
 if __name__ == "__main__":
