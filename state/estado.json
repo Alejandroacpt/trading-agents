@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-23T17:38+00:00",
+  "actualizado": "2026-11-23T17:40+00:00",
   "fecha_datos": "2026-11-22",
   "cartera": {
     "SPY": 0.097816,
@@ -153,14 +153,14 @@
     "modo": "paper",
     "fuente_capital": "presupuesto",
     "capital_gestionado_usd": 1096.51,
-    "equity_cuenta_usd": 100000.0,
-    "valor_posiciones_usd": 0,
+    "equity_cuenta_usd": 99999.89,
+    "valor_posiciones_usd": 459.13,
     "eurusd": 1.096972,
-    "actualizado": "2026-11-23T17:38+00:00",
+    "actualizado": "2026-11-23T17:40+00:00",
     "historial": [
       [
         "2026-11-23",
-        100000.0
+        99999.89
       ]
     ]
   }
