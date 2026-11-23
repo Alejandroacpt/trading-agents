@@ -46,5 +46,5 @@ alertas:
 alpaca:
   # simulacion: calcula y apunta en el diario las órdenes, pero no las envía.
   # paper:      las envía a la cuenta de SIMULACIÓN de Alpaca (nunca dinero real).
-  modo: simulacion
+  modo: paper
   orden_minima_usd: 10   # diferencias menores no se operan (evita órdenes diminutas)
