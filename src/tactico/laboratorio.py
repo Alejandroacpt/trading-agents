@@ -16,6 +16,7 @@ import pandas as pd
 from src.data import horario
 from src.tactico.familias import FAMILIAS_TACTICAS
 from src.tactico.simulador import Parametros, simular
+from src.tactico.velas import agregar
 
 INICIO_TEST_TACTICO = "2024-07-01"
 CALENTAMIENTO = 250
@@ -32,12 +33,24 @@ def ohlc_mercado(mercado: str) -> dict:
     return datos
 
 
+@lru_cache(maxsize=4)
+def ohlc_agregado(mercado: str) -> dict:
+    """Velas de 4 h (cripto) o de media sesión (acciones)."""
+    return agregar(ohlc_mercado(mercado), mercado)
+
+
+def velas_de(familia: dict, mercado: str) -> dict:
+    return ohlc_agregado(mercado) if familia.get("velas") == "4h" else ohlc_mercado(mercado)
+
+
 def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
     conf = horario.cargar_config()
     r = conf["riesgo"]
+    clave = "cripto" if mercado == "cripto" else "acciones"
     return Parametros(
         riesgo=r["riesgo_por_operacion"], max_posiciones=r["max_posiciones"], max_peso=r["max_peso_posicion"],
-        coste=conf["costes"]["cripto" if mercado == "cripto" else "acciones"] * mult_costes,
+        coste=conf["costes"][clave] * mult_costes,
+        coste_limitada=conf["costes"].get(f"{clave}_limitada", conf["costes"][clave]) * mult_costes,
         sin_intradia=bool(conf["mercados"][mercado].get("sin_operaciones_intradia", False)),
     )
 
@@ -45,14 +58,17 @@ def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
 def experimento(familia_id: str, mercado: str) -> dict:
     fam = FAMILIAS_TACTICAS[familia_id]
 
+    calentamiento = 120 if fam.get("velas") == "4h" else CALENTAMIENTO
+
     def simular_variante(params: dict, mult_costes: float = 1.0):
-        ohlc = ohlc_mercado(mercado)
+        ohlc = velas_de(fam, mercado)
         senales = fam["funcion"](ohlc, **params)
-        return simular(ohlc, senales, parametros_simulacion(mercado, mult_costes), calentamiento=CALENTAMIENTO)
+        return simular(ohlc, senales, parametros_simulacion(mercado, mult_costes), calentamiento=calentamiento)
 
     return {
         "id": f"tac_{familia_id}__{mercado}",
-        "nombre": f"{fam['nombre']} · {'Cripto' if mercado == 'cripto' else 'Acciones y ETFs'}",
+        "nombre": (f"{fam['nombre']} · {'Cripto' if mercado == 'cripto' else 'Acciones y ETFs'}"
+                   .replace("(4 h) · Acciones y ETFs", "(media sesión) · Acciones y ETFs")),
         "familia": familia_id,
         "mercado": f"tactico_{mercado}",
         "papel": "táctico",
@@ -64,7 +80,7 @@ def experimento(familia_id: str, mercado: str) -> dict:
         "inicio_test": INICIO_TEST_TACTICO,
         "min_operaciones": 100,
         "max_drawdown_aceptable": 0.25,
-        "cierres": lambda: pd.DataFrame({a: df["close"] for a, df in ohlc_mercado(mercado).items()}),
+        "cierres": lambda: pd.DataFrame({a: df["close"] for a, df in velas_de(fam, mercado).items()}),
         "universo": list(ohlc_mercado(mercado)),
     }
 

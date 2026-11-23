@@ -16,6 +16,9 @@ Reglas (las mismas que se aplicarán en vivo):
 5. Stop dinámico opcional (sube con el precio, nunca baja).
 6. Salida por tiempo opcional (máximo de velas en la operación).
 7. Regla PDT opcional (acciones): no se cierra el mismo día de la entrada.
+8. Orden limitada opcional en la entrada (columna "limite"): solo se
+   ejecuta si el precio llega al límite en la vela siguiente (si no, se
+   cancela) y paga la comisión de órdenes limitadas.
 
 Solo largos en esta versión.
 """
@@ -35,6 +38,7 @@ class Parametros:
     max_peso: float = 0.25
     coste: float = 0.0025
     sin_intradia: bool = False
+    coste_limitada: float | None = None   # comisión de las órdenes limitadas (None = la misma)
 
 
 def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: Parametros,
@@ -63,6 +67,7 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     SD = matriz(senales, "stop")
     TR = matriz(senales, "dinamico")
     MV = matriz(senales, "max_velas")
+    LIM = matriz(senales, "limite")
     fechas = indice.normalize()
 
     caja = 1.0
@@ -71,6 +76,7 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     stop = np.zeros(N)
     t_entrada = np.full(N, -1)
     dist_pendiente = np.full(N, np.nan)
+    limite_pendiente = np.full(N, np.nan)
     entrada_pendiente = np.zeros(N, dtype=bool)
     salida_pendiente = np.zeros(N, dtype=bool)
     ultimo_cierre = np.full(N, np.nan)
@@ -110,14 +116,24 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
             d = dist_pendiente[i]
             if not (d > 0) or (qty > 0).sum() >= p.max_posiciones:
                 continue
+            coste_e = p.coste
             precio = O[t, i]
-            valor = min(p.riesgo * equity_prev / d * precio, p.max_peso * equity_prev, caja / (1 + p.coste))
+            lim = limite_pendiente[i]
+            if not np.isnan(lim):
+                if O[t, i] <= lim:
+                    precio = O[t, i]          # abrió por debajo del límite: se compra a la apertura
+                elif L[t, i] <= lim:
+                    precio = lim              # el precio bajó hasta el límite durante la vela
+                else:
+                    continue                  # no llegó: la orden se cancela
+                coste_e = p.coste if p.coste_limitada is None else p.coste_limitada
+            valor = min(p.riesgo * equity_prev / d * precio, p.max_peso * equity_prev, caja / (1 + coste_e))
             if valor <= 1e-4 * equity_prev:
                 continue
             qty[i] = valor / precio
-            caja -= valor * (1 + p.coste)
+            caja -= valor * (1 + coste_e)
             rotacion[t] += valor
-            costes[t] += valor * p.coste
+            costes[t] += valor * coste_e
             precio_entrada[i] = precio
             stop[i] = precio - d
             t_entrada[i] = t
@@ -150,6 +166,7 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
             elif qty[i] == 0 and E[t, i] and not np.isnan(SD[t, i]):
                 entrada_pendiente[i] = True
                 dist_pendiente[i] = SD[t, i]
+                limite_pendiente[i] = LIM[t, i]
 
         pesos[t] = valor_pos / equity[t] if equity[t] > 0 else 0
         rotacion[t] /= max(equity_prev, 1e-12)

@@ -51,7 +51,7 @@ def cartera_estrategia(estrategia_id: str, inicio_vivo: str):
     """Simula una estrategia táctica activa desde la puesta en marcha."""
     familia, mercado = estrategia_id.removeprefix("tac_").split("__")
     fam = FAMILIAS_TACTICAS[familia]
-    ohlc = laboratorio.ohlc_mercado(mercado)
+    ohlc = laboratorio.velas_de(fam, mercado)
     desde = pd.Timestamp(inicio_vivo)
     # Datos desde un poco antes para que los indicadores estén calculados
     recorte = {a: df[df.index >= desde - pd.Timedelta(days=60)] for a, df in ohlc.items()}
@@ -66,6 +66,7 @@ def main() -> int:
     for linea in horario.actualizar(historico="--historico" in sys.argv):
         print(linea)
     laboratorio.ohlc_mercado.cache_clear()
+    laboratorio.ohlc_agregado.cache_clear()
 
     activas = conf.get("estrategias") or []
     previo = json.loads(RUTA_ESTADO.read_text(encoding="utf-8")) if RUTA_ESTADO.exists() else {}

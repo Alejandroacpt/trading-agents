@@ -21,8 +21,10 @@ riesgo:
     pausa: 0.25
 
 costes:                         # por operación y sentido (comisión + horquilla)
-  cripto: 0.0025
+  cripto: 0.0025                # orden a mercado (taker en Alpaca)
+  cripto_limitada: 0.0015       # orden limitada (maker en Alpaca)
   acciones: 0.0005
+  acciones_limitada: 0.0002
 
 # Universos (símbolos de Alpaca)
 mercados:
