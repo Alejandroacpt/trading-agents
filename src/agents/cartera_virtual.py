@@ -35,6 +35,26 @@ def guardar(estado: dict, ruta: Path = RUTA_ESTADO) -> None:
     ruta.write_text(json.dumps(estado, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
 
 
+def ajustar_capital(estado: dict | None, capital_nuevo: float) -> dict | None:
+    """Si se ha cambiado capital_eur en config/sistema.yaml, reescala la
+    cartera virtual (valor, máximo e historial) al nuevo capital.
+    Los pesos y la rentabilidad acumulada no cambian: es como si se
+    hubiera empezado con el capital nuevo."""
+    if not estado:
+        return estado
+    capital_previo = estado.get("capital_eur", 1000.0)
+    if not capital_previo or abs(capital_previo - capital_nuevo) < 1e-9:
+        return estado
+    f = capital_nuevo / capital_previo
+    v = estado["virtual"]
+    v["valor"] = v["valor"] * f
+    v["maximo"] = v["maximo"] * f
+    v["historial"] = [[fecha, round(x * f, 2)] for fecha, x in v.get("historial", [])]
+    estado["capital_eur"] = capital_nuevo
+    print(f"Capital cambiado de {capital_previo:,.0f} € a {capital_nuevo:,.0f} €: cartera virtual reescalada.")
+    return estado
+
+
 def ultimos_cierres(precios: pd.DataFrame) -> dict:
     return {c: float(precios[c].dropna().iloc[-1]) for c in precios.columns if precios[c].notna().any()}
 
@@ -71,7 +91,7 @@ def coste_cambio(antes: dict, despues: dict, clases: dict) -> float:
 
 
 def nuevo_estado(virtual: dict, cartera: dict, cierres: dict, clases: dict, kill: str,
-                 detalle: dict, fecha_datos: str) -> dict:
+                 detalle: dict, fecha_datos: str, capital_eur: float = 1000.0) -> dict:
     """Aplica los cambios de cartera (descontando costes) y prepara el estado a guardar."""
     coste = coste_cambio(virtual["pesos_derivados"], cartera, clases)
     valor = virtual["valor"] * (1 - coste)
@@ -81,6 +101,7 @@ def nuevo_estado(virtual: dict, cartera: dict, cierres: dict, clases: dict, kill
     return {
         "actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "fecha_datos": fecha_datos,
+        "capital_eur": capital_eur,
         "cartera": {t: round(w, 6) for t, w in cartera.items()},
         "precios_ref": {t: cierres[t] for t in cartera if t in cierres},
         "detalle": detalle,

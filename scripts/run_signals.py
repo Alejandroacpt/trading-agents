@@ -47,7 +47,7 @@ def main() -> int:
 
     # 2) Riesgo
     reparto = riesgo.reparto_estrategias(senales, precios, sistema)
-    previo = cartera_virtual.cargar()
+    previo = cartera_virtual.ajustar_capital(cartera_virtual.cargar(), capital)
     cierres = cartera_virtual.ultimos_cierres(precios)
     virtual = cartera_virtual.actualizar_valor(previo, cierres, capital)
     factor, kill = riesgo.factor_kill_switch(virtual["drawdown"], sistema)
@@ -90,7 +90,7 @@ def main() -> int:
             mensajes_sonoros.append(alertas.mensaje_cambio(c, capital, detalle, clases))
 
     fecha_datos = precios.index[-1].date().isoformat()
-    estado = cartera_virtual.nuevo_estado(virtual, ejecutable, cierres, clases, kill, detalle, fecha_datos)
+    estado = cartera_virtual.nuevo_estado(virtual, ejecutable, cierres, clases, kill, detalle, fecha_datos, capital)
 
     es_noche = datetime.now(timezone.utc).hour >= 18
     resumen = alertas.mensaje_resumen(estado, modelo.to_dict(), reparto.to_dict(), capital, vista, kill)

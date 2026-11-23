@@ -108,5 +108,17 @@ def test_cartera_virtual_cobra_costes_al_cambiar():
     assert est["virtual"]["valor"] == pytest.approx(1000 * (1 - 0.5 * 0.001))
 
 
+def test_cambiar_capital_reescala_la_cartera_virtual():
+    estado = {"capital_eur": 1000.0, "cartera": {"SPY": 0.1},
+              "virtual": {"valor": 1050.0, "maximo": 1100.0, "inicio": "2026-11-23",
+                          "historial": [["2026-11-23", 1000.0], ["2026-11-30", 1050.0]]}}
+    e = cartera_virtual.ajustar_capital(estado, 2000)
+    assert e["virtual"]["valor"] == pytest.approx(2100.0)      # misma rentabilidad (+5 %)
+    assert e["virtual"]["maximo"] == pytest.approx(2200.0)
+    assert e["virtual"]["historial"][0][1] == pytest.approx(2000.0)
+    assert e["cartera"] == {"SPY": 0.1}                          # los pesos no cambian
+    assert cartera_virtual.ajustar_capital(e, 2000)["virtual"]["valor"] == pytest.approx(2100.0)
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
