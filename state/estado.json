@@ -1,23 +1,24 @@
 {
-  "actualizado": "2026-11-23T17:40+00:00",
-  "fecha_datos": "2026-11-22",
+  "actualizado": "2026-11-23T22:57+00:00",
+  "fecha_datos": "2026-11-23",
+  "capital_eur": 1000,
   "cartera": {
-    "SPY": 0.097816,
-    "DBC": 0.095743,
-    "VGK": 0.091335,
-    "EWJ": 0.080603,
-    "TLT": 0.053366
+    "SPY": 0.097832,
+    "DBC": 0.095764,
+    "VGK": 0.091364,
+    "EWJ": 0.080652,
+    "TLT": 0.053265
   },
   "precios_ref": {
-    "SPY": 689.809998,
-    "DBC": 29.32,
-    "VGK": 82.610001,
-    "EWJ": 83.43,
-    "TLT": 81.449997
+    "SPY": 722.289978,
+    "DBC": 29.110001,
+    "VGK": 84.550003,
+    "EWJ": 86.900002,
+    "TLT": 81.690002
   },
   "detalle": {
     "SPY": {
-      "cierre": 689.809998,
+      "cierre": 722.289978,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -32,7 +33,7 @@
       }
     },
     "QQQ": {
-      "cierre": 608.450012,
+      "cierre": 651.030029,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -42,7 +43,7 @@
       }
     },
     "VGK": {
-      "cierre": 82.610001,
+      "cierre": 84.550003,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -57,7 +58,7 @@
       }
     },
     "EWJ": {
-      "cierre": 83.43,
+      "cierre": 86.900002,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -72,7 +73,7 @@
       }
     },
     "EEM": {
-      "cierre": 53.84,
+      "cierre": 57.830002,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -82,7 +83,7 @@
       }
     },
     "IEF": {
-      "cierre": 91.650002,
+      "cierre": 91.639999,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -92,7 +93,7 @@
       }
     },
     "TLT": {
-      "cierre": 81.449997,
+      "cierre": 81.690002,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -102,7 +103,7 @@
       }
     },
     "SLV": {
-      "cierre": 36.970001,
+      "cierre": 38.91,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -112,7 +113,7 @@
       }
     },
     "USO": {
-      "cierre": 139.630005,
+      "cierre": 133.360001,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -122,7 +123,7 @@
       }
     },
     "DBC": {
-      "cierre": 29.32,
+      "cierre": 29.110001,
       "estrategias": {
         "multi_horizonte": {
           "estado": "observacion",
@@ -140,27 +141,27 @@
   "kill_switch": "NORMAL",
   "virtual": {
     "inicio": "2026-11-23",
-    "valor": 999.58,
-    "maximo": 1000,
+    "valor": 1009.14,
+    "maximo": 1009.15,
     "historial": [
       [
         "2026-11-23",
-        999.58
+        1009.14
       ]
     ]
   },
   "alpaca": {
     "modo": "paper",
     "fuente_capital": "presupuesto",
-    "capital_gestionado_usd": 1096.51,
-    "equity_cuenta_usd": 99999.89,
-    "valor_posiciones_usd": 459.13,
-    "eurusd": 1.096972,
-    "actualizado": "2026-11-23T17:40+00:00",
+    "capital_gestionado_usd": 1100.6,
+    "equity_cuenta_usd": 100001.78,
+    "valor_posiciones_usd": 461.02,
+    "eurusd": 1.090631,
+    "actualizado": "2026-11-23T22:57+00:00",
     "historial": [
       [
         "2026-11-23",
-        99999.89
+        100001.78
       ]
     ]
   }
