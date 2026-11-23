@@ -153,7 +153,8 @@ def informe_markdown(a: dict) -> str:
           "", "## Actividad de la semana", "",
           f"- Alertas: {e['alertas']}",
           f"- Órdenes paper: {e['ordenes']} (ejecutadas {e['ejecutadas']}, errores {e['errores']})",
-          f"- Coste medio de ejecución frente al precio de referencia: {_pct(e['coste_medio'], 2)}", ""]
+          f"- Diferencia media entre el precio de ejecución y el de referencia: {_pct(e['coste_medio'], 2)} "
+          "(positivo = peor para nosotros; incluye el movimiento del mercado desde el último cierre)", ""]
     return "\n".join(L) + "\n"
 
 

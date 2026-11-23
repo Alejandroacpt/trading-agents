@@ -7,8 +7,11 @@ Registro de todo lo que hace el sistema, en diario/operaciones.csv
   - tipo "orden":  cada orden enviada (o simulada) a la cuenta paper de Alpaca.
 
 Para las órdenes se guarda el precio de referencia (último cierre) y,
-cuando Alpaca la ejecuta, el precio real. La diferencia mide el coste
-de ejecución, incluido el movimiento entre el cierre y la ejecución.
+cuando Alpaca la ejecuta, el precio real. La columna coste_ejecucion es
+la diferencia entre ambos (positivo = peor para nosotros). Ojo: incluye
+el movimiento del mercado entre el cierre y la ejecución, no solo el
+deslizamiento; promediada en muchas órdenes, mide el coste de operar
+al día siguiente de la señal.
 Sirve para auditar el sistema y, en la fase con dinero real, como base
 para la declaración de la renta.
 """
