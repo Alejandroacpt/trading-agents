@@ -1,9 +1,11 @@
 """
-TIPOS DE INTERÉS (FRED) Y FOREX CON CARRY
------------------------------------------
-Descarga los tipos de interés a 3 meses de las 6 divisas de nuestro
-universo desde FRED (la base de datos pública de la Reserva Federal de
-San Luis; gratis y sin clave) y los guarda en data/macro/tipos_3m.csv.
+TIPOS DE INTERÉS (BIS / FRED) Y FOREX CON CARRY
+-----------------------------------------------
+Descarga los tipos de interés de las 6 divisas de nuestro universo y los
+guarda en data/macro/tipos_3m.csv. Fuente principal: los tipos oficiales
+de los bancos centrales que publica el BIS (Banco de Pagos
+Internacionales), gratis y sin clave. FRED queda como respaldo (bloquea
+las peticiones desde los servidores de GitHub).
 
 ¿Para qué?
 En forex, quien compra una divisa con tipos más altos que la que vende
@@ -64,19 +66,51 @@ def descargar_fred(serie: str, intentos: int = 2) -> pd.Series:
     return s.dropna()
 
 
+# Tipo oficial del banco central (BIS, conjunto WS_CBPOL): código de país
+PAISES_BIS = {"USD": "US", "EUR": "XM", "GBP": "GB", "JPY": "JP", "AUD": "AU", "CHF": "CH"}
+
+
+def procesar_bis(texto_csv: str) -> pd.Series:
+    """Lee la respuesta CSV del BIS (formato SDMX) y devuelve una serie mensual."""
+    df = pd.read_csv(io.StringIO(texto_csv))
+    col_t = next(c for c in df.columns if c.upper().startswith("TIME_PERIOD"))
+    col_v = next(c for c in df.columns if c.upper().startswith("OBS_VALUE"))
+    s = pd.to_numeric(df[col_v], errors="coerce")
+    s.index = pd.to_datetime(df[col_t].astype(str).str[:7], format="%Y-%m")
+    return s.dropna().sort_index()
+
+
+def descargar_bis(pais: str) -> pd.Series:
+    import requests
+
+    url = f"https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CBPOL/1.0/M.{pais}?format=csv"
+    r = requests.get(url, timeout=30, headers={"User-Agent": "Mozilla/5.0 (trading-agents research)"})
+    r.raise_for_status()
+    return procesar_bis(r.text)
+
+
 def actualizar_tipos() -> dict:
-    """Descarga todas las series. Si una falla, conserva la guardada."""
+    """Descarga todas las series (BIS y, si falla, FRED). Si todo falla,
+    conserva lo guardado."""
     previos = cargar_tipos()
     columnas, informe = {}, {}
-    for divisa, serie in SERIES_FRED.items():
-        try:
-            s = descargar_fred(serie)
-            columnas[divisa] = s
-            informe[divisa] = f"OK hasta {s.index.max().date()}"
-        except Exception as e:  # noqa: BLE001
+    for divisa in SERIES_FRED:
+        errores = []
+        for fuente, funcion, codigo in (("BIS", descargar_bis, PAISES_BIS[divisa]),
+                                        ("FRED", descargar_fred, SERIES_FRED[divisa])):
+            try:
+                s = funcion(codigo)
+                if s.empty:
+                    raise ValueError("serie vacía")
+                columnas[divisa] = s
+                informe[divisa] = f"OK ({fuente}) hasta {s.index.max().date()}"
+                break
+            except Exception as e:  # noqa: BLE001
+                errores.append(f"{fuente}: {type(e).__name__}")
+        else:
             if divisa in previos:
                 columnas[divisa] = previos[divisa].dropna()
-            informe[divisa] = f"ERROR ({type(e).__name__}); se mantiene lo guardado"
+            informe[divisa] = f"ERROR ({'; '.join(errores)}); se mantiene lo guardado"
     if columnas:
         tipos = pd.DataFrame(columnas).sort_index()
         RUTA_TIPOS.parent.mkdir(parents=True, exist_ok=True)

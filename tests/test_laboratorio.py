@@ -84,6 +84,16 @@ def test_forex_con_carry_acumula_el_diferencial():
     assert out["JPY=X"].iloc[-1] > out["JPY=X"].iloc[0]
 
 
+def test_procesar_bis():
+    from src.data import macro
+
+    csv = ("FREQ,REF_AREA,UNIT_MEASURE,TIME_PERIOD,OBS_VALUE,OBS_STATUS\n"
+           "M,US,368,2024-01,5.5,A\nM,US,368,2024-02,5.25,A\nM,US,368,2024-03,,A\n")
+    s = macro.procesar_bis(csv)
+    assert list(s.values) == [5.5, 5.25]
+    assert s.index[0] == pd.Timestamp("2024-01-01")
+
+
 def test_sin_tipos_no_cambia_nada():
     from src.data import macro
 
