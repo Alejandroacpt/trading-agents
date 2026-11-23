@@ -25,6 +25,12 @@ def probar_telegram() -> None:
     if not os.getenv("TELEGRAM_BOT_TOKEN"):
         print("Falta el secreto TELEGRAM_BOT_TOKEN")
         return
+    try:
+        bot = telegram.bot_info()
+        print(f"Token válido: pertenece al bot '{bot.get('first_name')}' (@{bot.get('username')})")
+    except Exception as e:  # noqa: BLE001
+        print(f"El token no funciona: {e}")
+        return
     if not os.getenv("TELEGRAM_CHAT_ID"):
         print("Falta TELEGRAM_CHAT_ID. Chats que han escrito a tu bot:")
         chats = telegram.find_chat_id()

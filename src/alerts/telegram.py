@@ -85,6 +85,15 @@ def send_message(texto: str, silencioso: bool = False) -> bool:
     return ok
 
 
+def bot_info() -> dict:
+    """Devuelve el nombre y usuario del bot al que pertenece el token."""
+    token = os.environ["TELEGRAM_BOT_TOKEN"]
+    r = _peticion("GET", API.format(token=token, metodo="getMe"))
+    if r.status_code != 200:
+        raise RuntimeError(f"Telegram rechaza el token ({r.status_code})")
+    return r.json().get("result", {})
+
+
 def find_chat_id() -> list[dict]:
     """Busca los chats que han escrito a tu bot (para averiguar tu chat_id).
 
