@@ -1,0 +1,66 @@
+# ==========================================================
+# PIPELINE DIARIO
+# ----------------------------------------------------------
+# GitHub lo ejecuta solo, dos veces al día, en sus servidores
+# (no hace falta tener el ordenador encendido).
+#
+# Horas: GitHub usa hora UTC y no cambia con el horario de verano.
+#   22:07 UTC -> 23:07 en invierno / 00:07 en verano (tras el cierre de EEUU)
+#   06:37 UTC -> 07:37 en invierno / 08:37 en verano (antes de la apertura europea)
+# (los minutos "raros" evitan la hora en punto, cuando GitHub va más saturado
+#  y suele retrasar las ejecuciones)
+#
+# También se puede lanzar a mano: pestaña Actions -> "Pipeline diario" -> Run workflow
+# ==========================================================
+
+name: Pipeline diario
+
+on:
+  schedule:
+    - cron: "7 22 * * *"
+    - cron: "37 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write   # necesario para guardar los datos nuevos en el repositorio
+
+concurrency:
+  group: pipeline-diario
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Descargar el código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar librerías
+        run: pip install -r requirements.txt
+
+      - name: Paso 1 · Actualizar datos
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python scripts/update_data.py
+
+      # (semanas 2-5: aquí se añadirán escáneres, riesgo, alertas y paper trading)
+
+      - name: Guardar los datos en el repositorio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data reports
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos"
+          else
+            git commit -m "Datos $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git push
+          fi

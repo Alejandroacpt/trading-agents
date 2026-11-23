@@ -1,0 +1,47 @@
+# ==========================================================
+# UNIVERSO DE ACTIVOS
+# ----------------------------------------------------------
+# Lista de todo lo que el sistema vigila. Para añadir o quitar
+# un activo, basta con editar este archivo: el resto del código
+# lo lee de aquí.
+#
+# Campos de cada activo:
+#   ticker  -> símbolo en Yahoo Finance (de donde bajan los datos)
+#   nombre  -> descripción legible
+#   clase   -> equity, bonds, commodities, crypto, forex, cash
+#   source  -> de dónde se descargan: "yahoo" (por defecto)
+#   ccxt    -> (solo cripto) símbolo en Kraken, por si Yahoo falla
+# ==========================================================
+
+assets:
+  # --- Renta variable (ETFs de EEUU: mucho histórico) ---
+  - {ticker: SPY, nombre: "S&P 500", clase: equity}
+  - {ticker: QQQ, nombre: "Nasdaq 100", clase: equity}
+  - {ticker: VGK, nombre: "Europa", clase: equity}
+  - {ticker: EWJ, nombre: "Japón", clase: equity}
+  - {ticker: EEM, nombre: "Emergentes", clase: equity}
+
+  # --- Bonos ---
+  - {ticker: IEF, nombre: "Tesoro EEUU 7-10 años", clase: bonds}
+  - {ticker: TLT, nombre: "Tesoro EEUU 20+ años", clase: bonds}
+
+  # --- Materias primas ---
+  - {ticker: GLD, nombre: "Oro", clase: commodities}
+  - {ticker: SLV, nombre: "Plata", clase: commodities}
+  - {ticker: USO, nombre: "Petróleo (ETF)", clase: commodities}
+  - {ticker: DBC, nombre: "Cesta de materias primas", clase: commodities}
+
+  # --- Cripto (cotiza 7 días a la semana) ---
+  - {ticker: BTC-USD, nombre: "Bitcoin", clase: crypto, ccxt: "BTC/USD"}
+  - {ticker: ETH-USD, nombre: "Ethereum", clase: crypto, ccxt: "ETH/USD"}
+  - {ticker: SOL-USD, nombre: "Solana", clase: crypto, ccxt: "SOL/USD"}
+
+  # --- Forex (en Yahoo los pares llevan "=X") ---
+  - {ticker: EURUSD=X, nombre: "EUR/USD", clase: forex}
+  - {ticker: GBPUSD=X, nombre: "GBP/USD", clase: forex}
+  - {ticker: JPY=X, nombre: "USD/JPY", clase: forex}
+  - {ticker: AUDUSD=X, nombre: "AUD/USD", clase: forex}
+  - {ticker: CHF=X, nombre: "USD/CHF", clase: forex}
+
+  # --- Referencia: liquidez (para el filtro del dual momentum) ---
+  - {ticker: BIL, nombre: "Letras del Tesoro 1-3 meses (liquidez)", clase: cash}

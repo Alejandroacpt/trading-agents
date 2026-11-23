@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Secretos: NUNCA se suben al repositorio
+.env
+*.key
+
+# Sistema / editor
+.DS_Store
+.vscode/
+.idea/
