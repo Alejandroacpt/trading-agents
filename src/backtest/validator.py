@@ -103,32 +103,61 @@ def walk_forward(rents: dict, liquidez: pd.Series, anios_minimos: int = 3) -> tu
 
 def validar(estrategia: dict, precios_todos: pd.DataFrame, clases: dict) -> dict:
     """Ejecuta todas las pruebas de una estrategia (salvo el DSR, que
-    necesita conocer las pruebas de todas las estrategias)."""
-    precios = preparar_universo(estrategia, precios_todos)
-    liquidez = rent_liquidez(precios_todos, precios.index)
+    necesita conocer las pruebas de todas las estrategias).
 
-    # 1) Todas las variantes de la rejilla, para fijar un inicio común
-    objetivos_rejilla = {}
-    for params in estrategia["rejilla"]:
-        objetivos_rejilla[_clave(params)] = estrategia["senales"](precios, **params)
-    # Inicio: primer día en que la estrategia tiene opinión sobre al menos
-    # 'min_activos' activos (para no evaluar una "cartera" de un solo activo)
-    minimo = estrategia.get("min_activos", 1)
-    inicio = max(
-        o.index[o.notna().sum(axis=1) >= minimo][0] for o in objetivos_rejilla.values()
-    )
+    Dos tipos de estrategia:
+      - de pesos (diarias): tienen "senales" y se simulan con el motor de backtest;
+      - tácticas (con stops): tienen "simular", su propio simulador de operaciones.
+    """
+    inicio_test = pd.Timestamp(estrategia.get("inicio_test", INICIO_TEST))
 
-    # 2) Backtest de cada variante desde ese inicio
-    resultados = {}
-    for params in estrategia["rejilla"]:
-        k = _clave(params)
-        resultados[k] = run_backtest(precios, objetivos_rejilla[k], clases, liquidez, inicio=inicio)
+    if "simular" in estrategia:
+        # ---------------- Estrategia táctica (simulador de operaciones con stop)
+        resultados = {_clave(p): estrategia["simular"](p) for p in estrategia["rejilla"]}
+        clave_defecto = _clave(estrategia["parametros"])
+        if clave_defecto not in resultados:
+            resultados[clave_defecto] = estrategia["simular"](estrategia["parametros"])
+        base = resultados[clave_defecto]
+        inicio = base.rentabilidad.index[0]
+        caro = estrategia["simular"](estrategia["parametros"], 2.0)
+        cierres = estrategia["cierres"]()
+        precios = cierres[cierres.index >= inicio]
+        clases_t = {a: ("crypto" if "/" in a or a.endswith("-USD") else "equity") for a in precios.columns}
+        liquidez = pd.Series(0.0, index=precios.index)
+        bench = referencia_comprar_y_mantener(precios, clases_t, liquidez, inicio)
+    else:
+        # ---------------- Estrategia de pesos (motor de backtest diario)
+        precios = preparar_universo(estrategia, precios_todos)
+        liquidez = rent_liquidez(precios_todos, precios.index)
 
-    clave_defecto = _clave(estrategia["parametros"])
-    if clave_defecto not in resultados:
-        objetivos = estrategia["senales"](precios, **estrategia["parametros"])
-        resultados[clave_defecto] = run_backtest(precios, objetivos, clases, liquidez, inicio=inicio)
-    base = resultados[clave_defecto]
+        # 1) Todas las variantes de la rejilla, para fijar un inicio común
+        objetivos_rejilla = {}
+        for params in estrategia["rejilla"]:
+            objetivos_rejilla[_clave(params)] = estrategia["senales"](precios, **params)
+        # Inicio: primer día en que la estrategia tiene opinión sobre al menos
+        # 'min_activos' activos (para no evaluar una "cartera" de un solo activo)
+        minimo = estrategia.get("min_activos", 1)
+        inicio = max(
+            o.index[o.notna().sum(axis=1) >= minimo][0] for o in objetivos_rejilla.values()
+        )
+
+        # 2) Backtest de cada variante desde ese inicio
+        resultados = {}
+        for params in estrategia["rejilla"]:
+            k = _clave(params)
+            resultados[k] = run_backtest(precios, objetivos_rejilla[k], clases, liquidez, inicio=inicio)
+
+        clave_defecto = _clave(estrategia["parametros"])
+        if clave_defecto not in resultados:
+            objetivos = estrategia["senales"](precios, **estrategia["parametros"])
+            resultados[clave_defecto] = run_backtest(precios, objetivos, clases, liquidez, inicio=inicio)
+        base = resultados[clave_defecto]
+
+        # Costes x2 y referencia
+        obj_def = estrategia["senales"](precios, **estrategia["parametros"])
+        caro = run_backtest(precios, obj_def, clases, liquidez, inicio=inicio, multiplicador_costes=2.0)
+        bench = referencia_comprar_y_mantener(precios, clases, liquidez, inicio)
+
     rent = base.rentabilidad
     liq = base.liquidez
 
@@ -138,26 +167,19 @@ def validar(estrategia: dict, precios_todos: pd.DataFrame, clases: dict) -> dict
 
     periodos = {
         "completo": tabla(),
-        "desarrollo": tabla(hasta=INICIO_TEST),
-        "test": tabla(desde=INICIO_TEST),
+        "desarrollo": tabla(hasta=inicio_test),
+        "test": tabla(desde=inicio_test),
         "post_publicacion": tabla(desde=estrategia["publicacion"]),
     }
 
-    # 3) Robustez
+    # Robustez
     sharpes_rejilla = {k: metrics.sharpe(r.rentabilidad, r.liquidez) for k, r in resultados.items()}
-    sharpes_test_rejilla = {k: metrics.sharpe(recortar(r.rentabilidad, INICIO_TEST), r.liquidez)
+    sharpes_test_rejilla = {k: metrics.sharpe(recortar(r.rentabilidad, inicio_test), r.liquidez)
                             for k, r in resultados.items()}
 
-    # 4) Walk-forward
+    # Walk-forward
     rent_wf, elecciones = walk_forward({k: r.rentabilidad for k, r in resultados.items()}, liq)
     wf = metrics.resumen(rent_wf, liq) if len(rent_wf) else {}
-
-    # 5) Costes x2
-    obj_def = estrategia["senales"](precios, **estrategia["parametros"])
-    caro = run_backtest(precios, obj_def, clases, liquidez, inicio=inicio, multiplicador_costes=2.0)
-
-    # 6) Referencia
-    bench = referencia_comprar_y_mantener(precios, clases, liquidez, inicio)
 
     return {
         "estrategia": estrategia,
@@ -171,7 +193,7 @@ def validar(estrategia: dict, precios_todos: pd.DataFrame, clases: dict) -> dict
         "sharpe_costes_x2": metrics.sharpe(caro.rentabilidad, caro.liquidez),
         "referencia": {
             "completo": metrics.resumen(bench, liq),
-            "test": metrics.resumen(recortar(bench, INICIO_TEST), liq),
+            "test": metrics.resumen(recortar(bench, inicio_test), liq),
         },
         "rent_referencia": bench,
         "ppa": metrics.periodos_por_anio(rent),
@@ -204,7 +226,7 @@ def veredicto(v: dict) -> dict:
     p = v["periodos"]
     pruebas = {}
 
-    pruebas["Sharpe en test (2018+)"] = (p["test"].get("sharpe", 0), UMBRALES["sharpe_test"])
+    pruebas["Sharpe en test"] = (p["test"].get("sharpe", 0), UMBRALES["sharpe_test"])
 
     pp = p["post_publicacion"]
     if pp and pp.get("anios", 0) >= 3:
@@ -220,12 +242,14 @@ def veredicto(v: dict) -> dict:
     pruebas["Sharpe con costes x2"] = (v["sharpe_costes_x2"], UMBRALES["sharpe_costes_x2"])
     pruebas["Sharpe deflactado (DSR)"] = (v.get("dsr", np.nan), UMBRALES["dsr"])
     pruebas["Drawdown máximo"] = (p["completo"]["max_drawdown"], -e["max_drawdown_aceptable"])
+    if e.get("min_operaciones"):
+        pruebas["Número de operaciones"] = (p["completo"].get("operaciones", 0), e["min_operaciones"])
 
     detalle = {nombre: {"valor": val, "umbral": umb, "ok": bool(val >= umb) if not np.isnan(val) else False}
                for nombre, (val, umb) in pruebas.items()}
     fallos = [n for n, d in detalle.items() if not d["ok"]]
 
-    criticos = {"Sharpe en test (2018+)", "Robustez de parámetros"}
+    criticos = {"Sharpe en test", "Robustez de parámetros"}
     if p["test"].get("sharpe", 0) <= 0 or (criticos & set(fallos) and len(fallos) >= 2):
         decision = "RECHAZADA"
     elif not fallos:

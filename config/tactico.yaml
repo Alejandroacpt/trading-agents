@@ -1,0 +1,44 @@
+# ==========================================================
+# MOTOR TÁCTICO (CORTO PLAZO)
+# ----------------------------------------------------------
+# Operaciones de horas a días con velas de 1 hora, stop obligatorio
+# y tamaño calculado por riesgo. Plan v2, semana 7.
+# ==========================================================
+
+# Hasta la semana 8 (fases de capital y reparto entre motores) el motor
+# táctico funciona en SIMULACIÓN interna: cartera virtual propia y alertas,
+# sin órdenes en Alpaca.
+modo: simulacion
+capital_virtual_eur: 700      # 70 % de 1.000 € (fase < 5.000 €)
+inicio_vivo: "2026-11-23"     # desde cuándo cuenta la cartera táctica virtual
+
+riesgo:
+  riesgo_por_operacion: 0.015   # 1,5 % del capital del motor si salta el stop
+  max_posiciones: 5
+  max_peso_posicion: 0.25       # ninguna posición > 25 % del capital del motor
+  kill_switch:
+    reducir_a_la_mitad: 0.15
+    pausa: 0.25
+
+costes:                         # por operación y sentido (comisión + horquilla)
+  cripto: 0.0025
+  acciones: 0.0005
+
+# Universos (símbolos de Alpaca)
+mercados:
+  cripto:
+    activos: [BTC/USD, ETH/USD, SOL/USD, AVAX/USD, LINK/USD, DOGE/USD, LTC/USD, BCH/USD]
+    desde: "2021-01-01"
+  acciones:
+    activos: [SPY, QQQ, IWM,
+              XLK, XLF, XLE, XLV, XLI, XLY, XLP, XLU, XLB, XLRE, XLC,
+              AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, AVGO, JPM, V,
+              LLY, UNH, XOM, JNJ, WMT, MA, PG, HD, COST, NFLX]
+    desde: "2018-01-01"
+    # Norma PDT (cuentas < 25.000 $ en EEUU): no se cierra una posición el
+    # mismo día en que se abre.
+    sin_operaciones_intradia: true
+
+# Estrategias tácticas activas: solo las que pase el validador.
+# (Las rellena Alejandro tras ver el laboratorio táctico.)
+estrategias: []
