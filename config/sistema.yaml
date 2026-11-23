@@ -1,0 +1,44 @@
+# ==========================================================
+# CONFIGURACIÓN DEL SISTEMA EN VIVO
+# ----------------------------------------------------------
+# Qué estrategias operan, con cuánto capital y con qué límites.
+# Cambiar algo aquí cambia las alertas a partir de la siguiente
+# ejecución del pipeline diario.
+# ==========================================================
+
+# Capital de referencia para calcular los importes en € de las alertas.
+# (Fase 0: es capital virtual. Ajústalo al capital real cuando pases a la fase 1.)
+capital_eur: 1000
+
+# Estrategias activas.
+#   estado: aprobada | observacion  (según el último informe de validación)
+#   peso_riesgo: cuánto riesgo recibe frente a las demás (1 = completo).
+#                Las de observación reciben la mitad.
+estrategias:
+  - id: crypto_trend_vol
+    estado: aprobada
+    peso_riesgo: 1.0
+  - id: multi_horizonte
+    estado: observacion
+    peso_riesgo: 0.5
+  - id: faber
+    estado: observacion
+    peso_riesgo: 0.5
+
+riesgo:
+  tope_cripto: 0.25            # máximo 25 % del capital en cripto
+  tope_por_activo: 0.20        # máximo 20 % del capital en un solo activo
+  ventana_volatilidad: 252     # días para medir la volatilidad de cada estrategia
+  kill_switch:
+    reducir_a_la_mitad: 0.15   # si la cartera cae un 15 % desde su máximo, exposición a la mitad
+    pausa: 0.25                # si cae un 25 %, todo a liquidez y revisión manual
+
+cartera_ejecutable:
+  # Con poco capital, muchas posiciones pequeñas solo generan comisiones.
+  max_posiciones: 5
+  minimo_posicion_eur: 50
+
+alertas:
+  # Un cambio de tamaño de una posición ya abierta solo se avisa si mueve
+  # al menos este % del capital (las entradas y salidas se avisan siempre).
+  umbral_ajuste: 0.05

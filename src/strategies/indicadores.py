@@ -21,10 +21,22 @@ def fines_de_mes(indice: pd.DatetimeIndex) -> pd.DatetimeIndex:
     return pd.DatetimeIndex(s.groupby(indice.to_period("M")).max().values)
 
 
+def mes_cerrado(ultima_fecha: pd.Timestamp) -> bool:
+    """¿Es 'ultima_fecha' el último día hábil de su mes?"""
+    return (ultima_fecha + pd.offsets.BDay(1)).month != ultima_fecha.month
+
+
 def precios_fin_de_mes(precios: pd.DataFrame) -> pd.DataFrame:
-    """Precio de cierre de cada activo el último día de cada mes."""
+    """Precio de cierre de cada activo el último día de cada mes CERRADO.
+
+    El mes en curso solo se incluye si el último dato es del último día
+    hábil del mes. Así, en vivo, una estrategia mensual no cambia de
+    opinión a mitad de mes con un precio provisional.
+    """
     rellenos = precios.ffill()
     fm = fines_de_mes(precios.index)
+    if len(fm) and not mes_cerrado(fm[-1]):
+        fm = fm[:-1]
     p = rellenos.loc[fm]
     # Si un activo aún no existía ese mes, se queda en NaN
     primeros = precios.apply(lambda c: c.first_valid_index())

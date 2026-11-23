@@ -33,7 +33,10 @@ def main() -> int:
     resumen = resumen_telegram(resultados)
     print("\n" + resumen)
 
-    if enviar:
+    # Solo se avisa por Telegram si algún activo tiene problemas: el resumen
+    # diario de la cartera (paso 2) ya incluye los movimientos del día.
+    hay_problemas = any(r["estado"] != "OK" for r in resultados)
+    if enviar and hay_problemas:
         telegram.send_message(resumen, silencioso=True)
 
     # El script termina con error solo si NO se pudo actualizar ningún activo
