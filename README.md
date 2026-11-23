@@ -12,6 +12,8 @@ Sistema que vigila ~20 activos (ETFs, materias primas, cripto y forex), aplica e
 | 2–3 | Motor de backtest + validador; control de volatilidad, nuevas candidatas y cartera combinada | ✅ 1 aprobada, 3 en observación: [informe](reports/validacion/informe.md) |
 | 4 | Escáneres diarios + agente de riesgo + alertas | ✅ [señales y cartera](reports/senales.md) |
 | 5 | Paper trading automático + diario + auditor semanal | ✅ [diario](diario/operaciones.csv) · [auditor](reports/auditor/ultimo.md) |
+| 6 | Registro de pruebas, laboratorio por mercado, tipos de interés y carry, datos institucionales | ✅ [laboratorio](reports/laboratorio/ultimo.md) |
+| 7–9 | Motor táctico de corto plazo, fases de capital, apalancamiento por reglas, investigador semanal con IA | |
 
 ## Cómo funciona (semana 1)
 
@@ -43,6 +45,14 @@ src/broker/alpaca.py        <- cliente de Alpaca (solo paper)
 scripts/run_execution.py    <- paso 3: órdenes en Alpaca paper
 scripts/run_auditor.py      <- informe semanal del auditor
 diario/operaciones.csv      <- diario de alertas y órdenes
+src/research/familias.py    <- familias de estrategias genéricas (las amplía el investigador)
+src/research/laboratorio.py <- familias x mercados
+research/registro_pruebas.csv <- todas las variantes probadas (para el Sharpe deflactado)
+research/fichas/            <- fichas de las estrategias investigadas
+src/data/macro.py           <- tipos de interés (FRED) y forex con carry
+src/data/institucional.py   <- COT (CFTC) y compras de directivos (SEC)
+scripts/run_lab.py          <- laboratorio semanal
+scripts/update_research_data.py <- descarga semanal de datos de investigación
 config/sistema.yaml         <- estrategias activas, capital y límites de riesgo
 state/estado.json           <- cartera virtual (la actualiza el robot)
 scripts/test_connections.py <- prueba Telegram y Alpaca

@@ -42,7 +42,7 @@ PARES = {
 }
 
 
-def descargar_fred(serie: str, intentos: int = 3) -> pd.Series:
+def descargar_fred(serie: str, intentos: int = 2) -> pd.Series:
     import time
 
     import requests
@@ -50,13 +50,13 @@ def descargar_fred(serie: str, intentos: int = 3) -> pd.Series:
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={serie}"
     for i in range(intentos):
         try:
-            r = requests.get(url, timeout=90, headers={"User-Agent": "Mozilla/5.0 (trading-agents research)"})
+            r = requests.get(url, timeout=20, headers={"User-Agent": "Mozilla/5.0 (trading-agents research)"})
             r.raise_for_status()
             break
         except Exception:  # noqa: BLE001
             if i == intentos - 1:
                 raise
-            time.sleep(10 * (i + 1))
+            time.sleep(5)
     df = pd.read_csv(io.StringIO(r.text))
     col_fecha = df.columns[0]           # "observation_date" o "DATE" según la versión
     s = pd.to_numeric(df[df.columns[1]], errors="coerce")
