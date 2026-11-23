@@ -8,8 +8,8 @@ Sistema que vigila ~20 activos (ETFs, materias primas, cripto y forex), aplica e
 
 | Semana | Entregable | Estado |
 |---|---|---|
-| 1 | Repositorio, capa de datos de los 4 mercados, Telegram, conexión con Alpaca paper | ✅ código listo |
-| 2–3 | Motor de backtest + validador de estrategias | — |
+| 1 | Repositorio, capa de datos de los 4 mercados, Telegram, conexión con Alpaca paper | ✅ |
+| 2–3 | Motor de backtest + validador de estrategias | ✅ primera validación: [informe](reports/validacion/informe.md) |
 | 4 | Escáneres diarios + agente de riesgo + alertas | — |
 | 5 | Paper trading automático + diario + auditor semanal | — |
 
@@ -31,8 +31,14 @@ src/data/store.py           <- guardado en CSV
 src/data/quality.py         <- control de calidad
 src/data/update.py          <- orquesta la actualización e informes
 src/alerts/telegram.py      <- envío de mensajes
+src/backtest/engine.py      <- motor de backtest (costes, retraso, deriva)
+src/backtest/metrics.py     <- Sharpe, drawdown, Sharpe deflactado...
+src/backtest/validator.py   <- pruebas y veredicto de cada estrategia
+src/backtest/report.py      <- informe y gráficos
+src/strategies/             <- una estrategia por archivo
 scripts/update_data.py      <- paso 1 del pipeline diario
 scripts/test_connections.py <- prueba Telegram y Alpaca
+scripts/run_validation.py   <- valida todas las estrategias
 tests/                      <- pruebas automáticas (datos simulados)
 .github/workflows/          <- tareas programadas de GitHub
 data/                       <- precios (los rellena el robot)
