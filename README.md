@@ -11,7 +11,7 @@ Sistema que vigila ~20 activos (ETFs, materias primas, cripto y forex), aplica e
 | 1 | Repositorio, capa de datos de los 4 mercados, Telegram, conexión con Alpaca paper | ✅ |
 | 2–3 | Motor de backtest + validador; control de volatilidad, nuevas candidatas y cartera combinada | ✅ 1 aprobada, 3 en observación: [informe](reports/validacion/informe.md) |
 | 4 | Escáneres diarios + agente de riesgo + alertas | ✅ [señales y cartera](reports/senales.md) |
-| 5 | Paper trading automático + diario + auditor semanal | — |
+| 5 | Paper trading automático + diario + auditor semanal | ✅ [diario](diario/operaciones.csv) · [auditor](reports/auditor/ultimo.md) |
 
 ## Cómo funciona (semana 1)
 
@@ -38,7 +38,11 @@ src/backtest/report.py      <- informe y gráficos
 src/strategies/             <- una estrategia por archivo
 scripts/update_data.py      <- paso 1 del pipeline diario (datos)
 scripts/run_signals.py      <- paso 2: escáneres, riesgo y alertas
-src/agents/                 <- escáner, agente de riesgo, cartera virtual, alertas
+src/agents/                 <- escáner, riesgo, cartera virtual, alertas, ejecución, diario, auditor
+src/broker/alpaca.py        <- cliente de Alpaca (solo paper)
+scripts/run_execution.py    <- paso 3: órdenes en Alpaca paper
+scripts/run_auditor.py      <- informe semanal del auditor
+diario/operaciones.csv      <- diario de alertas y órdenes
 config/sistema.yaml         <- estrategias activas, capital y límites de riesgo
 state/estado.json           <- cartera virtual (la actualiza el robot)
 scripts/test_connections.py <- prueba Telegram y Alpaca

@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.agents import alertas, cartera_virtual, riesgo  # noqa: E402
+from src.agents import alertas, cartera_virtual, diario, riesgo  # noqa: E402
 from src.agents.escaner import calcular_senales, cargar_sistema, explicar, vista_por_clase  # noqa: E402
 from src.alerts import telegram  # noqa: E402
 from src.config import REPORTS_DIR, load_universe  # noqa: E402
@@ -80,11 +80,13 @@ def main() -> int:
     mensajes_sonoros = []
     if previo is None:
         mensajes_sonoros.append(alertas.mensaje_cartera_inicial(ejecutable, capital, detalle))
+        cambios = alertas.detectar_cambios({}, ejecutable, 0.0)
     else:
         aviso_kill = alertas.mensaje_kill_switch(previo.get("kill_switch", "NORMAL"), kill, virtual["drawdown"])
         if aviso_kill:
             mensajes_sonoros.append(aviso_kill)
-        for c in alertas.detectar_cambios(virtual["pesos_derivados"], ejecutable, sistema["alertas"]["umbral_ajuste"]):
+        cambios = alertas.detectar_cambios(virtual["pesos_derivados"], ejecutable, sistema["alertas"]["umbral_ajuste"])
+        for c in cambios:
             mensajes_sonoros.append(alertas.mensaje_cambio(c, capital, detalle, clases))
 
     fecha_datos = precios.index[-1].date().isoformat()
@@ -109,7 +111,12 @@ def main() -> int:
         alertas.informe_markdown(estado, modelo.to_dict(), reparto.to_dict(), vista, senales, capital, kill),
         encoding="utf-8")
     if not seco:
+        if previo is not None and "alpaca" in previo:
+            estado["alpaca"] = previo["alpaca"]  # lo actualiza el paso 3 (ejecución)
         cartera_virtual.guardar(estado)
+        if cambios:
+            d = diario.anadir(diario.cargar(), diario.filas_alertas(cambios, capital, cierres, detalle))
+            diario.guardar(d)
     print(f"\n{len(mensajes_sonoros)} alerta(s). Estado {'NO ' if seco else ''}guardado.")
     return 0
 

@@ -42,3 +42,9 @@ alertas:
   # Un cambio de tamaño de una posición ya abierta solo se avisa si mueve
   # al menos este % del capital (las entradas y salidas se avisan siempre).
   umbral_ajuste: 0.05
+
+alpaca:
+  # simulacion: calcula y apunta en el diario las órdenes, pero no las envía.
+  # paper:      las envía a la cuenta de SIMULACIÓN de Alpaca (nunca dinero real).
+  modo: simulacion
+  orden_minima_usd: 10   # diferencias menores no se operan (evita órdenes diminutas)
