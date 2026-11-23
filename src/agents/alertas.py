@@ -19,7 +19,10 @@ def _eur(x: float) -> str:
 
 
 def _pct(x: float, dec: int = 1) -> str:
-    return f"{x * 100:.{dec}f} %".replace(".", ",")
+    texto = f"{x * 100 + 0.0:.{dec}f}"
+    if texto.lstrip("-").strip("0").strip(".") == "":   # evita "-0,0"
+        texto = texto.lstrip("-")
+    return f"{texto} %".replace(".", ",")
 
 
 def detectar_cambios(antes: dict, despues: dict, umbral: float) -> list[dict]:
