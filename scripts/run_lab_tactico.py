@@ -67,6 +67,21 @@ def main() -> int:
         L.append(f"| {v['estrategia']['nombre']} | {ICONO[vd['decision']]} {vd['decision']} | {_n(c.get('sharpe'))} | "
                  f"{_n(p['test'].get('sharpe'))} | {_p(c.get('cagr'), 1)} | {_p(c.get('max_drawdown'))} | "
                  f"{c.get('operaciones', 0)} | {_p(c.get('aciertos'))} | {', '.join(vd['fallos']) or '—'} |")
+    # Diagnóstico de costes: ¿hay ventaja antes de costes? (pista para el investigador)
+    L += ["", "## Diagnóstico: ¿hay ventaja antes de costes?", "",
+          "Mismos experimentos (parámetros por defecto) sin costes. Si el Sharpe bruto es bueno y el neto malo, "
+          "la idea tiene algo pero opera demasiado o con stops demasiado ajustados para sus costes.", "",
+          "| Experimento | Sharpe bruto | Sharpe neto | Operaciones | Duración media | Resultado medio por operación (neto) |",
+          "|---|---|---|---|---|---|"]
+    from src.backtest import metrics as M  # noqa: E402
+    for v in orden:
+        e = v["estrategia"]
+        bruto = e["simular"](e["parametros"], 0.0)
+        ops = v["resultado"].operaciones
+        L.append(f"| {e['nombre']} | {_n(M.sharpe(bruto.rentabilidad))} | {_n(v['periodos']['completo'].get('sharpe'))} | "
+                 f"{len(ops)} | {_n(ops['dias'].mean() * 24 if len(ops) else float('nan'), 0)} h | "
+                 f"{_p(ops['resultado'].mean() if len(ops) else float('nan'), 2)} |")
+
     candidatas = [v for v in orden if v["veredicto"]["decision"] in ("APROBADA", "OBSERVACIÓN")]
     L += ["", "## Candidatas para el motor táctico", ""]
     L += ([f"- {ICONO[v['veredicto']['decision']]} **{v['estrategia']['nombre']}** (`{v['estrategia']['id']}`)"

@@ -13,7 +13,8 @@ Sistema que vigila ~20 activos (ETFs, materias primas, cripto y forex), aplica e
 | 4 | Escáneres diarios + agente de riesgo + alertas | ✅ [señales y cartera](reports/senales.md) |
 | 5 | Paper trading automático + diario + auditor semanal | ✅ [diario](diario/operaciones.csv) · [auditor](reports/auditor/ultimo.md) |
 | 6 | Registro de pruebas, laboratorio por mercado, tipos de interés y carry, datos institucionales | ✅ [laboratorio](reports/laboratorio/ultimo.md) |
-| 7–9 | Motor táctico de corto plazo, fases de capital, apalancamiento por reglas, investigador semanal con IA | |
+| 7 | Motor táctico (velas de 1 hora): datos, simulador con stops, familias tácticas, escáner horario | ✅ en simulación · [laboratorio táctico](reports/laboratorio/tactico.md) |
+| 8–9 | Fases de capital, apalancamiento por reglas, ejecución táctica, investigador semanal con IA | — |
 
 ## Cómo funciona (semana 1)
 
@@ -52,6 +53,11 @@ research/fichas/            <- fichas de las estrategias investigadas
 src/data/macro.py           <- tipos de interés (FRED) y forex con carry
 src/data/institucional.py   <- COT (CFTC) y compras de directivos (SEC)
 scripts/run_lab.py          <- laboratorio semanal
+scripts/run_lab_tactico.py  <- laboratorio táctico (velas de 1 hora)
+scripts/run_tactico.py      <- escáner táctico horario
+src/tactico/                <- simulador con stops, familias tácticas, laboratorio táctico
+src/data/horario.py         <- velas de 1 hora (Alpaca)
+config/tactico.yaml         <- universo, riesgo y estrategias del motor táctico
 scripts/update_research_data.py <- descarga semanal de datos de investigación
 config/sistema.yaml         <- estrategias activas, capital y límites de riesgo
 state/estado.json           <- cartera virtual (la actualiza el robot)

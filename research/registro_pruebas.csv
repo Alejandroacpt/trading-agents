@@ -133,6 +133,24 @@ lab_tendencia_media__renta_variable|dias=50,lab_tendencia_media__renta_variable,
 "rsi2|umbral=5, tendencia=150",rsi2,rsi2,multi,"umbral=5, tendencia=150",2026-11-23,2026-11-23,0.218,-0.092,biblioteca
 "rsi2|umbral=5, tendencia=200",rsi2,rsi2,multi,"umbral=5, tendencia=200",2026-11-23,2026-11-23,0.137,-0.116,biblioteca
 "rsi2|umbral=5, tendencia=250",rsi2,rsi2,multi,"umbral=5, tendencia=250",2026-11-23,2026-11-23,0.159,-0.077,biblioteca
+tac_momentum_horario__acciones|velas=168,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=168,2026-11-23,2026-11-23,0.558,0.326,laboratorio_tactico
+tac_momentum_horario__acciones|velas=24,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=24,2026-11-23,2026-11-23,-0.045,-0.739,laboratorio_tactico
+tac_momentum_horario__acciones|velas=72,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=72,2026-11-23,2026-11-23,0.34,0.248,laboratorio_tactico
+tac_momentum_horario__cripto|velas=168,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=168,2026-11-23,2026-11-23,-2.404,-2.939,laboratorio_tactico
+tac_momentum_horario__cripto|velas=24,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=24,2026-11-23,2026-11-23,-4.814,-6.685,laboratorio_tactico
+tac_momentum_horario__cripto|velas=72,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=72,2026-11-23,2026-11-23,-3.429,-4.579,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=10,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=10,2026-11-23,2026-11-23,-0.829,-1.221,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=20,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=20,2026-11-23,2026-11-23,-0.982,-1.777,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=5,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=5,2026-11-23,2026-11-23,-0.914,-1.578,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=10,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=10,2026-11-23,2026-11-23,-6.045,-7.809,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=20,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=20,2026-11-23,2026-11-23,-8.11,-10.42,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=5,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=5,2026-11-23,2026-11-23,-4.197,-5.607,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=24,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=24,2026-11-23,2026-11-23,0.445,0.335,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=48,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=48,2026-11-23,2026-11-23,0.42,-0.577,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=96,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=96,2026-11-23,2026-11-23,0.757,0.585,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=24,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=24,2026-11-23,2026-11-23,-1.957,-3.193,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=48,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=48,2026-11-23,2026-11-23,-1.132,-1.946,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=96,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=96,2026-11-23,2026-11-23,-0.124,-1.026,laboratorio_tactico
 "tsmom|meses=12, largo_corto=False",tsmom,tsmom,multi,"meses=12, largo_corto=False",2026-11-23,2026-11-23,0.374,0.286,biblioteca
 "tsmom|meses=12, largo_corto=True",tsmom,tsmom,multi,"meses=12, largo_corto=True",2026-11-23,2026-11-23,0.181,0.185,biblioteca
 "tsmom|meses=3, largo_corto=False",tsmom,tsmom,multi,"meses=3, largo_corto=False",2026-11-23,2026-11-23,0.45,0.275,biblioteca
