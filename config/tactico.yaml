@@ -34,7 +34,7 @@ mercados:
               XLK, XLF, XLE, XLV, XLI, XLY, XLP, XLU, XLB, XLRE, XLC,
               AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, AVGO, JPM, V,
               LLY, UNH, XOM, JNJ, WMT, MA, PG, HD, COST, NFLX]
-    desde: "2018-01-01"
+    desde: "2020-01-01"
     # Norma PDT (cuentas < 25.000 $ en EEUU): no se cierra una posición el
     # mismo día en que se abre.
     sin_operaciones_intradia: true

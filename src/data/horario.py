@@ -130,45 +130,57 @@ def guardar(df: pd.DataFrame, mercado: str, simbolo: str) -> None:
     df.round(6).to_csv(p, date_format="%Y-%m-%d %H:%M")
 
 
+def _al_dia(df: pd.DataFrame, desde: str) -> bool:
+    """¿El archivo ya cubre desde la fecha de inicio hasta hace pocos días?"""
+    if df.empty:
+        return False
+    empieza_bien = df.index.min() <= pd.Timestamp(desde) + pd.Timedelta(days=10)
+    reciente = df.index.max() >= pd.Timestamp.now() - pd.Timedelta(days=7)
+    return bool(empieza_bien and reciente)
+
+
 def actualizar(mercado: str | None = None, historico: bool = False, dias_solape: int = 5) -> list[str]:
-    """Actualiza los datos horarios. historico=True descarga todo desde el inicio."""
+    """Actualiza los datos horarios, símbolo a símbolo (guardando cada uno al
+    terminar). historico=True descarga todo desde el inicio, saltando los
+    símbolos que ya estén completos: si se corta, se retoma donde se quedó."""
     conf = cargar_config()
     informe = []
     for m, datos in conf["mercados"].items():
         if mercado and m != mercado:
             continue
-        simbolos = datos["activos"]
-        previos = {s: cargar(m, s) for s in simbolos}
-        if historico or any(df.empty for df in previos.values()):
-            desde = datos["desde"]
-        else:
-            ultimo = min(df.index.max() for df in previos.values())
-            desde = (ultimo - pd.Timedelta(days=dias_solape)).strftime("%Y-%m-%d")
-        fuente = "alpaca"
-        try:
-            nuevos = descargar_alpaca(m, simbolos, desde)
-        except Exception as e:  # noqa: BLE001
-            informe.append(f"{m}: Alpaca falló ({type(e).__name__}: {str(e)[:100]}); uso Yahoo")
-            fuente = "yahoo"
-            nuevos = {}
-            for s in simbolos:
+        actualizados, fuentes = 0, set()
+        for s in datos["activos"]:
+            previo = cargar(m, s)
+            if historico and _al_dia(previo, datos["desde"]):
+                actualizados += 1
+                continue
+            if historico or previo.empty:
+                desde = datos["desde"]
+            else:
+                desde = (previo.index.max() - pd.Timedelta(days=dias_solape)).strftime("%Y-%m-%d")
+            try:
+                nuevo = descargar_alpaca(m, [s], desde).get(s, pd.DataFrame())
+                fuente = "alpaca"
+            except Exception as e:  # noqa: BLE001
+                print(f"  {s}: Alpaca falló ({type(e).__name__}); pruebo Yahoo", flush=True)
                 try:
-                    nuevos[s] = descargar_yahoo(s)
+                    nuevo, fuente = descargar_yahoo(s), "yahoo"
                 except Exception:  # noqa: BLE001
-                    nuevos[s] = pd.DataFrame()
-        actualizados = 0
-        for s in simbolos:
-            nuevo = nuevos.get(s, pd.DataFrame())
+                    nuevo, fuente = pd.DataFrame(), "-"
             if nuevo is None or nuevo.empty:
+                print(f"  {s}: sin datos", flush=True)
                 continue
             if m == "acciones":
                 nuevo = solo_sesion_regular(nuevo)
             nuevo = sin_vela_en_curso(nuevo)
-            df = pd.concat([previos[s], nuevo]) if not previos[s].empty else nuevo
+            df = pd.concat([previo, nuevo]) if not previo.empty else nuevo
             df = df[~df.index.duplicated(keep="last")].sort_index()
             guardar(df, m, s)
             actualizados += 1
-        informe.append(f"{m}: {actualizados}/{len(simbolos)} símbolos actualizados ({fuente}, desde {desde})")
+            fuentes.add(fuente)
+            if historico:
+                print(f"  {m} {s}: {len(df)} velas desde {df.index.min():%Y-%m-%d} ({fuente})", flush=True)
+        informe.append(f"{m}: {actualizados}/{len(datos['activos'])} símbolos al día ({', '.join(sorted(fuentes)) or 'sin cambios'})")
     return informe
 
 
