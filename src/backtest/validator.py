@@ -178,7 +178,7 @@ def validar(estrategia: dict, precios_todos: pd.DataFrame, clases: dict) -> dict
     }
 
 
-def anadir_dsr(validaciones: list[dict]) -> None:
+def anadir_dsr(validaciones: list[dict], n_minimo: int = 0) -> None:
     """Calcula el Sharpe deflactado de cada estrategia teniendo en cuenta
     TODAS las variantes probadas en TODAS las estrategias.
 
@@ -187,7 +187,8 @@ def anadir_dsr(validaciones: list[dict]) -> None:
     (No usamos la dispersión entre variantes: mezclar cripto con el resto
     la inflaría y castigaría a todas por igual.)
     """
-    n_pruebas = sum(len(v["sharpes_rejilla"]) for v in validaciones)
+    # N = las pruebas de esta tanda o el total histórico del registro, lo que sea mayor
+    n_pruebas = max(sum(len(v["sharpes_rejilla"]) for v in validaciones), n_minimo)
     for v in validaciones:
         r = v["resultado"]
         sr0_diario = metrics.sharpe_maximo_por_suerte(n_pruebas, len(r.rentabilidad))

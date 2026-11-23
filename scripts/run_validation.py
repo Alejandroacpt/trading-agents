@@ -15,6 +15,7 @@ from src.backtest import validator  # noqa: E402
 from src.backtest.report import ICONO, informe  # noqa: E402
 from src.config import REPORTS_DIR, load_universe  # noqa: E402
 from src.data.store import close_matrix  # noqa: E402
+from src.research import registro  # noqa: E402
 from src.strategies import TODAS  # noqa: E402
 
 
@@ -28,7 +29,9 @@ def main() -> int:
     for e in TODAS:
         print(f"Validando {e['nombre']}...")
         validaciones.append(validator.validar(e, precios, clases))
-    validator.anadir_dsr(validaciones)
+    total = registro.registrar(validaciones, origen="biblioteca")
+    validator.anadir_dsr(validaciones, n_minimo=total)
+    print(f"Pruebas acumuladas en el registro: {total}")
     for v in validaciones:
         v["veredicto"] = validator.veredicto(v)
 

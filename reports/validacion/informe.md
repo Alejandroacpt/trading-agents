@@ -16,7 +16,7 @@
 | Filtro de 10 meses + control de volatilidad | control de caídas | ❌ RECHAZADA | 0,37 | 0,37 | 3,7 % | -16 % | -38 % |
 | Tendencia en cripto + control de volatilidad | núcleo cripto | ✅ APROBADA | 1,28 | 0,93 | 43,6 % | -40 % | -95 % |
 | Tendencia multi-horizonte (1-3-12 meses) | núcleo | 🟡 OBSERVACIÓN | 0,56 | 0,51 | 4,7 % | -10 % | -40 % |
-| Efecto cambio de mes | satélite | ❌ RECHAZADA | 0,04 | 0,00 | 1,3 % | -24 % | -58 % |
+| Efecto cambio de mes | satélite | ❌ RECHAZADA | 0,04 | -0,00 | 1,3 % | -24 % | -58 % |
 | Efecto Halloween (noviembre-abril) | satélite | ❌ RECHAZADA | 0,40 | 0,26 | 6,2 % | -31 % | -58 % |
 | Cartera: Faber + cripto (con control de volatilidad) | cartera combinada | 🟡 OBSERVACIÓN | 1,06 | 0,83 | 10,8 % | -13 % | -92 % |
 
@@ -126,9 +126,9 @@ Sin fallos → APROBADA. Uno o dos fallos no críticos → OBSERVACIÓN. Sharpe 
 
 | Periodo | Desde | Años | CAGR | Volatilidad | Sharpe | Peor caída | Operaciones/año | % aciertos | Exposición media |
 |---|---|---|---|---|---|---|---|---|---|
-| Completo | 2006-03-07 | 20,7 | 1,9 % | 5,1 % | 0,14 | -12 % | 36,1 | 67 % | 11 % |
-| Desarrollo (< 2018) | 2006-03-07 | 11,8 | 1,7 % | 5,0 % | 0,28 | -12 % | 34,4 | 67 % | 10 % |
-| Test (2018+) | 2018-01-02 | 8,9 | 2,2 % | 5,2 % | -0,05 | -8 % | 38,5 | 67 % | 11 % |
+| Completo | 2006-03-07 | 20,7 | 1,9 % | 5,1 % | 0,14 | -12 % | 36,1 | 66 % | 11 % |
+| Desarrollo (< 2018) | 2006-03-07 | 11,8 | 1,7 % | 5,0 % | 0,28 | -12 % | 34,4 | 66 % | 10 % |
+| Test (2018+) | 2018-01-02 | 8,9 | 2,2 % | 5,2 % | -0,05 | -8 % | 38,5 | 66 % | 11 % |
 | Desde la publicación | 2008-01-02 | 18,9 | 2,0 % | 5,0 % | 0,15 | -12 % | 35,8 | 67 % | 10 % |
 | *Referencia (comprar y mantener)* | | | 9,4 % | 21,4 % | 0,46 | -57 % | | | 100 % |
 
@@ -144,7 +144,7 @@ Sin fallos → APROBADA. Uno o dos fallos no críticos → OBSERVACIÓN. Sharpe 
 | Sharpe deflactado (DSR) | 4 % | ≥ 90 % | ❌ |
 | Drawdown máximo | -12 % | mejor que -25 % | ✅ |
 
-**Variantes de parámetros (Sharpe completo / test):** umbral=5, tendencia=150: 0,22 / -0,09; umbral=5, tendencia=200: 0,14 / -0,11; umbral=5, tendencia=250: 0,16 / -0,07; umbral=10, tendencia=150: 0,12 / -0,04; umbral=10, tendencia=200: 0,14 / -0,05; umbral=10, tendencia=250: 0,13 / -0,05; umbral=15, tendencia=150: 0,16 / 0,04; umbral=15, tendencia=200: 0,14 / -0,03; umbral=15, tendencia=250: 0,12 / -0,07
+**Variantes de parámetros (Sharpe completo / test):** umbral=5, tendencia=150: 0,22 / -0,09; umbral=5, tendencia=200: 0,14 / -0,12; umbral=5, tendencia=250: 0,16 / -0,08; umbral=10, tendencia=150: 0,11 / -0,04; umbral=10, tendencia=200: 0,14 / -0,05; umbral=10, tendencia=250: 0,13 / -0,05; umbral=15, tendencia=150: 0,15 / 0,04; umbral=15, tendencia=200: 0,13 / -0,03; umbral=15, tendencia=250: 0,11 / -0,08
 
 **Nota:** Su ventaja depende mucho de cuándo se ejecuta. Comprando al cierre del mismo día de la señal (como en el libro) el Sharpe completo sube de 0,14 a 0,33 y el de test, de -0,05 a 0,24: ni así llega al umbral. Se podría replantear calculando la señal minutos antes del cierre y enviando órdenes 'market-on-close' a Alpaca.
 
@@ -278,7 +278,7 @@ Sin fallos → APROBADA. Uno o dos fallos no críticos → OBSERVACIÓN. Sharpe 
 |---|---|---|---|---|---|---|---|---|---|
 | Completo | 2005-03-10 | 21,7 | 1,3 % | 8,5 % | 0,04 | -24 % | 60,2 | 57 % | 19 % |
 | Desarrollo (< 2018) | 2005-03-10 | 12,8 | 0,6 % | 8,9 % | 0,07 | -24 % | 59,8 | 55 % | 19 % |
-| Test (2018+) | 2018-01-02 | 8,9 | 2,3 % | 7,8 % | 0,00 | -11 % | 60,8 | 59 % | 19 % |
+| Test (2018+) | 2018-01-02 | 8,9 | 2,3 % | 7,8 % | -0,00 | -11 % | 60,8 | 59 % | 19 % |
 | Desde la publicación | 2005-03-10 | 21,7 | 1,3 % | 8,5 % | 0,04 | -24 % | 60,2 | 57 % | 19 % |
 | *Referencia (comprar y mantener)* | | | 9,9 % | 21,2 % | 0,49 | -58 % | | | 100 % |
 
@@ -286,7 +286,7 @@ Sin fallos → APROBADA. Uno o dos fallos no críticos → OBSERVACIÓN. Sharpe 
 
 | Prueba | Resultado | Umbral | |
 |---|---|---|---|
-| Sharpe en test (2018+) | 0,00 | ≥ 0,40 | ❌ |
+| Sharpe en test (2018+) | -0,00 | ≥ 0,40 | ❌ |
 | Sharpe post-publicación | 0,04 | ≥ 0,30 | ❌ |
 | Robustez de parámetros | 0 % | ≥ 67 % | ❌ |
 | Sharpe walk-forward | -0,04 | ≥ 0,30 | ❌ |
@@ -294,7 +294,7 @@ Sin fallos → APROBADA. Uno o dos fallos no críticos → OBSERVACIÓN. Sharpe 
 | Sharpe deflactado (DSR) | 2 % | ≥ 90 % | ❌ |
 | Drawdown máximo | -24 % | mejor que -25 % | ✅ |
 
-**Variantes de parámetros (Sharpe completo / test):** antes=1, despues=2: 0,04 / -0,20; antes=1, despues=3: 0,04 / 0,00; antes=1, despues=4: -0,05 / -0,02; antes=2, despues=2: 0,16 / 0,06; antes=2, despues=3: 0,16 / 0,20; antes=2, despues=4: 0,06 / 0,15
+**Variantes de parámetros (Sharpe completo / test):** antes=1, despues=2: 0,04 / -0,20; antes=1, despues=3: 0,04 / -0,00; antes=1, despues=4: -0,05 / -0,02; antes=2, despues=2: 0,16 / 0,06; antes=2, despues=3: 0,16 / 0,20; antes=2, despues=4: 0,06 / 0,15
 
 ## ❌ Efecto Halloween (noviembre-abril): RECHAZADA
 
