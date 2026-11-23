@@ -76,7 +76,7 @@ def calidad_ejecucion(diario: pd.DataFrame, dias: int = 7) -> dict:
     d["fecha"] = pd.to_datetime(d["fecha_utc"], errors="coerce", utc=True)
     desde = datetime.now(timezone.utc) - timedelta(days=dias)
     d = d[d["fecha"] >= desde]
-    ordenes = d[d["tipo"] == "orden"]
+    ordenes = d[(d["tipo"] == "orden") & (d["estado"].astype(str) != "simulada")]
     costes = pd.to_numeric(ordenes["coste_ejecucion"], errors="coerce").dropna()
     return {
         "ordenes": int(len(ordenes)),
