@@ -1,0 +1,17 @@
+{
+  "modo": "paper",
+  "fuente_capital": "presupuesto",
+  "capital_gestionado_usd": 1100.03,
+  "equity_cuenta_usd": 99998.76,
+  "valor_posiciones_usd": 458.0,
+  "eurusd": 1.097153,
+  "actualizado": "2026-11-24T10:38+00:00",
+  "historial": [
+    [
+      "2026-11-24",
+      99998.76
+    ]
+  ],
+  "incluye_tactico": true,
+  "objetivo": {}
+}

@@ -1,0 +1,20 @@
+{
+  "aportaciones": [],
+  "total": {
+    "valor": 1002.74,
+    "maximo": 1002.74,
+    "drawdown": 0.0,
+    "historial": [
+      [
+        "2026-11-24",
+        1002.74
+      ]
+    ]
+  },
+  "candidata": null,
+  "fase": 0,
+  "reparto": {
+    "tactico": 0.7,
+    "estructural": 0.3
+  }
+}
