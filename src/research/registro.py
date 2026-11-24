@@ -30,8 +30,16 @@ def cargar(ruta: Path = RUTA) -> pd.DataFrame:
     return pd.read_csv(ruta).reindex(columns=COLUMNAS).astype(object)
 
 
+def _cribados(ruta: Path) -> int:
+    """Las ideas del cribado rápido también cuentan como pruebas (research/cribado.csv)."""
+    if ruta != RUTA:
+        return 0
+    from src.research import cribado
+    return cribado.numero()
+
+
 def numero_pruebas(ruta: Path = RUTA) -> int:
-    return len(cargar(ruta))
+    return len(cargar(ruta)) + _cribados(ruta)
 
 
 def registrar(validaciones: list[dict], origen: str, ruta: Path = RUTA) -> int:
@@ -59,4 +67,4 @@ def registrar(validaciones: list[dict], origen: str, ruta: Path = RUTA) -> int:
         reg = nuevas
     ruta.parent.mkdir(parents=True, exist_ok=True)
     reg.reset_index(drop=True).sort_values(["primera_fecha", "clave"]).to_csv(ruta, index=False)
-    return len(reg)
+    return len(reg) + _cribados(ruta)

@@ -5,7 +5,8 @@ Esta guía es la fuente de verdad de cómo trabaja; la tarea programada solo apu
 
 ## Objetivo
 
-Encontrar cada semana entre 1 y 3 ideas nuevas con evidencia pública que puedan mejorar lo que ya opera.
+Encontrar cada semana ideas nuevas (de cualquier fuente, académica o no) que puedan mejorar lo que ya opera:
+hasta 10 se criban rápido y como mucho 3 pasan a la validación completa.
 Alejandro quiere **crecer el capital de forma agresiva** mientras la cartera total sea < 5.000 € (fase
 agresiva: 70 % táctico / 30 % estructural, con 100 €/mes de aportación). Por eso:
 
@@ -37,45 +38,76 @@ Prioridad actual:
    (`data/macro/tipos_3m.csv`) y, si existe, compras de directivos.
 4. Forex y bonos, solo si aparece algo con rentabilidad suficiente.
 
-## Procedimiento
+## Fuentes
+
+Cualquier fuente vale **si la idea se puede convertir en reglas exactas** (entrada, salida, stop, tamaño,
+marco temporal). Lo que no se pueda programar sin interpretación ("price action", "zonas de liquidez",
+patrones dibujados a ojo) se descarta. Lo que decide es el validador, no la fuente.
+
+- **Académicas**: SSRN, arXiv (q-fin), revistas (JFE, RFS, JF, JPM, FAJ), Quantpedia, Alpha Architect.
+- **YouTube**: no puedes ver vídeos, pero sí buscar transcripciones y resúmenes en la web (WebSearch:
+  `"<título del vídeo>" transcript`, sitios de resúmenes) y recopilaciones de la comunidad (p. ej. hojas
+  de cálculo públicas con estrategias de YouTube "probadas en 100 operaciones"). Ojo: casi siempre son
+  muestras cortas y elegidas a dedo; espera muy pocos aprobados.
+- **TradingView**: listas de scripts y estrategias (`tradingview.com/scripts/...`) y sus descripciones;
+  los de código abierto suelen describir la fórmula.
+- **Blogs y webs de estrategias probadas**: Quantified Strategies, Robot Wealth, QuantConnect (foro y
+  estrategias de la comunidad), Medium/dev.to/Substack de trading cuantitativo, repositorios de GitHub.
+- **Foros públicos** (Forex Factory, BabyPips, Elite Trader) si se pueden leer sin iniciar sesión.
+- **No accesibles** desde tu entorno: X/Twitter y Reddit bloquean el acceso automático. No insistas.
+
+En la ficha apunta siempre la fuente y el enlace.
+
+## Procedimiento (embudo)
 
 1. **Leer el estado** (sin gastar de más):
    - `reports/laboratorio/ultimo.md` y `reports/laboratorio/tactico.md`
    - `reports/auditor/ultimo.md`
-   - `research/registro_pruebas.csv` (qué se ha probado ya; no repetir ideas)
+   - `research/registro_pruebas.csv` y `research/cribado.csv` (qué se ha probado ya; no repetir ideas)
    - `research/fichas/` (fichas de semanas anteriores)
-2. **Investigar** con búsqueda web: SSRN, arXiv (q-fin), revistas (JFE, RFS, JF, JPM, FAJ), Quantpedia,
-   Alpha Architect, blogs de investigación cuantitativa. Preferir ideas con estudios académicos, datos fuera
-   de muestra y explicación económica (por qué funciona y por qué no ha desaparecido).
-3. **Elegir 1–3 ideas** que se puedan probar con los datos disponibles.
-4. **Escribir una ficha** por idea en `research/fichas/AAAA-MM-DD-<id>.md`: reglas exactas, mercados,
-   referencia, fecha de publicación, evidencia y riesgos.
-5. **Fijar la rejilla de parámetros ANTES de ejecutar nada** (3 variantes como máximo, con el parámetro
-   del paper en el centro) y escribirla en la ficha.
-6. **Programar la idea** como familia nueva:
+2. **Buscar ideas** en las fuentes de arriba, con prioridad en lo que pide el objetivo.
+3. **Cribado rápido (hasta 10 ideas por semana)**. Para cada idea:
+   - Escribe una ficha corta en `research/fichas/AAAA-MM-DD-<id>.md`: reglas exactas, mercado, marco
+     temporal, fuente y enlace, y los parámetros TAL CUAL los da la fuente (no los optimices).
+   - Si una familia existente ya la cubre con otros parámetros, no programes nada: usa `--param`.
+     Si no, prográmala como familia nueva (ver paso 5) con un test mínimo.
+   - Cribado: `python3 scripts/cribar.py tactico|diario <familia> <mercado> --idea "<id>" --fuente "..." --url "..." [--param clave=valor]`
+     Usa solo datos ANTERIORES al periodo de test (táctico: antes de jul-2024; diario: antes de 2018),
+     así el test queda intacto para la validación final. Criterios: Sharpe ≥ 0,5, rentabilidad > 0, caída
+     ≤ 35 % y, en táctico, ≥ 50 operaciones. Cada idea cribada cuenta como una prueba para el Sharpe
+     deflactado (crece despacio; es lo honesto).
+   - Mercados tácticos: `cripto`, `acciones` y `apalancados` (ETFs x3 de `config/investigacion.yaml`).
+4. **Validación completa (máximo 3 por semana)** solo de las que pasen el cribado:
+   - Fija en la ficha la rejilla de parámetros ANTES de ejecutar (3 variantes como máximo, con el
+     parámetro de la fuente en el centro).
+   - Si la familia es nueva, añádela a la rejilla de su familia y ejecuta el laboratorio:
+     `python3 scripts/run_lab.py --sin-telegram` y/o `python3 scripts/run_lab_tactico.py --sin-telegram`.
+     Para el mercado `apalancados`: `laboratorio.experimento("<familia>", "apalancados")`,
+     `validator.validar(exp, None, {})` y `registro.registrar([v], origen="investigador")`.
+5. **Programar una familia**:
    - Diaria: en `src/research/familias.py` (función + entrada en `FAMILIAS`). Campo `"mercados"` si solo
      tiene sentido en algunos.
    - Táctica: en `src/tactico/familias.py` (función + entrada en `FAMILIAS_TACTICAS`, con `"velas": "4h"`
      si usa velas de 4 h / media sesión). Puede usar `limite` (orden limitada), `dinamico` (stop dinámico)
-     y `max_velas`.
-   - Código comentado en español y sencillo, como el resto del repositorio.
-7. **Añadir un test** mínimo en `tests/` y ejecutar `python3 -m pytest -q`: todo debe pasar.
-8. **Probar** con `python3 scripts/run_lab.py --sin-telegram` y/o `python3 scripts/run_lab_tactico.py --sin-telegram`
-   (los datos están en el repositorio; no hace falta descargar nada). Cada variante queda en el registro de
-   pruebas y endurece el listón del Sharpe deflactado: es lo correcto.
-9. **Anotar el resultado en la ficha** (veredicto, Sharpe completo y de test, peor caída, qué falla) sin
-   reajustar parámetros a la vista de los resultados.
-10. **Subir** los cambios a `main` con un commit descriptivo.
-11. **Avisar a Alejandro** lanzando el workflow de notificación:
+     y `max_velas`. Si una familia nueva solo tiene sentido en un mercado, que el laboratorio no la pruebe
+     en los demás.
+   - Mejor familias **genéricas** con parámetros (p. ej. "cruce de medias + filtro RSI") que una por vídeo:
+     así muchas ideas futuras se criban solo cambiando parámetros.
+   - Código comentado en español y sencillo. Añade un test en `tests/` y ejecuta `python3 -m pytest -q`.
+6. **Anotar el resultado en la ficha** (cribado y, si llegó, validación: veredicto, Sharpe, rentabilidad
+   frente al SPY, peor caída, qué falla) sin reajustar parámetros a la vista de los resultados.
+7. **Subir** los cambios a `main` con un commit descriptivo (incluye `research/cribado.csv`).
+8. **Avisar a Alejandro** lanzando el workflow de notificación:
     `gh api -X POST repos/Alejandroacpt/trading-agents/actions/workflows/notificar.yml/dispatches -f ref=main -f "inputs[mensaje]=<resumen>"`
-    Resumen breve: ideas probadas, veredicto de cada una y si hay algo que proponer.
+    Resumen breve: cuántas ideas cribadas (y de qué fuentes), cuáles pasaron, veredicto de las validadas
+    y si hay algo que proponer.
 
 ## Reglas que no se rompen
 
 - **Nunca** modificar `config/sistema.yaml` ni `config/tactico.yaml` (lo que opera): solo proponer.
-- **Nunca** cambiar los umbrales del validador ni borrar filas del registro de pruebas.
+- **Nunca** cambiar los umbrales del validador o del cribado ni borrar filas de `research/registro_pruebas.csv` o `research/cribado.csv`.
 - **Nunca** ajustar parámetros después de ver resultados para que una estrategia apruebe. Si una idea falla,
   se anota y se pasa a otra.
 - Si algo del sistema está roto (tests que fallan, datos sin actualizar), arreglarlo tiene prioridad sobre
   investigar, y se menciona en el aviso.
-- Sesión acotada: como máximo 3 ideas por semana (el presupuesto de IA es limitado).
+- Sesión acotada: como máximo 10 ideas cribadas y 3 validaciones completas por semana (el presupuesto de IA es limitado).
