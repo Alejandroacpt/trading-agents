@@ -23,8 +23,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.agents import alertas, cartera_virtual, diario, riesgo  # noqa: E402
-from src.agents.escaner import calcular_senales, cargar_sistema, explicar, vista_por_clase  # noqa: E402
+import json  # noqa: E402
+
+from src.agents import alertas, capital as gestor_capital, cartera_virtual, diario, riesgo  # noqa: E402
+from src.agents.escaner import POR_ID, calcular_senales, cargar_sistema, explicar, vista_por_clase  # noqa: E402
 from src.alerts import telegram  # noqa: E402
 from src.config import REPORTS_DIR, load_universe  # noqa: E402
 from src.data.store import close_matrix  # noqa: E402
@@ -39,7 +41,10 @@ def main() -> int:
     clases = {a["ticker"]: a["clase"] for a in universo}
     precios = close_matrix(universo)
     sistema = cargar_sistema()
-    capital = sistema["capital_eur"]
+    conf_capital = sistema["capital"]
+    estado_capital = gestor_capital.cargar()
+    fase, parte = gestor_capital.fase_vigente(sistema, estado_capital)
+    hoy = datetime.now(timezone.utc).date().isoformat()
 
     # 1) Escáneres
     senales = calcular_senales(precios, sistema)
@@ -47,10 +52,47 @@ def main() -> int:
 
     # 2) Riesgo
     reparto = riesgo.reparto_estrategias(senales, precios, sistema)
-    previo = cartera_virtual.ajustar_capital(cartera_virtual.cargar(), capital)
+    previo = cartera_virtual.cargar()
+    if previo is not None and previo.get("motor") != "estructural":
+        # Paso al plan por fases: la cartera virtual pasa a ser solo la parte del motor estructural
+        previo = cartera_virtual.ajustar_capital(previo, conf_capital["inicial_eur"] * parte["estructural"])
+        previo["motor"], previo["aportaciones"] = "estructural", []
+    if previo is None:
+        capital = gestor_capital.capital_aportado(conf_capital) * parte["estructural"]
+    else:
+        for fecha, importe in gestor_capital.pendientes(conf_capital, previo.get("aportaciones")):
+            cartera_virtual.aportar(previo, importe * parte["estructural"], fecha)
+            print(f"Aportación del {fecha}: {importe * parte['estructural']:.2f} € al motor estructural")
+        capital = previo["capital_eur"]
     cierres = cartera_virtual.ultimos_cierres(precios)
     virtual = cartera_virtual.actualizar_valor(previo, cierres, capital)
-    factor, kill = riesgo.factor_kill_switch(virtual["drawdown"], sistema)
+
+    # Cartera total (estructural + táctico): fase y kill-switch
+    ruta_tac = cartera_virtual.RUTA_ESTADO.parent / "tactico.json"
+    tac = json.loads(ruta_tac.read_text(encoding="utf-8")) if ruta_tac.exists() else {}
+    valor_tactico = tac.get("valor_total_eur", conf_capital["inicial_eur"] * parte["tactico"])
+    valor_tactico += sum(x * parte["tactico"] for _, x in gestor_capital.pendientes(conf_capital, tac.get("aportaciones")))
+    nuevas = gestor_capital.pendientes(conf_capital, estado_capital.get("aportaciones"))
+    estado_capital.setdefault("aportaciones", []).extend(f for f, _ in nuevas)
+    gestor_capital.actualizar_total(estado_capital, virtual["valor"] + valor_tactico, sum(x for _, x in nuevas), hoy)
+    total = estado_capital["total"]
+    fases = sistema["fases"]["tramos"]
+    fase, cambio_fase = gestor_capital.actualizar_fase(estado_capital, fases, total["valor"],
+                                                      sistema["fases"]["histeresis_dias"], hoy)
+    mensaje_fase = None
+    if cambio_fase:
+        parte = gestor_capital.reparto(fases, fase)
+        objetivo_est = total["valor"] * parte["estructural"]
+        if previo is not None:
+            cartera_virtual.aportar(previo, objetivo_est - virtual["valor"], f"cambio-fase-{hoy}")
+            virtual = cartera_virtual.actualizar_valor(previo, cierres, previo["capital_eur"])
+            capital = previo["capital_eur"]
+        estado_capital["ajuste_tactico"] = {"id": f"cambio-fase-{hoy}", "valor_eur": round(total["valor"] * parte["tactico"], 2)}
+        mensaje_fase = (f"🔀 Cambio de fase: cartera total {total['valor']:,.0f} €. Nuevo reparto: "
+                        f"{parte['tactico']:.0%} táctico / {parte['estructural']:.0%} estructural.").replace(",", ".")
+    estado_capital["reparto"] = parte
+    factor, kill = riesgo.factor_kill_switch(total["drawdown"], sistema)
+    sistema["capital_eur"] = virtual["valor"]          # importes mínimos de la cartera ejecutable
     modelo = riesgo.cartera_modelo(senales, reparto, sistema, factor)
 
     # 3) Cartera ejecutable
@@ -73,13 +115,21 @@ def main() -> int:
             info["motivo_venta"] = "Kill-switch en pausa: todo a liquidez."
         else:
             antes = (previo or {}).get("detalle", {}).get(activo, {}).get("estrategias", {})
-            textos = [explicar(sid, precios, activo, dentro=False)[0] for sid in antes] or ["La estrategia ya no lo quiere."]
+            apartadas = [sid for sid in antes if sid not in senales]
+            if apartadas and len(apartadas) == len(antes):
+                textos = ["Las estrategias que lo tenían (" + ", ".join(POR_ID[s]["nombre"] for s in apartadas)
+                          + ") ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."]
+            else:
+                textos = ([explicar(sid, precios, activo, dentro=False)[0] for sid in antes if sid in senales]
+                          or ["La estrategia ya no lo quiere."])
             info["motivo_venta"] = " ".join(textos)
 
     # 4) Alertas
     mensajes_sonoros = []
+    if mensaje_fase:
+        mensajes_sonoros.append(mensaje_fase)
     if previo is None:
-        mensajes_sonoros.append(alertas.mensaje_cartera_inicial(ejecutable, capital, detalle))
+        mensajes_sonoros.append(alertas.mensaje_cartera_inicial(ejecutable, virtual["valor"], detalle))
         cambios = alertas.detectar_cambios({}, ejecutable, 0.0)
     else:
         aviso_kill = alertas.mensaje_kill_switch(previo.get("kill_switch", "NORMAL"), kill, virtual["drawdown"])
@@ -87,13 +137,17 @@ def main() -> int:
             mensajes_sonoros.append(aviso_kill)
         cambios = alertas.detectar_cambios(virtual["pesos_derivados"], ejecutable, sistema["alertas"]["umbral_ajuste"])
         for c in cambios:
-            mensajes_sonoros.append(alertas.mensaje_cambio(c, capital, detalle, clases))
+            mensajes_sonoros.append(alertas.mensaje_cambio(c, virtual["valor"], detalle, clases))
 
     fecha_datos = precios.index[-1].date().isoformat()
     estado = cartera_virtual.nuevo_estado(virtual, ejecutable, cierres, clases, kill, detalle, fecha_datos, capital)
+    estado["motor"] = "estructural"
+    estado["aportaciones"] = (previo or {}).get("aportaciones") or [f for f, _ in gestor_capital.aportaciones(conf_capital)]
 
     es_noche = datetime.now(timezone.utc).hour >= 18
-    resumen = alertas.mensaje_resumen(estado, modelo.to_dict(), reparto.to_dict(), capital, vista, kill)
+    resumen = alertas.mensaje_resumen(estado, modelo.to_dict(), reparto.to_dict(), capital, vista, kill,
+                                      total=total, parte=parte, valor_tactico=valor_tactico,
+                                      aportado=gestor_capital.capital_aportado(conf_capital))
 
     for m in mensajes_sonoros:
         print(m + "\n")
@@ -111,11 +165,10 @@ def main() -> int:
         alertas.informe_markdown(estado, modelo.to_dict(), reparto.to_dict(), vista, senales, capital, kill),
         encoding="utf-8")
     if not seco:
-        if previo is not None and "alpaca" in previo:
-            estado["alpaca"] = previo["alpaca"]  # lo actualiza el paso 3 (ejecución)
         cartera_virtual.guardar(estado)
+        gestor_capital.guardar(estado_capital)
         if cambios:
-            d = diario.anadir(diario.cargar(), diario.filas_alertas(cambios, capital, cierres, detalle))
+            d = diario.anadir(diario.cargar(), diario.filas_alertas(cambios, virtual["valor"], cierres, detalle))
             diario.guardar(d)
     print(f"\n{len(mensajes_sonoros)} alerta(s). Estado {'NO ' if seco else ''}guardado.")
     return 0

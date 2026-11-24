@@ -27,6 +27,43 @@ from datetime import datetime, timezone
 from src.broker.alpaca import es_cripto, normalizar
 
 
+def ticker_comun(activo: str) -> str:
+    """El motor táctico usa símbolos de Alpaca ('BTC/USD'); el estructural, de Yahoo ('BTC-USD')."""
+    return activo.replace("/", "-")
+
+
+def objetivo_combinado(estructural: dict, tactico: dict | None, incluir_tactico: bool) -> tuple[dict, float]:
+    """Cartera objetivo única de los dos motores.
+
+    Devuelve ({ticker: peso sobre el total}, valor total en €).
+    - Estructural: pesos de su cartera ejecutable x valor del motor.
+    - Táctico: posiciones abiertas + compras pendientes (se ejecutan en la
+      próxima apertura) - ventas pendientes.
+    """
+    importes: dict[str, float] = {}
+    v_est = float(estructural["virtual"]["valor"])
+    for t, w in estructural.get("cartera", {}).items():
+        importes[t] = importes.get(t, 0.0) + w * v_est
+    v_tac = 0.0
+    if tactico and incluir_tactico:
+        v_tac = float(tactico.get("valor_total_eur", 0.0))
+        tac: dict[tuple, float] = {}
+        for p in tactico.get("posiciones", {}).values():
+            k = (p.get("estrategia", ""), ticker_comun(p["activo"]))
+            tac[k] = tac.get(k, 0.0) + float(p["importe_eur"])
+        for p in tactico.get("pendientes", {}).values():
+            k = (p.get("estrategia", ""), ticker_comun(p["activo"]))
+            if p["accion"] == "comprar":
+                tac[k] = tac.get(k, 0.0) + float(p.get("importe_eur", 0.0))
+            else:
+                tac[k] = 0.0
+        for (_, t), x in tac.items():
+            importes[t] = importes.get(t, 0.0) + x
+    total = v_est + v_tac
+    pesos = {t: x / total for t, x in importes.items() if x > 0 and total > 0}
+    return pesos, total
+
+
 def capital_referencia(cuenta: dict, valor_virtual_eur: float, eurusd: float) -> tuple[float, str]:
     """Dólares que gestiona el sistema dentro de la cuenta paper."""
     presupuesto = valor_virtual_eur * eurusd
@@ -48,11 +85,14 @@ def posiciones_gestionadas(posiciones: list[dict], universo: list[str]) -> dict:
     return salida
 
 
-def calcular_ordenes(cartera: dict, capital_usd: float, actuales: dict, minimo_usd: float) -> list[dict]:
+def calcular_ordenes(cartera: dict, capital_usd: float, actuales: dict, minimo_usd: float,
+                     banda: float = 0.0) -> list[dict]:
     """Órdenes para pasar de las posiciones actuales a la cartera objetivo.
 
     cartera  : {ticker: peso objetivo}
     actuales : {ticker: {"valor", "cantidad", "precio"}}
+    banda    : una posición abierta solo se reajusta si se desvía más de
+               este % de su objetivo (evita operar por la simple deriva de precios).
     """
     ordenes = []
     for t in sorted(set(cartera) | set(actuales)):
@@ -61,7 +101,7 @@ def calcular_ordenes(cartera: dict, capital_usd: float, actuales: dict, minimo_u
         diferencia = objetivo - actual
         if objetivo <= 0 and actual > 0:
             ordenes.append({"activo": t, "accion": "cerrar", "importe": actual})
-        elif abs(diferencia) >= minimo_usd:
+        elif abs(diferencia) >= max(minimo_usd, banda * objetivo if actual > 0 else 0.0):
             if diferencia > 0:
                 ordenes.append({"activo": t, "accion": "comprar", "importe": diferencia})
             else:

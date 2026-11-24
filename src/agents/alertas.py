@@ -92,21 +92,33 @@ def mensaje_kill_switch(anterior: str, actual: str, drawdown: float) -> str | No
     return textos[actual]
 
 
-def mensaje_resumen(estado: dict, modelo: dict, reparto: dict, capital: float, vista: dict, kill: str) -> str:
+def mensaje_resumen(estado: dict, modelo: dict, reparto: dict, capital: float, vista: dict, kill: str,
+                    total: dict | None = None, parte: dict | None = None, valor_tactico: float | None = None,
+                    aportado: float | None = None) -> str:
     v = estado["virtual"]
     inicial = capital
     rent = v["valor"] / inicial - 1
     dd = v["valor"] / v["maximo"] - 1
-    lineas = [
-        f"📈 Cartera virtual: {_eur(v['valor'])} ({_pct(rent)} desde el {v['inicio']}) · "
-        f"caída desde máximo {_pct(dd)} · kill-switch {kill.lower()}",
+    lineas = []
+    if total:
+        ganancia = total["valor"] - aportado if aportado else None
+        lineas += [f"💼 Cartera total: {_eur(total['valor'])}"
+                   + (f" (aportado {_eur(aportado)}, resultado {_eur(ganancia)})" if aportado else "")
+                   + f" · caída desde máximo {_pct(total.get('drawdown', 0))} · kill-switch {kill.lower()}"]
+        if parte and valor_tactico is not None:
+            lineas += [f"⚡ Táctico ({parte['tactico']:.0%}): {_eur(valor_tactico)} · "
+                       f"🧱 Estructural ({parte['estructural']:.0%}): {_eur(v['valor'])}"]
+        lineas += [""]
+    lineas += [
+        f"🧱 Motor estructural: {_eur(v['valor'])} ({_pct(rent)} desde el {v['inicio']}) · "
+        f"caída desde máximo {_pct(dd)}",
         "",
         "Posiciones (ejecutables):",
     ]
     cartera = estado["cartera"]
     if cartera:
         for a, w in sorted(cartera.items(), key=lambda x: -x[1]):
-            lineas.append(f"• {a} {_pct(w)} ({_eur(w * capital)})")
+            lineas.append(f"• {a} {_pct(w)} ({_eur(w * v['valor'])})")
     lineas.append(f"• Liquidez {_pct(1 - sum(cartera.values()))}")
     lineas += ["", "Reparto entre estrategias: " + " · ".join(
         f"{POR_ID[s]['nombre'].split(' (')[0].split(' +')[0]} {_pct(r, 0)}" for s, r in reparto.items())]

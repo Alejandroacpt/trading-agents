@@ -33,6 +33,15 @@ def cargar_config() -> dict:
         return yaml.safe_load(f)
 
 
+def activos_investigacion(mercado: str) -> list[str]:
+    """Símbolos extra que solo se descargan para el laboratorio (config/investigacion.yaml)."""
+    ruta = CONFIG_DIR / "investigacion.yaml"
+    if not ruta.exists():
+        return []
+    with open(ruta, encoding="utf-8") as f:
+        return list((yaml.safe_load(f) or {}).get(mercado) or [])
+
+
 def nombre_archivo(simbolo: str) -> str:
     return simbolo.replace("/", "-")
 
@@ -149,7 +158,8 @@ def actualizar(mercado: str | None = None, historico: bool = False, dias_solape:
         if mercado and m != mercado:
             continue
         actualizados, fuentes = 0, set()
-        for s in datos["activos"]:
+        lista = list(datos["activos"]) + [a for a in activos_investigacion(m) if a not in datos["activos"]]
+        for s in lista:
             previo = cargar(m, s)
             if historico and _al_dia(previo, datos["desde"]):
                 actualizados += 1
@@ -180,7 +190,7 @@ def actualizar(mercado: str | None = None, historico: bool = False, dias_solape:
             fuentes.add(fuente)
             if historico:
                 print(f"  {m} {s}: {len(df)} velas desde {df.index.min():%Y-%m-%d} ({fuente})", flush=True)
-        informe.append(f"{m}: {actualizados}/{len(datos['activos'])} símbolos al día ({', '.join(sorted(fuentes)) or 'sin cambios'})")
+        informe.append(f"{m}: {actualizados}/{len(lista)} símbolos al día ({', '.join(sorted(fuentes)) or 'sin cambios'})")
     return informe
 
 

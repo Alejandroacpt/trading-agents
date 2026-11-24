@@ -55,6 +55,23 @@ def ajustar_capital(estado: dict | None, capital_nuevo: float) -> dict | None:
     return estado
 
 
+def aportar(estado: dict, importe: float, fecha: str) -> dict:
+    """Añade (o retira, si es negativo) liquidez a la cartera virtual del
+    motor estructural. Sube valor y máximo a la vez (no es ganancia) y el
+    capital nominal; los pesos se diluyen porque la aportación entra como
+    liquidez hasta el siguiente reparto."""
+    v = estado["virtual"]
+    previo = v["valor"]
+    nuevo = max(previo + importe, 0.0)
+    f = previo / nuevo if nuevo > 0 else 0.0
+    estado["cartera"] = {t: w * f for t, w in estado.get("cartera", {}).items()}
+    v["valor"] = nuevo
+    v["maximo"] = max(v["maximo"] + importe, nuevo)
+    estado["capital_eur"] = estado.get("capital_eur", previo) + importe
+    estado.setdefault("aportaciones", []).append(fecha)
+    return estado
+
+
 def ultimos_cierres(precios: pd.DataFrame) -> dict:
     return {c: float(precios[c].dropna().iloc[-1]) for c in precios.columns if precios[c].notna().any()}
 

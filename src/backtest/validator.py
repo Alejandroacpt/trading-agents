@@ -22,6 +22,8 @@ Pruebas que hace a cada estrategia:
 8. DRAWDOWN: ¿la peor caída es aceptable para su papel?
 """
 
+from functools import lru_cache
+
 import numpy as np
 import pandas as pd
 
@@ -39,7 +41,34 @@ UMBRALES = {
     "sharpe_costes_x2": 0.3,
     "sharpe_walk_forward": 0.3,
     "dsr": 0.90,
+    # Listón del SPY (24 nov 2026): en el periodo de test hay que ganar más que
+    # comprar y mantener SPY, o tener un Sharpe al menos 0,2 mejor que el suyo.
+    "margen_sharpe_spy": 0.2,
 }
+
+
+@lru_cache(maxsize=1)
+def _precios_spy() -> pd.DataFrame:
+    from src.config import load_universe
+    from src.data.store import close_matrix
+    return close_matrix([a for a in load_universe() if a["ticker"] in ("SPY", "BIL")])
+
+
+def frente_a_spy(rent: pd.Series, inicio_test, precios_todos: pd.DataFrame | None = None) -> dict:
+    """Compara la estrategia con comprar y mantener SPY en el periodo de test."""
+    fuente = precios_todos if precios_todos is not None and "SPY" in precios_todos else _precios_spy()
+    spy = fuente["SPY"].dropna()
+    liq_spy = rent_liquidez(fuente, spy.index)
+    desde = max(pd.Timestamp(inicio_test), rent.index[0])
+    r_spy = spy.pct_change().loc[desde:rent.index[-1]].dropna()
+    r_est = rent.loc[desde:]
+    if len(r_spy) < 60 or len(r_est) < 60:
+        return {}
+    m_spy = metrics.resumen(r_spy, liq_spy)
+    m_est = metrics.resumen(r_est, pd.Series(0.0, index=r_est.index))
+    margen = max(m_est["cagr"] - m_spy["cagr"], m_est["sharpe"] - m_spy["sharpe"] - UMBRALES["margen_sharpe_spy"])
+    return {"cagr_spy": m_spy["cagr"], "sharpe_spy": m_spy["sharpe"], "max_dd_spy": m_spy["max_drawdown"],
+            "cagr": m_est["cagr"], "sharpe": m_est["sharpe"], "margen": float(margen)}
 
 
 def rent_liquidez(precios_todos: pd.DataFrame, indice: pd.DatetimeIndex) -> pd.Series:
@@ -196,6 +225,7 @@ def validar(estrategia: dict, precios_todos: pd.DataFrame, clases: dict) -> dict
             "test": metrics.resumen(recortar(bench, inicio_test), liq),
         },
         "rent_referencia": bench,
+        "spy": frente_a_spy(rent, inicio_test, precios_todos),
         "ppa": metrics.periodos_por_anio(rent),
     }
 
@@ -242,6 +272,8 @@ def veredicto(v: dict) -> dict:
     pruebas["Sharpe con costes x2"] = (v["sharpe_costes_x2"], UMBRALES["sharpe_costes_x2"])
     pruebas["Sharpe deflactado (DSR)"] = (v.get("dsr", np.nan), UMBRALES["dsr"])
     pruebas["Drawdown máximo"] = (p["completo"]["max_drawdown"], -e["max_drawdown_aceptable"])
+    if v.get("spy"):
+        pruebas["Bate al SPY (test)"] = (v["spy"]["margen"], 0.0)
     if e.get("min_operaciones"):
         pruebas["Número de operaciones"] = (p["completo"].get("operaciones", 0), e["min_operaciones"])
 
@@ -254,6 +286,8 @@ def veredicto(v: dict) -> dict:
         decision = "RECHAZADA"
     elif not fallos:
         decision = "APROBADA"
+    elif "Bate al SPY (test)" in fallos and len(fallos) == 1:
+        decision = "OBSERVACIÓN"   # sin batir al SPY nunca se aprueba
     elif len(fallos) <= 2:
         decision = "OBSERVACIÓN"
     else:

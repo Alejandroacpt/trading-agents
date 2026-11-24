@@ -5,12 +5,14 @@
 # y tamaño calculado por riesgo. Plan v2, semana 7.
 # ==========================================================
 
-# Hasta la semana 8 (fases de capital y reparto entre motores) el motor
-# táctico funciona en SIMULACIÓN interna: cartera virtual propia y alertas,
-# sin órdenes en Alpaca.
-modo: simulacion
-capital_virtual_eur: 700      # 70 % de 1.000 € (fase < 5.000 €)
-inicio_vivo: "2026-11-24"     # desde cuándo cuenta la cartera táctica virtual (activación)
+# modo:
+#   simulacion: cartera virtual propia y alertas, sin órdenes.
+#   paper:      además, sus posiciones se envían a la cuenta paper de Alpaca
+#               (junto con las del motor estructural, en una sola cartera).
+# El capital del motor es su parte de la fase (config/sistema.yaml -> fases):
+# 70 % mientras la cartera total sea < 5.000 €.
+modo: paper
+inicio_vivo: "2026-11-24"     # desde cuándo cuenta la cartera táctica (activación)
 
 riesgo:
   riesgo_por_operacion: 0.015   # 1,5 % del capital del motor si salta el stop

@@ -1,0 +1,17 @@
+# ==========================================================
+# ACTIVOS SOLO PARA INVESTIGACIÓN
+# ----------------------------------------------------------
+# Se descargan sus velas de 1 hora junto con las del motor táctico, pero
+# NO se operan (lo que opera está en config/tactico.yaml).
+# El investigador semanal puede añadir aquí los símbolos que necesite
+# (símbolos de Alpaca; acciones/ETFs con feed IEX desde 2020).
+# En el laboratorio: laboratorio.ohlc_mercado("acciones", extra=True)
+# ==========================================================
+acciones:
+  # ETFs apalancados x3 (muy volátiles: solo con filtro de tendencia y stop)
+  - TQQQ   # Nasdaq-100 x3
+  - UPRO   # S&P 500 x3
+  - SOXL   # semiconductores x3
+  - TECL   # tecnología x3
+  - TNA    # Russell 2000 x3
+cripto: []

@@ -5,16 +5,32 @@ Esta guía es la fuente de verdad de cómo trabaja; la tarea programada solo apu
 
 ## Objetivo
 
-Encontrar cada semana entre 1 y 3 ideas nuevas con evidencia pública que puedan mejorar lo que ya opera
-en algún mercado (renta variable, bonos, materias primas, cripto, forex) o en el motor táctico (velas de 1 h,
-4 h o media sesión). Prioridad actual:
+Encontrar cada semana entre 1 y 3 ideas nuevas con evidencia pública que puedan mejorar lo que ya opera.
+Alejandro quiere **crecer el capital de forma agresiva** mientras la cartera total sea < 5.000 € (fase
+agresiva: 70 % táctico / 30 % estructural, con 100 €/mes de aportación). Por eso:
 
-1. **Motor táctico de baja rotación**: el diagnóstico de costes (`reports/laboratorio/tactico.md`) muestra
-   que con velas de 1 hora los costes se comen la ventaja. Buscar ideas con pocas operaciones, mucho recorrido
-   por operación y entradas a favor de la tendencia diaria.
-2. **Forex y bonos**: hoy no tienen ninguna estrategia válida.
-3. **Datos institucionales** ya descargados: posicionamiento COT (`data/institucional/cot.csv`), tipos de
-   interés (`data/macro/tipos_3m.csv`) y, si existe, compras de directivos.
+- **El listón es el SPY.** El validador exige batir a comprar y mantener SPY en el periodo de test (más
+  rentabilidad, o un Sharpe al menos 0,2 mejor). En la fase agresiva lo que interesa es la **rentabilidad**:
+  una idea con mucho Sharpe pero poca rentabilidad (tipo 5-6 % anual) no sirve ahora.
+- Caída máxima aceptable en torno al 25-30 %; más que eso no es agresivo, es temerario.
+
+Prioridad actual:
+
+1. **Táctico agresivo que bata al SPY**: momentum / ruptura de baja rotación aplicados a activos más
+   volátiles (ETFs apalancados como TQQQ/SOXL/UPRO con filtro de tendencia, acciones pequeñas, sectores
+   fuertes), rotación de momentum entre sectores o acciones, y cripto en velas de 4 h o diarias. Pocas
+   operaciones, mucho recorrido por operación y entradas a favor de la tendencia diaria (con velas de 1 hora
+   los costes se comen la ventaja: ver `reports/laboratorio/tactico.md`).
+   Los activos que no opera el sistema pero quieras investigar van en `config/investigacion.yaml` (SÍ puedes
+   editarlo): el escáner horario descarga sus velas y en el laboratorio se cargan con
+   `laboratorio.ohlc_mercado("acciones", extra=True)`. Ya incluye ETFs x3 (TQQQ, UPRO, SOXL, TECL, TNA).
+   Ojo: un símbolo recién añadido tarda una ejecución del escáner en tener datos; si aún no los tiene,
+   lanza el workflow `tactico.yml` y prueba la idea la semana siguiente.
+2. **Mejorar la parte cripto del estructural** (tendencia con control de volatilidad, la única estrategia
+   aprobada): variantes publicadas, más monedas, señales on-chain o de financiación si hay datos gratuitos.
+3. **Datos institucionales** ya descargados: COT (`data/institucional/cot.csv`), tipos de interés
+   (`data/macro/tipos_3m.csv`) y, si existe, compras de directivos.
+4. Forex y bonos, solo si aparece algo con rentabilidad suficiente.
 
 ## Procedimiento
 

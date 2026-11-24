@@ -9,6 +9,7 @@ Uso:
     python scripts/run_auditor.py [--sin-telegram]
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -33,7 +34,11 @@ def main() -> int:
     configs = {c["id"]: c for c in sistema["estrategias"]}
     estrategias = [POR_ID[c["id"]] for c in sistema["estrategias"]]
 
-    a = auditor.auditar(estrategias, configs, precios, clases, estado, diario.cargar(), sistema["capital_eur"])
+    ruta_alpaca = cartera_virtual.RUTA_ESTADO.parent / "alpaca.json"
+    if ruta_alpaca.exists():
+        estado = {**estado, "alpaca": json.loads(ruta_alpaca.read_text(encoding="utf-8"))}
+    a = auditor.auditar(estrategias, configs, precios, clases, estado, diario.cargar(),
+                        estado.get("capital_eur", 1000.0))
     carpeta = REPORTS_DIR / "auditor"
     carpeta.mkdir(parents=True, exist_ok=True)
     texto = auditor.informe_markdown(a)

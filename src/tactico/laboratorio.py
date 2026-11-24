@@ -22,21 +22,26 @@ INICIO_TEST_TACTICO = "2024-07-01"
 CALENTAMIENTO = 250
 
 
-@lru_cache(maxsize=4)
-def ohlc_mercado(mercado: str) -> dict:
+@lru_cache(maxsize=8)
+def ohlc_mercado(mercado: str, extra: bool = False) -> dict:
+    """Velas de 1 hora del universo táctico; con extra=True, también los
+    activos solo de investigación (config/investigacion.yaml)."""
     conf = horario.cargar_config()
     datos = {}
-    for s in conf["mercados"][mercado]["activos"]:
+    activos = list(conf["mercados"][mercado]["activos"])
+    if extra:
+        activos += [a for a in horario.activos_investigacion(mercado) if a not in activos]
+    for s in activos:
         df = horario.cargar(mercado, s)
         if len(df) > CALENTAMIENTO * 2:
             datos[s] = df
     return datos
 
 
-@lru_cache(maxsize=4)
-def ohlc_agregado(mercado: str) -> dict:
+@lru_cache(maxsize=8)
+def ohlc_agregado(mercado: str, extra: bool = False) -> dict:
     """Velas de 4 h (cripto) o de media sesión (acciones)."""
-    return agregar(ohlc_mercado(mercado), mercado)
+    return agregar(ohlc_mercado(mercado, extra), mercado)
 
 
 def velas_de(familia: dict, mercado: str) -> dict:

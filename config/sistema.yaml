@@ -6,37 +6,50 @@
 # ejecución del pipeline diario.
 # ==========================================================
 
-# Capital de referencia para calcular los importes en € de las alertas.
-# (Fase 0: es capital virtual. Ajústalo al capital real cuando pases a la fase 1.)
-capital_eur: 1000
+# CAPITAL (fase 0: virtual). Capital inicial + aportación mensual fija.
+# El reparto entre motores lo decide la fase (abajo); este archivo
+# configura el motor ESTRUCTURAL, que recibe su parte.
+capital:
+  inicial_eur: 1000
+  inicio: "2026-11-23"
+  aportacion_mensual_eur: 100       # compromiso de Alejandro (24 nov 2026)
+  primera_aportacion: "2026-12-01"
+  dia_aportacion: 1
 
-# Estrategias activas.
+# FASES (plan v2). Cambio de fase solo si el capital total pasa el umbral
+# durante `histeresis_dias` días seguidos.
+fases:
+  histeresis_dias: 20
+  tramos:
+    - {nombre: "agresiva",   hasta_eur: 5000,  tactico: 0.70, estructural: 0.30}
+    - {nombre: "intermedia", hasta_eur: 20000, tactico: 0.50, estructural: 0.50}
+    - {nombre: "largo plazo", hasta_eur: null, tactico: 0.20, estructural: 0.80}
+
+# Estrategias activas del motor estructural.
 #   estado: aprobada | observacion  (según el último informe de validación)
 #   peso_riesgo: cuánto riesgo recibe frente a las demás (1 = completo).
-#                Las de observación reciben la mitad.
+# Fase agresiva (< 5.000 €): solo tendencia en cripto con control de
+# volatilidad. Multi-horizonte y Faber (defensivas, ~6 % anual) quedan
+# apartadas hasta la fase de largo plazo (decisión de Alejandro, 24 nov 2026).
 estrategias:
   - id: crypto_trend_vol
     estado: aprobada
     peso_riesgo: 1.0
-  - id: multi_horizonte
-    estado: observacion
-    peso_riesgo: 0.5
-  - id: faber
-    estado: observacion
-    peso_riesgo: 0.5
 
 riesgo:
-  tope_cripto: 0.25            # máximo 25 % del capital en cripto
-  tope_por_activo: 0.20        # máximo 20 % del capital en un solo activo
+  tope_cripto: 1.0             # el motor es 100 % cripto en esta fase (≈30 % de la cartera total)
+  tope_por_activo: 0.50        # máximo 50 % del motor en un solo activo
   ventana_volatilidad: 252     # días para medir la volatilidad de cada estrategia
   kill_switch:
-    reducir_a_la_mitad: 0.15   # si la cartera cae un 15 % desde su máximo, exposición a la mitad
-    pausa: 0.25                # si cae un 25 %, todo a liquidez y revisión manual
+    # Se mide sobre la cartera TOTAL (táctico + estructural) y actúa sobre el estructural.
+    reducir_a_la_mitad: 0.15   # si la cartera total cae un 15 % desde su máximo, exposición a la mitad
+    pausa: 0.25                # si cae un 25 %, estructural a liquidez y revisión manual
 
 cartera_ejecutable:
-  # Con poco capital, muchas posiciones pequeñas solo generan comisiones.
-  max_posiciones: 5
-  minimo_posicion_eur: 50
+  # Alpaca permite fracciones desde 1 $: el límite antiguo (5 posiciones,
+  # mín. 50 €) dejaba fuera casi toda la cripto y costaba la mitad de la rentabilidad.
+  max_posiciones: 15
+  minimo_posicion_eur: 10
 
 alertas:
   # Un cambio de tamaño de una posición ya abierta solo se avisa si mueve
@@ -48,3 +61,4 @@ alpaca:
   # paper:      las envía a la cuenta de SIMULACIÓN de Alpaca (nunca dinero real).
   modo: paper
   orden_minima_usd: 10   # diferencias menores no se operan (evita órdenes diminutas)
+  banda_rebalanceo: 0.15 # una posición abierta solo se reajusta si se desvía > 15 % de su objetivo
