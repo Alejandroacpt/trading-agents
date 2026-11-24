@@ -14,8 +14,10 @@ Uso:
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -57,6 +59,8 @@ def main() -> int:
     cierres = cartera_virtual.ultimos_cierres(precios)
     eurusd = cierres.get("EURUSD=X", 1.08)
     objetivo, total_eur = ejecucion.objetivo_combinado(estado, tactico, incluir_tactico)
+    ahora = datetime.now(timezone.utc)
+    hoy_ny = pd.Timestamp(ahora).tz_convert("America/New_York").strftime("%Y-%m-%d")
 
     # 1) Ejecuciones pendientes de pasadas anteriores
     d = diario.actualizar_ejecuciones(diario.cargar(), cliente)
@@ -65,6 +69,17 @@ def main() -> int:
     cuenta = cliente.cuenta()
     actuales = ejecucion.posiciones_gestionadas(cliente.posiciones(), universo)
     capital_usd, fuente = ejecucion.capital_referencia(cuenta, total_eur, eurusd)
+
+    # Un stop real que ya ha saltado en Alpaca y que el simulador aún no ha registrado (su vela
+    # no ha cerrado): no se vuelve a comprar ese activo.
+    if incluir_tactico and modo == "paper":
+        desde = (ahora - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        saltados = ejecucion.stops_ejecutados_recientes(cliente, desde)
+        for p in (tactico or {}).get("posiciones", {}).values():
+            sim = p["activo"].replace("/", "").replace("-", "")
+            if sim in saltados and str(saltados[sim])[:19] >= str(p["entrada"]).replace(" ", "T")[:19]:
+                objetivo.pop(ejecucion.ticker_comun(p["activo"]), None)
+                print(f"  Stop de {p['activo']} ya ejecutado en Alpaca ({saltados[sim][:16]}): no se recompra")
 
     # 3) Órdenes
     # Tras cada aportación mensual se reajusta TODO a su objetivo (sin banda), para
@@ -87,6 +102,18 @@ def main() -> int:
     d = diario.anadir(d, diario.filas_ordenes(resultados, cierres, modo))
     diario.guardar(d)
 
+    # 4b) Órdenes stop reales de las posiciones tácticas (se renuevan cada sesión)
+    cambios_stops, stops = [], {}
+    if incluir_tactico and modo == "paper":
+        try:
+            deseados = ejecucion.stops_deseados(tactico or {}, cliente.posiciones(), eurusd, hoy_ny)
+            cambios_stops = ejecucion.sincronizar_stops(cliente, deseados, cliente.ordenes_abiertas())
+            stops = {d["activo"]: round(d["stop"], 4) for d in deseados.values()}
+        except Exception as e:  # noqa: BLE001 - los stops no deben parar la ejecución
+            cambios_stops = [f"ERROR al sincronizar stops: {str(e)[:150]}"]
+    for c in cambios_stops:
+        print("  " + c)
+
     # 5) Estado de la cuenta paper
     hoy = datetime.now(timezone.utc).date().isoformat()
     equity = float(cuenta.get("equity", 0))
@@ -104,6 +131,7 @@ def main() -> int:
         "actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "historial": historial[-800:],
         "incluye_tactico": incluir_tactico,
+        "stops": stops,
         # Si alguna orden falla, se vuelve a intentar el reajuste completo en la siguiente pasada
         "aportacion_invertida": (ultima_aportacion if invertir_aportacion and not any(
             r["estado"] == "error" for r in resultados) else previo.get("aportacion_invertida")),
@@ -122,6 +150,9 @@ def main() -> int:
         print("  Sin órdenes: la cuenta ya coincide con la cartera.")
 
     errores = [r for r in resultados if r["estado"] == "error"]
+    errores_stops = [c for c in cambios_stops if c.startswith("ERROR")]
+    if errores_stops and "--sin-telegram" not in sys.argv:
+        telegram.send_message("⚠️ Stops en Alpaca paper:\n" + "\n".join(errores_stops), silencioso=False)
     if modo == "paper" and resultados:
         lineas = [f"🤖 Paper Alpaca: {len(resultados)} orden(es)"]
         for r in resultados:

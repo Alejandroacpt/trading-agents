@@ -112,6 +112,13 @@ def calcular_ordenes(cartera: dict, capital_usd: float, actuales: dict, minimo_u
     return sorted(ordenes, key=lambda o: 0 if o["accion"] in ("cerrar", "vender") else 1)
 
 
+PREFIJO_STOP = "ta-stop-"
+
+
+def es_orden_stop(o: dict) -> bool:
+    return str(o.get("client_order_id", "")).startswith(PREFIJO_STOP)
+
+
 def ejecutar(ordenes: list[dict], cliente, modo: str, universo: list[str]) -> list[dict]:
     """Cancela pendientes y envía las órdenes. Devuelve el resultado de cada una."""
     gestionados = {normalizar(t.replace("-", "/")) for t in universo}
@@ -123,6 +130,11 @@ def ejecutar(ordenes: list[dict], cliente, modo: str, universo: list[str]) -> li
         for o in cliente.ordenes_abiertas():
             simbolo = normalizar(o["symbol"])
             if simbolo not in gestionados:
+                continue
+            if es_orden_stop(o):
+                # Los stops los gestiona sincronizar_stops; solo se quitan antes de vender ese activo
+                if lado.get(simbolo) == "sell":
+                    cliente.cancelar(o["id"])
                 continue
             if o.get("side") and lado.get(simbolo) == o["side"]:
                 ya_pendientes.add(simbolo)
@@ -151,3 +163,71 @@ def ejecutar(ordenes: list[dict], cliente, modo: str, universo: list[str]) -> li
                 r["error"] = str(e)[:200]
         resultados.append(r)
     return resultados
+
+
+def stops_ejecutados_recientes(cliente, desde_iso: str) -> dict[str, str]:
+    """{símbolo normalizado: hora} de los stops tácticos que se han ejecutado desde una fecha."""
+    salida = {}
+    for o in cliente.ordenes_cerradas(desde_iso):
+        if es_orden_stop(o) and o.get("status") == "filled":
+            salida[normalizar(o["symbol"])] = o.get("filled_at") or o.get("updated_at") or ""
+    return salida
+
+
+def stops_deseados(tactico: dict, posiciones: list[dict], eurusd: float, hoy_ny: str) -> dict[str, dict]:
+    """{símbolo: {"cantidad", "stop", "activo"}} de las posiciones tácticas de acciones/ETFs.
+
+    - Cantidad: la de la cuenta, sin pasar de la parte del motor táctico.
+    - No se pone stop el día de la compra (como el simulador: sin cierres el mismo día).
+    - Si hay una venta pendiente o el precio ya está por debajo del stop, no hace falta stop
+      (la ejecución vende a mercado).
+    """
+    cuenta = {normalizar(p["symbol"]): p for p in posiciones}
+    ventas = {normalizar(p["activo"]) for p in (tactico.get("pendientes") or {}).values() if p["accion"] == "vender"}
+    deseados = {}
+    for p in (tactico.get("posiciones") or {}).values():
+        activo = p["activo"]
+        if "/" in activo or activo.endswith("-USD"):
+            continue                       # cripto: sin stops nativos de este tipo
+        sim = normalizar(activo)
+        real = cuenta.get(sim)
+        if real is None or sim in ventas or str(p["entrada"])[:10] >= hoy_ny:
+            continue
+        precio = float(real["current_price"])
+        if precio <= p["stop"]:
+            continue
+        cantidad = min(float(real["qty"]), float(p["importe_eur"]) * eurusd / precio)
+        if cantidad > 0:
+            deseados[sim] = {"activo": activo, "cantidad": cantidad, "stop": float(p["stop"])}
+    return deseados
+
+
+def sincronizar_stops(cliente, deseados: dict[str, dict], abiertas: list[dict]) -> list[str]:
+    """Deja en la cuenta exactamente un stop por posición táctica, con su precio y cantidad.
+    Devuelve una línea por cambio (para el registro)."""
+    cambios = []
+    actuales = {}
+    for o in abiertas:
+        if es_orden_stop(o):
+            actuales.setdefault(normalizar(o["symbol"]), []).append(o)
+    vende_ya = {normalizar(o["symbol"]) for o in abiertas if not es_orden_stop(o) and o.get("side") == "sell"}
+    marca = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
+    for sim, ords in actuales.items():
+        d = deseados.get(sim)
+        buenos = [o for o in ords if d and abs(float(o.get("stop_price") or 0) / d["stop"] - 1) < 0.001
+                  and abs(float(o.get("qty") or 0) / d["cantidad"] - 1) < 0.02]
+        for o in ords:
+            if not buenos or o is not buenos[0]:
+                cliente.cancelar(o["id"])
+                cambios.append(f"stop cancelado {sim} ({o.get('stop_price')})")
+        if buenos:
+            deseados = {k: v for k, v in deseados.items() if k != sim}
+    for i, (sim, d) in enumerate(deseados.items()):
+        if sim in vende_ya:
+            continue
+        try:
+            cliente.stop_venta(d["activo"], d["cantidad"], d["stop"], f"{PREFIJO_STOP}{marca}-{i}")
+            cambios.append(f"stop puesto {sim} {d['cantidad']:.4f} a {d['stop']:.2f}")
+        except Exception as e:  # noqa: BLE001
+            cambios.append(f"ERROR stop {sim}: {str(e)[:120]}")
+    return cambios

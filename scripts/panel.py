@@ -145,6 +145,8 @@ def main() -> int:
         filas.append(f"| 🧱 {a} | {_eur(w * v_est)} | {ref:.2f} | - | - | - |" if ref else f"| 🧱 {a} | {_eur(w * v_est)} | - | - | - | - |")
     L += (["| Activo | Importe | Entrada | Stop | Resultado | Desde |", "|---|---|---|---|---|---|"] + filas
           if filas else ["Sin posiciones abiertas: todo en liquidez a la espera de señales."])
+    if alp.get("stops"):
+        L += ["", "**Stops reales en Alpaca:** " + ", ".join(f"{a} {v:.2f}" for a, v in alp["stops"].items())]
     pend = list((tac.get("pendientes") or {}).values())
     if pend:
         L += ["", "**Señales pendientes** (se ejecutan en la próxima apertura): "

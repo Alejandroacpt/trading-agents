@@ -77,6 +77,10 @@ class ClienteAlpaca:
     def ordenes_abiertas(self) -> list[dict]:
         return self._json("GET", "/v2/orders", params={"status": "open", "limit": 500})
 
+    def ordenes_cerradas(self, desde_iso: str) -> list[dict]:
+        """Órdenes cerradas (ejecutadas, canceladas, caducadas) desde una fecha ISO."""
+        return self._json("GET", "/v2/orders", params={"status": "closed", "after": desde_iso, "limit": 500})
+
     def orden(self, order_id: str) -> dict:
         return self._json("GET", f"/v2/orders/{order_id}")
 
@@ -110,6 +114,19 @@ class ClienteAlpaca:
         }
         if ref:
             datos["client_order_id"] = ref
+        return self._json("POST", "/v2/orders", json=datos)
+
+    def stop_venta(self, ticker: str, cantidad: float, stop: float, ref: str) -> dict:
+        """Orden stop de venta (acciones/ETFs, admite fracciones; 'day': se renueva cada sesión)."""
+        datos = {
+            "symbol": a_simbolo_alpaca(ticker),
+            "qty": f"{cantidad:.9f}".rstrip("0").rstrip("."),
+            "side": "sell",
+            "type": "stop",
+            "stop_price": f"{stop:.2f}" if stop >= 1 else f"{stop:.4f}",
+            "time_in_force": "day",
+            "client_order_id": ref,
+        }
         return self._json("POST", "/v2/orders", json=datos)
 
     def cerrar_posicion(self, ticker: str) -> dict:
