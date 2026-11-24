@@ -67,8 +67,17 @@ def main() -> int:
     capital_usd, fuente = ejecucion.capital_referencia(cuenta, total_eur, eurusd)
 
     # 3) Órdenes
-    ordenes = ejecucion.calcular_ordenes(objetivo, capital_usd, actuales, conf["orden_minima_usd"],
-                                         conf.get("banda_rebalanceo", 0.0))
+    # Tras cada aportación mensual se reajusta TODO a su objetivo (sin banda), para
+    # que el dinero nuevo se invierta también en las posiciones ya abiertas.
+    previo_alp = json.loads(ruta_alp.read_text(encoding="utf-8")) if ruta_alp.exists() else {}
+    ruta_cap = ROOT / "state" / "capital.json"
+    aportadas = json.loads(ruta_cap.read_text(encoding="utf-8")).get("aportaciones", []) if ruta_cap.exists() else []
+    ultima_aportacion = max(aportadas) if aportadas else None
+    invertir_aportacion = bool(ultima_aportacion and ultima_aportacion != previo_alp.get("aportacion_invertida"))
+    banda = 0.0 if invertir_aportacion else conf.get("banda_rebalanceo", 0.0)
+    if invertir_aportacion:
+        print(f"Aportación del {ultima_aportacion}: se reajustan todas las posiciones a su objetivo")
+    ordenes = ejecucion.calcular_ordenes(objetivo, capital_usd, actuales, conf["orden_minima_usd"], banda)
 
     # 4) Envío (o simulación)
     todas = ejecucion.ejecutar(ordenes, cliente, modo, universo)
@@ -94,6 +103,9 @@ def main() -> int:
         "actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "historial": historial[-800:],
         "incluye_tactico": incluir_tactico,
+        # Si alguna orden falla, se vuelve a intentar el reajuste completo en la siguiente pasada
+        "aportacion_invertida": (ultima_aportacion if invertir_aportacion and not any(
+            r["estado"] == "error" for r in resultados) else previo.get("aportacion_invertida")),
         "objetivo": {t: round(w, 4) for t, w in sorted(objetivo.items(), key=lambda x: -x[1])},
     }
     ruta_alp.write_text(json.dumps(alpaca, indent=2, ensure_ascii=False), encoding="utf-8")
