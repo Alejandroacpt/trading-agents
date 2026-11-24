@@ -71,7 +71,10 @@ def main() -> int:
                                          conf.get("banda_rebalanceo", 0.0))
 
     # 4) Envío (o simulación)
-    resultados = ejecucion.ejecutar(ordenes, cliente, modo, universo)
+    todas = ejecucion.ejecutar(ordenes, cliente, modo, universo)
+    resultados = [r for r in todas if r["estado"] != "ya_pendiente"]
+    if len(todas) > len(resultados):
+        print(f"  {len(todas) - len(resultados)} orden(es) ya pendientes de pasadas anteriores: se mantienen")
     d = diario.anadir(d, diario.filas_ordenes(resultados, cierres, modo))
     diario.guardar(d)
 

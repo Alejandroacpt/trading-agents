@@ -115,16 +115,27 @@ def calcular_ordenes(cartera: dict, capital_usd: float, actuales: dict, minimo_u
 def ejecutar(ordenes: list[dict], cliente, modo: str, universo: list[str]) -> list[dict]:
     """Cancela pendientes y envía las órdenes. Devuelve el resultado de cada una."""
     gestionados = {normalizar(t.replace("-", "/")) for t in universo}
+    lado = {normalizar(o["activo"]): ("sell" if o["accion"] in ("cerrar", "vender") else "buy") for o in ordenes}
+    ya_pendientes = set()
     if modo == "paper":
+        # Una orden que sigue pendiente (p. ej. con la bolsa cerrada) y va en el mismo sentido se
+        # mantiene: no se cancela y se reenvía en cada pasada. El resto de pendientes se cancela.
         for o in cliente.ordenes_abiertas():
-            if normalizar(o["symbol"]) in gestionados:
+            simbolo = normalizar(o["symbol"])
+            if simbolo not in gestionados:
+                continue
+            if o.get("side") and lado.get(simbolo) == o["side"]:
+                ya_pendientes.add(simbolo)
+            else:
                 cliente.cancelar(o["id"])
 
     marca = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
     resultados = []
     for i, o in enumerate(ordenes):
         r = {**o, "estado": "simulada", "order_id": ""}
-        if modo == "paper":
+        if modo == "paper" and normalizar(o["activo"]) in ya_pendientes:
+            r["estado"] = "ya_pendiente"
+        elif modo == "paper":
             ref = f"ta-{marca}-{i}"
             try:
                 if o["accion"] == "cerrar":

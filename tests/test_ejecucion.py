@@ -162,3 +162,29 @@ def test_semaforo():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_orden_pendiente_en_el_mismo_sentido_no_se_reenvia():
+    class ClienteFalso:
+        def __init__(self):
+            self.canceladas, self.cerradas = [], []
+
+        def ordenes_abiertas(self):
+            return [{"id": "o1", "symbol": "SPY", "side": "sell"}, {"id": "o2", "symbol": "GLD", "side": "sell"}]
+
+        def cancelar(self, oid):
+            self.canceladas.append(oid)
+
+        def cerrar_posicion(self, t):
+            self.cerradas.append(t)
+            return {"id": "n", "status": "accepted"}
+
+        def comprar_importe(self, t, imp, ref):
+            return {"id": "n2", "status": "accepted"}
+
+    c = ClienteFalso()
+    res = ejecucion.ejecutar([{"activo": "SPY", "accion": "cerrar", "importe": 100},
+                              {"activo": "GLD", "accion": "comprar", "importe": 50}], c, "paper", UNIVERSO)
+    assert res[0]["estado"] == "ya_pendiente" and c.cerradas == []
+    assert c.canceladas == ["o2"]                # sentido contrario: se cancela
+    assert res[1]["estado"] == "accepted"
