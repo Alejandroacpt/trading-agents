@@ -236,6 +236,9 @@ def main() -> int:
     ultimas = [df.index.max() for m in ("cripto", "acciones") for df in laboratorio.ohlc_mercado(m).values()]
     estado["ultima_vela"] = str(max(ultimas)) if ultimas else previo.get("ultima_vela", "")
     estado["valor_total_eur"] = round(sum(e["valor_eur"] for e in estado["estrategias"].values()), 2)
+    hoy = datetime.now(timezone.utc).date().isoformat()
+    estado["historial"] = ([h for h in previo.get("historial", []) if h[0] != hoy]
+                           + [[hoy, estado["valor_total_eur"]]])[-800:]
 
     if not previo.get("posiciones") and not previo.get("ultima_vela"):
         # Primera ejecución con estrategias activas: un solo resumen, no el historial entero

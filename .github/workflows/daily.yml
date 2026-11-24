@@ -65,6 +65,11 @@ jobs:
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: python scripts/run_execution.py
 
+      - name: 4) Panel del sistema
+        if: always()
+        continue-on-error: true
+        run: python scripts/panel.py > /dev/null
+
       - name: Guardar datos, estado e informes en el repositorio
         run: |
           git config user.name "github-actions[bot]"

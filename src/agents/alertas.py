@@ -131,6 +131,7 @@ def mensaje_resumen(estado: dict, modelo: dict, reparto: dict, capital: float, v
                 movs.append(f"{t} {filas[t]['var_dia']:+.1%}".replace(".", ","))
     if movs:
         lineas += ["", "Último día: " + " · ".join(movs)]
+    lineas += ["", "📊 Panel completo: https://github.com/Alejandroacpt/trading-agents/blob/main/reports/panel.md"]
     return "\n".join(lineas)
 
 
