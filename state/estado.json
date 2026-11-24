@@ -1,36 +1,10 @@
 {
-  "actualizado": "2026-11-24T10:38+00:00",
-  "fecha_datos": "2026-11-23",
+  "actualizado": "2026-11-24T23:00+00:00",
+  "fecha_datos": "2026-11-24",
   "capital_eur": 300.0,
   "cartera": {},
   "precios_ref": {},
-  "detalle": {
-    "EWJ": {
-      "cierre": 86.900002,
-      "estrategias": {},
-      "motivo_venta": "Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-    },
-    "DBC": {
-      "cierre": 29.110001,
-      "estrategias": {},
-      "motivo_venta": "Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-    },
-    "TLT": {
-      "cierre": 81.690002,
-      "estrategias": {},
-      "motivo_venta": "Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-    },
-    "SPY": {
-      "cierre": 722.289978,
-      "estrategias": {},
-      "motivo_venta": "Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-    },
-    "VGK": {
-      "cierre": 84.550003,
-      "estrategias": {},
-      "motivo_venta": "Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-    }
-  },
+  "detalle": {},
   "kill_switch": "NORMAL",
   "virtual": {
     "inicio": "2026-11-23",

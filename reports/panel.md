@@ -1,4 +1,4 @@
-# Panel del sistema · 24/11/2026 15:58 UTC
+# Panel del sistema · 24/11/2026 23:00 UTC
 
 ## Cartera
 
@@ -19,19 +19,23 @@ Próximas aportaciones: 100 € el día 1 de cada mes. Siguiente fase al superar
 
 ## Posiciones
 
-Sin posiciones abiertas: todo en liquidez a la espera de señales.
+| Activo | Importe | Entrada | Stop | Resultado | Desde |
+|---|---|---|---|---|---|
+| ⚡ XLY | 175 € | 117.90 | 111.96 | -0,1 % | 2026-11-24 |
+| ⚡ XLRE | 175 € | 43.32 | 41.94 | +0,3 % | 2026-11-24 |
+| ⚡ TSLA | 106 € | 384.48 | 346.49 | +0,1 % | 2026-11-24 |
+| ⚡ JNJ | 175 € | 276.35 | 263.84 | +0,1 % | 2026-11-24 |
 
 ## Cuenta paper (Alpaca)
 
-Capital gestionado 1,100 $ · posiciones 457 $ · actualizado 2026-11-24 14:22 UTC
+Capital gestionado 1,100 $ · posiciones 694 $ · actualizado 2026-11-24 23:00 UTC
 
 | Activo | Real | Objetivo | Diferencia |
 |---|---|---|---|
-| DBC | +9,5 % | +0,0 % | +9,5 % ⚠️ |
-| EWJ | +8,0 % | +0,0 % | +8,0 % ⚠️ |
-| SPY | +9,6 % | +0,0 % | +9,6 % ⚠️ |
-| TLT | +5,3 % | +0,0 % | +5,3 % ⚠️ |
-| VGK | +9,1 % | +0,0 % | +9,1 % ⚠️ |
+| JNJ | +17,5 % | +17,5 % | +0,1 % |
+| TSLA | +10,7 % | +10,6 % | +0,1 % |
+| XLRE | +17,6 % | +17,5 % | +0,1 % |
+| XLY | +17,4 % | +17,4 % | -0,0 % |
 
 ## Estrategias en vivo (último auditor)
 
@@ -44,14 +48,14 @@ Capital gestionado 1,100 $ · posiciones 457 $ · actualizado 2026-11-24 14:22 U
 
 | Fecha (UTC) | Activo | Acción | Importe | Estado |
 |---|---|---|---|---|
-| 2026-11-24 10:38 | SPY | cerrar | 106 $ | canceled |
-| 2026-11-24 10:38 | TLT | cerrar | 59 $ | canceled |
-| 2026-11-24 10:38 | VGK | cerrar | 100 $ | canceled |
-| 2026-11-24 10:41 | DBC | cerrar | 104 $ | new |
-| 2026-11-24 10:41 | EWJ | cerrar | 88 $ | new |
-| 2026-11-24 10:41 | SPY | cerrar | 106 $ | accepted |
-| 2026-11-24 10:41 | TLT | cerrar | 59 $ | accepted |
-| 2026-11-24 10:41 | VGK | cerrar | 100 $ | new |
+| 2026-11-24 10:41 | EWJ | cerrar | 88 $ | filled |
+| 2026-11-24 10:41 | SPY | cerrar | 106 $ | filled |
+| 2026-11-24 10:41 | TLT | cerrar | 59 $ | filled |
+| 2026-11-24 10:41 | VGK | cerrar | 100 $ | filled |
+| 2026-11-24 18:58 | JNJ | comprar | 192 $ | filled |
+| 2026-11-24 18:58 | TSLA | comprar | 117 $ | filled |
+| 2026-11-24 18:58 | XLRE | comprar | 192 $ | filled |
+| 2026-11-24 18:58 | XLY | comprar | 192 $ | filled |
 
 ## Investigación
 

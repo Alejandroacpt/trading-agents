@@ -2,26 +2,26 @@
 
 | Estado | Ticker | Activo | Clase | Desde | Hasta | Días | Último cierre | Var. día | Fuente |
 |---|---|---|---|---|---|---|---|---|---|
-| ✅ | SPY | S&P 500 | equity | 1993-01-29 | 2026-11-23 | 8513 | 722.2900 | +4.71% | yahoo |
-| ✅ | QQQ | Nasdaq 100 | equity | 1999-03-10 | 2026-11-23 | 6971 | 651.0300 | +7.00% | yahoo |
-| ✅ | VGK | Europa | equity | 2005-03-10 | 2026-11-23 | 5462 | 84.5500 | +2.35% | yahoo |
-| ✅ | EWJ | Japón | equity | 1996-03-18 | 2026-11-23 | 7722 | 86.9000 | +4.16% | yahoo |
-| ✅ | EEM | Emergentes | equity | 2003-04-14 | 2026-11-23 | 5942 | 57.8300 | +7.41% | yahoo |
-| ✅ | IEF | Tesoro EEUU 7-10 años | bonds | 2002-07-30 | 2026-11-23 | 6120 | 91.6400 | -0.01% | yahoo |
-| ✅ | TLT | Tesoro EEUU 20+ años | bonds | 2002-07-30 | 2026-11-23 | 6120 | 81.6900 | +0.29% | yahoo |
-| ✅ | GLD | Oro | commodities | 2004-11-18 | 2026-11-23 | 5538 | 333.0200 | +3.14% | yahoo |
-| ✅ | SLV | Plata | commodities | 2006-04-28 | 2026-11-23 | 5176 | 38.9100 | +5.25% | yahoo |
-| ✅ | USO | Petróleo (ETF) | commodities | 2006-04-10 | 2026-11-23 | 5189 | 133.3600 | -4.49% | yahoo |
-| ✅ | DBC | Cesta de materias primas | commodities | 2006-02-06 | 2026-11-23 | 5233 | 29.1100 | -0.72% | yahoo |
+| ✅ | SPY | S&P 500 | equity | 1993-01-29 | 2026-11-24 | 8514 | 718.7800 | -0.49% | yahoo |
+| ✅ | QQQ | Nasdaq 100 | equity | 1999-03-10 | 2026-11-24 | 6972 | 638.1000 | -1.99% | yahoo |
+| ✅ | VGK | Europa | equity | 2005-03-10 | 2026-11-24 | 5463 | 84.7800 | +0.27% | yahoo |
+| ✅ | EWJ | Japón | equity | 1996-03-18 | 2026-11-24 | 7723 | 86.6400 | -0.30% | yahoo |
+| ✅ | EEM | Emergentes | equity | 2003-04-14 | 2026-11-24 | 5943 | 56.6900 | -1.97% | yahoo |
+| ✅ | IEF | Tesoro EEUU 7-10 años | bonds | 2002-07-30 | 2026-11-24 | 6121 | 91.6400 | +0.00% | yahoo |
+| ✅ | TLT | Tesoro EEUU 20+ años | bonds | 2002-07-30 | 2026-11-24 | 6121 | 81.4900 | -0.24% | yahoo |
+| ✅ | GLD | Oro | commodities | 2004-11-18 | 2026-11-24 | 5539 | 325.4500 | -2.27% | yahoo |
+| ✅ | SLV | Plata | commodities | 2006-04-28 | 2026-11-24 | 5177 | 36.8400 | -5.32% | yahoo |
+| ✅ | USO | Petróleo (ETF) | commodities | 2006-04-10 | 2026-11-24 | 5190 | 135.4300 | +1.55% | yahoo |
+| ✅ | DBC | Cesta de materias primas | commodities | 2006-02-06 | 2026-11-24 | 5234 | 29.0300 | -0.27% | yahoo |
 | ✅ | BTC-USD | Bitcoin | crypto | 2014-09-17 | 2026-11-23 | 4451 | 61,210.9844 | +0.08% | yahoo |
 | ✅ | ETH-USD | Ethereum | crypto | 2017-11-09 | 2026-11-23 | 3302 | 1,708.8513 | -0.71% | yahoo |
 | ✅ | SOL-USD | Solana | crypto | 2020-04-10 | 2026-11-23 | 2419 | 71.9818 | +2.00% | yahoo |
-| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-23 | 5962 | 1.0972 | +0.02% | yahoo |
-| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-23 | 5974 | 1.3095 | +0.06% | yahoo |
-| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-23 | 7796 | 158.9310 | -0.49% | yahoo |
-| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-23 | 5338 | 0.6641 | -0.23% | yahoo |
-| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-23 | 6028 | 0.8409 | -0.38% | yahoo |
-| ✅ | BIL | Letras del Tesoro 1-3 meses (liquidez) | cash | 2007-05-30 | 2026-11-23 | 4904 | 91.6000 | +0.01% | yahoo |
+| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-24 | 5963 | 1.0969 | -0.03% | yahoo |
+| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-24 | 5975 | 1.3112 | +0.13% | yahoo |
+| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-24 | 7797 | 159.2520 | +0.20% | yahoo |
+| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-24 | 5339 | 0.6641 | +0.01% | yahoo |
+| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-24 | 6029 | 0.8354 | -0.66% | yahoo |
+| ✅ | BIL | Letras del Tesoro 1-3 meses (liquidez) | cash | 2007-05-30 | 2026-11-24 | 4905 | 91.6100 | +0.01% | yahoo |
 
 ## Avisos de los últimos 30 días
 
