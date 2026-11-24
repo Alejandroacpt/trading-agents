@@ -36,7 +36,14 @@ Prioridad actual:
    aprobada): variantes publicadas, más monedas, señales on-chain o de financiación si hay datos gratuitos.
 3. **Datos institucionales** ya descargados: COT (`data/institucional/cot.csv`), tipos de interés
    (`data/macro/tipos_3m.csv`) y, si existe, compras de directivos.
-4. Forex y bonos, solo si aparece algo con rentabilidad suficiente.
+4. **Forex intradía** (mercado táctico `forex`, datos horarios de Dukascopy desde 2016): hay muchísimas
+   estrategias públicas (sesiones de Londres/Nueva York, rupturas del rango asiático, cruces de medias,
+   reversión en niveles...). Solo investigación y simulación: Alpaca no opera divisas, así que una
+   estrategia de forex aprobada solo daría alertas. Ojo: sin apalancamiento el forex rinde poco (los pares
+   se mueven ~0,5 % al día); una buena estrategia de forex se reconoce por el **Sharpe**, no por la
+   rentabilidad sin apalancar. Para añadir pares: `config/investigacion.yaml` -> `forex`, y lanzar el
+   workflow `forex.yml`.
+5. Bonos, solo si aparece algo con rentabilidad suficiente.
 
 ## Fuentes
 
@@ -76,7 +83,8 @@ En la ficha apunta siempre la fuente y el enlace.
      así el test queda intacto para la validación final. Criterios: Sharpe ≥ 0,5, rentabilidad > 0, caída
      ≤ 35 % y, en táctico, ≥ 50 operaciones. Cada idea cribada cuenta como una prueba para el Sharpe
      deflactado (crece despacio; es lo honesto).
-   - Mercados tácticos: `cripto`, `acciones` y `apalancados` (ETFs x3 de `config/investigacion.yaml`).
+   - Mercados tácticos: `cripto`, `acciones`, `apalancados` (ETFs x3 de `config/investigacion.yaml`) y
+     `forex` (10 pares de Dukascopy, velas de 1 hora desde 2016, agregadas a 4 h en las familias de 4 h).
 4. **Validación completa (máximo 3 por semana)** solo de las que pasen el cribado:
    - Fija en la ficha la rejilla de parámetros ANTES de ejecutar (3 variantes como máximo, con el
      parámetro de la fuente en el centro).
