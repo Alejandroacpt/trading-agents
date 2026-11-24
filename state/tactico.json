@@ -1,15 +1,22 @@
 {
-  "actualizado": "2026-11-24T09:45+00:00",
-  "capital_eur": 700,
+  "actualizado": "2026-11-24T10:41+00:00",
+  "modo": "paper",
+  "reparto_fase": 0.7,
+  "unidades": {
+    "tac_momentum_tendencia__acciones": 700.0
+  },
+  "aportaciones": [],
+  "ajustes": [],
   "estrategias": {
     "tac_momentum_tendencia__acciones": {
       "valor_eur": 700.0,
+      "liquidativo": 1.0,
       "operaciones": 0
     }
   },
   "posiciones": {},
   "pendientes": {},
   "cerradas": [],
-  "ultima_vela": "2026-11-24 08:00:00",
+  "ultima_vela": "2026-11-24 09:00:00",
   "valor_total_eur": 700.0
 }

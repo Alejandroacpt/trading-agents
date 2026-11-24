@@ -14,8 +14,13 @@ fecha_utc,tipo,activo,accion,importe,moneda,peso_antes,peso_despues,precio_ref,e
 2026-11-24T10:38+00:00,alerta,SPY,venta,29.62,EUR,0.0978,0.0,722.289978,,,,,,,"Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
 2026-11-24T10:38+00:00,alerta,TLT,venta,16.13,EUR,0.0533,0.0,81.690002,,,,,,,Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto.
 2026-11-24T10:38+00:00,alerta,VGK,venta,27.66,EUR,0.0914,0.0,84.550003,,,,,,,"Las estrategias que lo tenían (Tendencia multi-horizonte (1-3-12 meses), Filtro de tendencia de 10 meses (Faber)) ya no operan: en la fase agresiva el motor estructural solo usa tendencia en cripto."
-2026-11-24T10:38+00:00,orden,DBC,cerrar,104.47,USD,,,29.110001,pending_new,2d013acd-f74e-42ce-8066-ccc62a1cd3a1,,,,,modo paper
-2026-11-24T10:38+00:00,orden,EWJ,cerrar,88.49,USD,,,86.900002,pending_new,e36d2717-8f5d-4db0-9e10-e137f0c5c1fd,,,,,modo paper
+2026-11-24T10:38+00:00,orden,DBC,cerrar,104.47,USD,,,29.110001,new,2d013acd-f74e-42ce-8066-ccc62a1cd3a1,,,,,modo paper
+2026-11-24T10:38+00:00,orden,EWJ,cerrar,88.49,USD,,,86.900002,new,e36d2717-8f5d-4db0-9e10-e137f0c5c1fd,,,,,modo paper
 2026-11-24T10:38+00:00,orden,SPY,cerrar,106.49,USD,,,722.289978,accepted,89401c38-a7a5-4498-a2b0-9145e23e3940,,,,,modo paper
 2026-11-24T10:38+00:00,orden,TLT,cerrar,58.78,USD,,,81.690002,accepted,93873a1a-1ada-489c-8432-30f3c2953def,,,,,modo paper
-2026-11-24T10:38+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,pending_new,e1d50d87-5224-4555-b417-434da702d209,,,,,modo paper
+2026-11-24T10:38+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,new,e1d50d87-5224-4555-b417-434da702d209,,,,,modo paper
+2026-11-24T10:41+00:00,orden,DBC,cerrar,104.47,USD,,,29.110001,pending_new,daba2094-c837-4303-b89e-c975fc126256,,,,,modo paper
+2026-11-24T10:41+00:00,orden,EWJ,cerrar,88.06,USD,,,86.900002,pending_new,a457537b-a5cf-4216-b1a6-07b3168b8b94,,,,,modo paper
+2026-11-24T10:41+00:00,orden,SPY,cerrar,106.37,USD,,,722.289978,accepted,4b871950-433b-4081-a467-5a2b40cc5a77,,,,,modo paper
+2026-11-24T10:41+00:00,orden,TLT,cerrar,58.8,USD,,,81.690002,accepted,dd7db18a-dacc-4b29-abc5-36d08abda8ff,,,,,modo paper
+2026-11-24T10:41+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,pending_new,fcfbffad-f36d-4b79-9800-a008dd3ec527,,,,,modo paper
