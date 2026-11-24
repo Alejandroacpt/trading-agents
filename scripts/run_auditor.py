@@ -37,8 +37,33 @@ def main() -> int:
     ruta_alpaca = cartera_virtual.RUTA_ESTADO.parent / "alpaca.json"
     if ruta_alpaca.exists():
         estado = {**estado, "alpaca": json.loads(ruta_alpaca.read_text(encoding="utf-8"))}
+    # Motor táctico: valor liquidativo en vivo frente a su backtest
+    from src.agents import capital as gestor_capital
+    from src.backtest.validator import validar
+    from src.data import horario
+    from src.tactico import laboratorio
+    conf_tac = horario.cargar_config()
+    filas_tac = []
+    for item in conf_tac.get("estrategias") or []:
+        eid = item["id"] if isinstance(item, dict) else item
+        familia, mercado = eid.removeprefix("tac_").split("__")
+        res, fam, _ = laboratorio.simular_en_vivo(eid, conf_tac["inicio_vivo"])
+        ref = validar(laboratorio.experimento(familia, mercado), None, {})["periodos"]["completo"]
+        nombre = fam["nombre"].replace("(4 h)", "(media sesión)") if mercado == "acciones" else fam["nombre"]
+        filas_tac.append(auditor.fila(eid, nombre, item.get("estado", "aprobada") if isinstance(item, dict) else "aprobada",
+                                      auditor.vivo_tactico(res.equity, conf_tac["inicio_vivo"]), ref, "táctico"))
+    estado_cap = gestor_capital.cargar()
+    ruta_tac = cartera_virtual.RUTA_ESTADO.parent / "tactico.json"
+    tac = json.loads(ruta_tac.read_text(encoding="utf-8")) if ruta_tac.exists() else {}
+    total = None
+    if estado_cap.get("total"):
+        f = estado_cap.get("fase", 0)
+        total = {**estado_cap["total"], "aportado": gestor_capital.capital_aportado(sistema["capital"]),
+                 "reparto": estado_cap.get("reparto", {}), "fase_nombre": sistema["fases"]["tramos"][f].get("nombre", f),
+                 "valor_tactico": tac.get("valor_total_eur", 0.0),
+                 "kill_tactico": ", ".join(sorted({e.get("kill_switch", "NORMAL") for e in tac.get("estrategias", {}).values()})) or "-"}
     a = auditor.auditar(estrategias, configs, precios, clases, estado, diario.cargar(),
-                        estado.get("capital_eur", 1000.0))
+                        estado.get("capital_eur", 1000.0), filas_tac, total)
     carpeta = REPORTS_DIR / "auditor"
     carpeta.mkdir(parents=True, exist_ok=True)
     texto = auditor.informe_markdown(a)

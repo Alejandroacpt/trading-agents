@@ -99,6 +99,7 @@ def main() -> int:
         "capital_gestionado_usd": round(capital_usd, 2),
         "equity_cuenta_usd": round(equity, 2),
         "valor_posiciones_usd": round(sum(p["valor"] for p in actuales.values()), 2),
+        "posiciones": {t: round(p["valor"], 2) for t, p in actuales.items()},
         "eurusd": eurusd,
         "actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "historial": historial[-800:],

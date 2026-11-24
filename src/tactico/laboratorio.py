@@ -19,6 +19,15 @@ from src.tactico.simulador import Parametros, simular
 from src.tactico.velas import agregar
 
 INICIO_TEST_TACTICO = "2024-07-01"
+
+# Mercados solo de investigación: activos de config/investigacion.yaml que no
+# opera el sistema, tratados como su mercado base (mismas velas, costes y PDT).
+# Uso: experimento("momentum_tendencia", "apalancados")
+MERCADOS_INVESTIGACION = {"apalancados": "acciones"}
+
+
+def mercado_base(mercado: str) -> str:
+    return MERCADOS_INVESTIGACION.get(mercado, mercado)
 CALENTAMIENTO = 250
 
 
@@ -28,11 +37,15 @@ def ohlc_mercado(mercado: str, extra: bool = False) -> dict:
     activos solo de investigación (config/investigacion.yaml)."""
     conf = horario.cargar_config()
     datos = {}
-    activos = list(conf["mercados"][mercado]["activos"])
-    if extra:
-        activos += [a for a in horario.activos_investigacion(mercado) if a not in activos]
+    base = mercado_base(mercado)
+    if mercado in MERCADOS_INVESTIGACION:
+        activos = horario.activos_investigacion(base)
+    else:
+        activos = list(conf["mercados"][mercado]["activos"])
+        if extra:
+            activos += [a for a in horario.activos_investigacion(mercado) if a not in activos]
     for s in activos:
-        df = horario.cargar(mercado, s)
+        df = horario.cargar(base, s)
         if len(df) > CALENTAMIENTO * 2:
             datos[s] = df
     return datos
@@ -41,7 +54,7 @@ def ohlc_mercado(mercado: str, extra: bool = False) -> dict:
 @lru_cache(maxsize=8)
 def ohlc_agregado(mercado: str, extra: bool = False) -> dict:
     """Velas de 4 h (cripto) o de media sesión (acciones)."""
-    return agregar(ohlc_mercado(mercado, extra), mercado)
+    return agregar(ohlc_mercado(mercado, extra), mercado_base(mercado))
 
 
 def velas_de(familia: dict, mercado: str) -> dict:
@@ -51,13 +64,17 @@ def velas_de(familia: dict, mercado: str) -> dict:
 def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
     conf = horario.cargar_config()
     r = conf["riesgo"]
-    clave = "cripto" if mercado == "cripto" else "acciones"
+    base = mercado_base(mercado)
+    clave = "cripto" if base == "cripto" else "acciones"
     return Parametros(
         riesgo=r["riesgo_por_operacion"], max_posiciones=r["max_posiciones"], max_peso=r["max_peso_posicion"],
         coste=conf["costes"][clave] * mult_costes,
         coste_limitada=conf["costes"].get(f"{clave}_limitada", conf["costes"][clave]) * mult_costes,
-        sin_intradia=bool(conf["mercados"][mercado].get("sin_operaciones_intradia", False)),
+        sin_intradia=bool(conf["mercados"][base].get("sin_operaciones_intradia", False)),
     )
+
+
+ETIQUETA = {"cripto": "Cripto", "acciones": "Acciones y ETFs", "apalancados": "ETFs apalancados x3"}
 
 
 def experimento(familia_id: str, mercado: str) -> dict:
@@ -72,8 +89,9 @@ def experimento(familia_id: str, mercado: str) -> dict:
 
     return {
         "id": f"tac_{familia_id}__{mercado}",
-        "nombre": (f"{fam['nombre']} · {'Cripto' if mercado == 'cripto' else 'Acciones y ETFs'}"
-                   .replace("(4 h) · Acciones y ETFs", "(media sesión) · Acciones y ETFs")),
+        "nombre": (f"{fam['nombre']} · {ETIQUETA.get(mercado, mercado)}"
+                   .replace("(4 h) · Acciones y ETFs", "(media sesión) · Acciones y ETFs")
+                   .replace("(4 h) · ETFs apalancados x3", "(media sesión) · ETFs apalancados x3")),
         "familia": familia_id,
         "mercado": f"tactico_{mercado}",
         "papel": "táctico",
@@ -92,3 +110,18 @@ def experimento(familia_id: str, mercado: str) -> dict:
 
 def todos_los_experimentos() -> list[dict]:
     return [experimento(f, m) for m in ("cripto", "acciones") for f in FAMILIAS_TACTICAS if ohlc_mercado(m)]
+
+
+def simular_en_vivo(estrategia_id: str, inicio_vivo: str):
+    """Repite una estrategia táctica activa con los datos reales desde su puesta en
+    marcha. Los indicadores se calculan con TODO el histórico (igual que en el
+    backtest); solo cuentan las entradas desde inicio_vivo.
+    Devuelve (resultado, familia, mercado)."""
+    familia, mercado = estrategia_id.removeprefix("tac_").split("__")
+    fam = FAMILIAS_TACTICAS[familia]
+    ohlc = velas_de(fam, mercado)
+    desde = pd.Timestamp(inicio_vivo)
+    senales = fam["funcion"](ohlc, **fam["parametros"])
+    for s in senales.values():
+        s.loc[s.index < desde, "entrada"] = False
+    return simular(ohlc, senales, parametros_simulacion(mercado)), fam, mercado

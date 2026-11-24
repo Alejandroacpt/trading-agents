@@ -8,11 +8,12 @@ Pasos:
 1. Paridad de riesgo entre estrategias: cada una recibe capital en
    proporción inversa a su volatilidad del último año, multiplicada por
    su peso de riesgo (las de observación, la mitad).
-2. Topes: cripto como máximo el 25 % del capital; ningún activo más del 20 %.
-3. Kill-switch: si la cartera virtual cae un 15 % desde su máximo, la
-   exposición se reduce a la mitad; si cae un 25 %, todo a liquidez.
-4. Cartera ejecutable: con poco capital, solo las posiciones más grandes
-   (máximo 5) y de al menos 50 €; el resto queda en liquidez.
+2. Topes de cripto y por activo (config/sistema.yaml -> riesgo).
+3. Kill-switch: se mide sobre la cartera TOTAL (los dos motores); si cae
+   un 15 % desde su máximo, la exposición se reduce a la mitad; si cae un
+   25 %, el motor estructural pasa a liquidez.
+4. Cartera ejecutable: solo las N posiciones mayores y de un importe
+   mínimo (config/sistema.yaml -> cartera_ejecutable); el resto, liquidez.
 """
 
 import numpy as np

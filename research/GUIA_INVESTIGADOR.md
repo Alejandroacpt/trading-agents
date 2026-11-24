@@ -24,6 +24,11 @@ Prioridad actual:
    Los activos que no opera el sistema pero quieras investigar van en `config/investigacion.yaml` (SÍ puedes
    editarlo): el escáner horario descarga sus velas y en el laboratorio se cargan con
    `laboratorio.ohlc_mercado("acciones", extra=True)`. Ya incluye ETFs x3 (TQQQ, UPRO, SOXL, TECL, TNA).
+   Para probar una familia táctica SOLO en esos activos hay un mercado de investigación:
+   `laboratorio.experimento("<familia>", "apalancados")` (velas, costes y norma PDT de acciones). Valídalo con
+   `validator.validar(exp, None, {})`, regístralo con `registro.registrar([v], origen="investigador")` y
+   anota el resultado en la ficha. El laboratorio semanal no lo prueba solo: cada prueba sube el listón
+   del Sharpe deflactado, así que pruébalo cuando tenga una justificación.
    Ojo: un símbolo recién añadido tarda una ejecución del escáner en tener datos; si aún no los tiene,
    lanza el workflow `tactico.yml` y prueba la idea la semana siguiente.
 2. **Mejorar la parte cripto del estructural** (tendencia con control de volatilidad, la única estrategia

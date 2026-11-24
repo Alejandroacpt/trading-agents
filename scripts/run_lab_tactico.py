@@ -32,6 +32,11 @@ def _p(x, dec=0):
     return "-" if x is None or x != x else f"{x * 100:.{dec}f} %".replace(".", ",")
 
 
+def _spy(v):
+    s = v.get("spy") or {}
+    return f"{_p(s['cagr'])} / {_p(s['cagr_spy'])}" if s else "—"
+
+
 def main() -> int:
     experimentos = laboratorio.todos_los_experimentos()
     if not experimentos:
@@ -57,8 +62,8 @@ def main() -> int:
          "Simulación con stop en cada operación, tamaño por riesgo (1,5 % del capital del motor), "
          "entrada en la vela siguiente a la señal, costes por operación (cripto 0,25 %, acciones 0,05 %) "
          "y, en acciones, sin cierres el mismo día (norma PDT). Test desde julio de 2024; mínimo 100 operaciones.", "",
-         "| Experimento | Veredicto | Sharpe completo | Sharpe test | CAGR | Peor caída | Operaciones | % aciertos | Qué falla |",
-         "|---|---|---|---|---|---|---|---|---|"]
+         "| Experimento | Veredicto | Sharpe completo | Sharpe test | CAGR | Peor caída | Operaciones | % aciertos | Test: rent. / SPY | Qué falla |",
+         "|---|---|---|---|---|---|---|---|---|---|"]
     orden = sorted(validaciones, key=lambda v: (["APROBADA", "OBSERVACIÓN", "RECHAZADA"].index(v["veredicto"]["decision"]),
                                                 -v["periodos"]["test"].get("sharpe", -9)))
     for v in orden:
@@ -66,7 +71,7 @@ def main() -> int:
         c = p["completo"]
         L.append(f"| {v['estrategia']['nombre']} | {ICONO[vd['decision']]} {vd['decision']} | {_n(c.get('sharpe'))} | "
                  f"{_n(p['test'].get('sharpe'))} | {_p(c.get('cagr'), 1)} | {_p(c.get('max_drawdown'))} | "
-                 f"{c.get('operaciones', 0)} | {_p(c.get('aciertos'))} | {', '.join(vd['fallos']) or '—'} |")
+                 f"{c.get('operaciones', 0)} | {_p(c.get('aciertos'))} | {_spy(v)} | {', '.join(vd['fallos']) or '—'} |")
     # Diagnóstico de costes: ¿hay ventaja antes de costes? (pista para el investigador)
     L += ["", "## Diagnóstico: ¿hay ventaja antes de costes?", "",
           "Mismos experimentos (parámetros por defecto) sin costes. Si el Sharpe bruto es bueno y el neto malo, "

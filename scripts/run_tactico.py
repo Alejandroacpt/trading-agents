@@ -32,7 +32,6 @@ from src.config import ROOT  # noqa: E402
 from src.data import horario  # noqa: E402
 from src.tactico import laboratorio  # noqa: E402
 from src.tactico.familias import FAMILIAS_TACTICAS  # noqa: E402
-from src.tactico.simulador import simular  # noqa: E402
 
 RUTA_ESTADO = ROOT / "state" / "tactico.json"
 
@@ -49,18 +48,53 @@ def _pct(x):
     return f"{x * 100:+.1f} %".replace(".", ",")
 
 
+def _tramo(ts: pd.Timestamp, mercado: str) -> str:
+    """Vela agregada a la que pertenece una vela de 1 hora."""
+    if mercado == "cripto":
+        return str(ts.floor("4h"))
+    ny = ts.tz_localize("UTC").tz_convert("America/New_York")
+    return f"{ny.date()}-{int(ny.hour >= 13)}"
+
+
+def stop_tocado(pos: dict, mercado: str, ultima_agregada: pd.Timestamp) -> bool:
+    """¿El precio ha tocado el stop en la vela agregada que aún está en curso?
+
+    El simulador solo ve velas completas; en la cuenta real no se espera a que
+    termine la vela (hasta 4 horas): en cuanto una vela de 1 hora toca el stop
+    se vende. En acciones no se vende el mismo día de la compra (norma PDT,
+    igual que en el simulador)."""
+    horas = laboratorio.ohlc_mercado(mercado).get(pos["activo"])
+    if horas is None or horas.empty:
+        return False
+    tramo_cerrado = _tramo(ultima_agregada, mercado)
+    en_curso = horas[(horas.index > ultima_agregada)]
+    en_curso = en_curso[[_tramo(t, mercado) != tramo_cerrado for t in en_curso.index]]
+    if en_curso.empty:
+        return False
+    if mercado == "acciones":
+        hoy_ny = en_curso.index[-1].tz_localize("UTC").tz_convert("America/New_York").date()
+        entrada_ny = pd.Timestamp(pos["entrada"]).tz_localize("UTC").tz_convert("America/New_York").date()
+        if entrada_ny == hoy_ny:
+            return False
+    return bool(en_curso["low"].min() <= pos["stop"])
+
+
+def factor_riesgo_tactico(equity: pd.Series, inicio_vivo: str, conf_ks: dict, dd_total: float) -> tuple[float, str, float]:
+    """Kill-switch del motor táctico: el peor de (caída del propio motor desde su
+    máximo en vivo, caída de la cartera total). Solo afecta a las entradas nuevas."""
+    vivo = equity[equity.index >= pd.Timestamp(inicio_vivo)]
+    dd_motor = float(vivo.iloc[-1] / vivo.cummax().iloc[-1] - 1) if len(vivo) else 0.0
+    dd = min(dd_motor, dd_total)
+    if dd <= -conf_ks["pausa"]:
+        return 0.0, "PAUSA", dd_motor
+    if dd <= -conf_ks["reducir_a_la_mitad"]:
+        return 0.5, "MITAD", dd_motor
+    return 1.0, "NORMAL", dd_motor
+
+
 def cartera_estrategia(estrategia_id: str, inicio_vivo: str):
     """Simula una estrategia táctica activa desde la puesta en marcha."""
-    familia, mercado = estrategia_id.removeprefix("tac_").split("__")
-    fam = FAMILIAS_TACTICAS[familia]
-    ohlc = laboratorio.velas_de(fam, mercado)
-    desde = pd.Timestamp(inicio_vivo)
-    # Indicadores calculados con TODO el histórico (igual que en el backtest:
-    # la media de 50 días y el momentum de 90 velas necesitan meses de datos).
-    senales = fam["funcion"](ohlc, **fam["parametros"])
-    for s in senales.values():
-        s.loc[s.index < desde, "entrada"] = False   # solo cuentan entradas desde la puesta en marcha
-    return simular(ohlc, senales, laboratorio.parametros_simulacion(mercado)), fam, mercado
+    return laboratorio.simular_en_vivo(estrategia_id, inicio_vivo)
 
 
 def main() -> int:
@@ -128,6 +162,17 @@ def main() -> int:
         estado["estrategias"][eid] = {"valor_eur": round(valor, 2), "liquidativo": round(liquidativo[eid], 6),
                                       "operaciones": int(len(res.operaciones))}
         invertido = sum(p["peso"] for p in res.abiertas) * valor
+        dd_total = (estado_capital.get("total") or {}).get("drawdown", 0.0)
+        factor, kill, dd_motor = factor_riesgo_tactico(res.equity, conf["inicio_vivo"], riesgo_conf["kill_switch"], dd_total)
+        estado["estrategias"][eid].update(kill_switch=kill, caida_motor=round(dd_motor, 4))
+        kill_previo = (previo.get("estrategias", {}).get(eid) or {}).get("kill_switch", "NORMAL")
+        if kill != kill_previo:
+            mensajes.append(f"⚡🛡️ Kill-switch del motor táctico: {kill_previo} → {kill} "
+                            f"(caída del motor {_pct(dd_motor)}, cartera total {_pct(dd_total)}). "
+                            + ("Entradas nuevas a la mitad de tamaño." if kill == "MITAD" else
+                               "Sin entradas nuevas; las posiciones abiertas siguen con su stop." if kill == "PAUSA" else
+                               "Vuelve el tamaño normal."))
+        velas_mercado = laboratorio.velas_de(fam, mercado)
         for pos in res.abiertas:
             clave = f"{eid}|{pos['activo']}|{pos['entrada']}"
             estado["posiciones"][clave] = {**pos, "entrada": str(pos["entrada"]), "estrategia": eid,
@@ -148,6 +193,15 @@ def main() -> int:
                 motivo = "saltó el stop" if op["motivo"] == "stop" else "señal de salida"
                 mensajes.append(f"⚡🔴 VENTA {op['activo']} (motor táctico) · {motivo} · resultado {_pct(op['resultado'])}\n"
                                 f"Estrategia: {etiqueta}")
+        # Stop tocado en la vela en curso: se vende ya en la cuenta real
+        for pos in res.abiertas:
+            if stop_tocado(pos, mercado, velas_mercado[pos["activo"]].index[-1]):
+                clave = f"{eid}|{pos['activo']}|vender"
+                estado["pendientes"][clave] = {"activo": pos["activo"], "accion": "vender", "estrategia": eid,
+                                               "motivo": "stop"}
+                if clave not in pendientes_previas:
+                    mensajes.append(f"⚡🛑 STOP TOCADO {pos['activo']} (motor táctico): se vende ya\n"
+                                    f"Estrategia: {etiqueta}\nStop: {_precio(pos['stop'])}")
         # Señales nuevas: se avisan en cuanto aparecen (se ejecutan en la próxima apertura)
         n_abiertas = len(res.abiertas)
         for pend in res.pendientes:
@@ -156,20 +210,22 @@ def main() -> int:
             if pend["accion"] == "comprar":
                 # Importe estimado con la misma regla que el simulador (riesgo por operación,
                 # tope por posición y liquidez disponible), al último cierre.
-                ref_p = float(laboratorio.velas_de(fam, mercado)[pend["activo"]]["close"].iloc[-1])
-                importe = min(riesgo_conf["riesgo_por_operacion"] * valor / pend["distancia_stop"] * ref_p,
-                              riesgo_conf["max_peso_posicion"] * valor, max(valor - invertido, 0.0))
+                ref_p = float(velas_mercado[pend["activo"]]["close"].iloc[-1])
+                importe = factor * min(riesgo_conf["riesgo_por_operacion"] * valor / pend["distancia_stop"] * ref_p,
+                                       riesgo_conf["max_peso_posicion"] * valor, max(valor - invertido, 0.0))
                 if n_abiertas >= riesgo_conf["max_posiciones"] or importe <= 0:
                     continue
                 n_abiertas += 1
                 invertido += importe
                 pend["importe_eur"] = round(importe, 2)
             pend["estrategia"] = eid
+            if clave in estado["pendientes"]:      # ya marcada (stop tocado)
+                continue
             estado["pendientes"][clave] = pend
             if clave in pendientes_previas:
                 continue
             if pend["accion"] == "comprar":
-                ref = float(laboratorio.velas_de(fam, mercado)[pend["activo"]]["close"].iloc[-1])
+                ref = float(velas_mercado[pend["activo"]]["close"].iloc[-1])
                 mensajes.append(f"⚡📣 SEÑAL DE COMPRA {pend['activo']} (motor táctico) · ~{_eur(pend['importe_eur'])}\n"
                                 f"Estrategia: {etiqueta}\n"
                                 f"Se compra en {cuando}. Último precio: {_precio(ref)} · "

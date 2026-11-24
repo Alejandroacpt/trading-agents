@@ -37,6 +37,11 @@ def _p(x, dec=0):
     return "-" if x is None or x != x else f"{x * 100:.{dec}f} %".replace(".", ",")
 
 
+def _spy(v):
+    s = v.get("spy") or {}
+    return f"{_p(s['cagr'])} / {_p(s['cagr_spy'])}" if s else "—"
+
+
 def main() -> int:
     universo = load_universe()
     clases = {a["ticker"]: a["clase"] for a in universo}
@@ -106,13 +111,13 @@ def main() -> int:
         mejores[m_id] = vs[0]
         L += [f"## {mer['nombre']}", "",
               f"En vivo hoy: {describe_vivo(m_id)}.", "",
-              "| Familia | Veredicto | Sharpe completo | Sharpe test 2018+ | Peor caída | DSR | Qué falla |",
-              "|---|---|---|---|---|---|---|"]
+              "| Familia | Veredicto | Sharpe completo | Sharpe test 2018+ | Peor caída | DSR | Test: rent. / SPY | Qué falla |",
+              "|---|---|---|---|---|---|---|---|"]
         for v in vs:
             p, vd = v["periodos"], v["veredicto"]
             L.append(f"| {v['estrategia']['nombre'].split(' · ')[0]} | {ICONO[vd['decision']]} {vd['decision']} | "
                      f"{_n(p['completo']['sharpe'])} | {_n(p['test'].get('sharpe'))} | "
-                     f"{_p(p['completo']['max_drawdown'])} | {_p(v.get('dsr'))} | {', '.join(vd['fallos']) or '—'} |")
+                     f"{_p(p['completo']['max_drawdown'])} | {_p(v.get('dsr'))} | {_spy(v)} | {', '.join(vd['fallos']) or '—'} |")
             if vd["decision"] == "APROBADA":
                 (propuestas if mejora_lo_actual(v) else aprobadas_peores).append(v)
         L.append("")
