@@ -10,7 +10,7 @@
 # sin órdenes en Alpaca.
 modo: simulacion
 capital_virtual_eur: 700      # 70 % de 1.000 € (fase < 5.000 €)
-inicio_vivo: "2026-11-23"     # desde cuándo cuenta la cartera táctica virtual
+inicio_vivo: "2026-11-24"     # desde cuándo cuenta la cartera táctica virtual (activación)
 
 riesgo:
   riesgo_por_operacion: 0.015   # 1,5 % del capital del motor si salta el stop
@@ -41,6 +41,10 @@ mercados:
     # mismo día en que se abre.
     sin_operaciones_intradia: true
 
-# Estrategias tácticas activas: solo las que pase el validador.
-# (Las rellena Alejandro tras ver el laboratorio táctico.)
-estrategias: []
+# Estrategias tácticas activas (las decide Alejandro tras ver el laboratorio).
+# estado: aprobada | observacion. En observación solo se simula y se avisa.
+estrategias:
+  # Activada el 24 nov 2026 por decisión de Alejandro. Lab: Sharpe 0,95,
+  # test 0,96, caída −20 %, 520 operaciones; solo falla el Sharpe deflactado.
+  - id: tac_momentum_tendencia__acciones
+    estado: observacion

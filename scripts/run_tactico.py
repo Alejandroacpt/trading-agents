@@ -53,12 +53,12 @@ def cartera_estrategia(estrategia_id: str, inicio_vivo: str):
     fam = FAMILIAS_TACTICAS[familia]
     ohlc = laboratorio.velas_de(fam, mercado)
     desde = pd.Timestamp(inicio_vivo)
-    # Datos desde un poco antes para que los indicadores estén calculados
-    recorte = {a: df[df.index >= desde - pd.Timedelta(days=60)] for a, df in ohlc.items()}
-    senales = fam["funcion"](recorte, **fam["parametros"])
+    # Indicadores calculados con TODO el histórico (igual que en el backtest:
+    # la media de 50 días y el momentum de 90 velas necesitan meses de datos).
+    senales = fam["funcion"](ohlc, **fam["parametros"])
     for s in senales.values():
         s.loc[s.index < desde, "entrada"] = False   # solo cuentan entradas desde la puesta en marcha
-    return simular(recorte, senales, laboratorio.parametros_simulacion(mercado)), fam, mercado
+    return simular(ohlc, senales, laboratorio.parametros_simulacion(mercado)), fam, mercado
 
 
 def main() -> int:
@@ -77,30 +77,55 @@ def main() -> int:
     capital = conf["capital_virtual_eur"]
     reparto = capital / len(activas)       # v1: mismo capital para cada estrategia activa
     estado = {"actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
-              "capital_eur": capital, "estrategias": {}, "posiciones": {}}
+              "capital_eur": capital, "estrategias": {}, "posiciones": {}, "pendientes": {},
+              "cerradas": list(previo.get("cerradas", []))}
     mensajes = []
     claves_previas = set(previo.get("posiciones", {}))
+    pendientes_previas = set(previo.get("pendientes", {}))
+    cerradas_previas = set(previo.get("cerradas", []))
     for item in activas:
         eid = item["id"] if isinstance(item, dict) else item
         res, fam, mercado = cartera_estrategia(eid, conf["inicio_vivo"])
+        nombre = fam["nombre"].replace("(4 h)", "(media sesión)") if mercado == "acciones" else fam["nombre"]
+        estado_estrategia = item.get("estado", "aprobada") if isinstance(item, dict) else "aprobada"
+        etiqueta = f"{nombre}" + (" · en observación" if estado_estrategia == "observacion" else "")
+        cuando = "la apertura de la próxima sesión" if mercado == "acciones" else "la apertura de la próxima vela de 4 h"
         valor = reparto * float(res.equity.iloc[-1]) if len(res.equity) else reparto
         estado["estrategias"][eid] = {"valor_eur": round(valor, 2), "operaciones": int(len(res.operaciones))}
         for pos in res.abiertas:
-            clave = f"{eid}|{pos['activo']}"
+            clave = f"{eid}|{pos['activo']}|{pos['entrada']}"
             estado["posiciones"][clave] = {**pos, "entrada": str(pos["entrada"]), "importe_eur": round(pos["peso"] * valor, 2)}
             if clave not in claves_previas:
                 caida = pos["stop"] / pos["precio_entrada"] - 1
                 mensajes.append(
                     f"⚡🟢 COMPRA {pos['activo']} (motor táctico) · {_eur(pos['peso'] * valor)}\n"
-                    f"Estrategia: {fam['nombre']}\n"
+                    f"Estrategia: {etiqueta}\n"
                     f"Entrada: {_precio(pos['precio_entrada'])} · Stop: {_precio(pos['stop'])} ({_pct(caida)})\n"
                     f"Riesgo si salta el stop: ~{_eur(abs(caida) * pos['peso'] * valor)}")
         if len(res.operaciones):
-            cerradas = res.operaciones[res.operaciones["salida"] > pd.Timestamp(previo.get("ultima_vela", "1900-01-01"))]
-            for _, op in cerradas.iterrows():
+            for _, op in res.operaciones.iterrows():
+                clave = f"{eid}|{op['activo']}|{op['entrada']}|{op['salida']}"
+                if clave in cerradas_previas:
+                    continue
+                estado["cerradas"].append(clave)
                 motivo = "saltó el stop" if op["motivo"] == "stop" else "señal de salida"
                 mensajes.append(f"⚡🔴 VENTA {op['activo']} (motor táctico) · {motivo} · resultado {_pct(op['resultado'])}\n"
-                                f"Estrategia: {fam['nombre']}")
+                                f"Estrategia: {etiqueta}")
+        # Señales nuevas: se avisan en cuanto aparecen (se ejecutan en la próxima apertura)
+        for pend in res.pendientes:
+            clave = f"{eid}|{pend['activo']}|{pend['accion']}"
+            estado["pendientes"][clave] = pend
+            if clave in pendientes_previas:
+                continue
+            if pend["accion"] == "comprar":
+                ref = float(laboratorio.velas_de(fam, mercado)[pend["activo"]]["close"].iloc[-1])
+                mensajes.append(f"⚡📣 SEÑAL DE COMPRA {pend['activo']} (motor táctico)\n"
+                                f"Estrategia: {etiqueta}\n"
+                                f"Se compra en {cuando}. Último precio: {_precio(ref)} · "
+                                f"stop aprox. {_precio(ref - pend['distancia_stop'])} ({_pct(-pend['distancia_stop'] / ref)})")
+            else:
+                mensajes.append(f"⚡📣 SEÑAL DE VENTA {pend['activo']} (motor táctico)\n"
+                                f"Estrategia: {etiqueta}\nSe vende en {cuando}.")
     ultimas = [df.index.max() for m in ("cripto", "acciones") for df in laboratorio.ohlc_mercado(m).values()]
     estado["ultima_vela"] = str(max(ultimas)) if ultimas else previo.get("ultima_vela", "")
     estado["valor_total_eur"] = round(sum(e["valor_eur"] for e in estado["estrategias"].values()), 2)
