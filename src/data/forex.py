@@ -64,18 +64,25 @@ def decodificar(datos: bytes, inicio: pd.Timestamp, par: str) -> pd.DataFrame:
     return df[df["volume"] > 0]
 
 
-def _bajar(url: str, sesion, reintentos: int = 3) -> bytes | None:
+PAUSA = 0.4          # segundos entre peticiones (Dukascopy limita a quien pide muy rápido)
+
+
+def _bajar(url: str, sesion, reintentos: int = 6) -> bytes | None:
+    """Descarga un archivo; 404 = no existe (None). Con 503/429 espera cada vez más."""
     for intento in range(reintentos):
+        time.sleep(PAUSA)
         try:
             r = sesion.get(url, timeout=30)
             if r.status_code == 404:
                 return None
+            if r.status_code in (429, 500, 502, 503, 504):
+                raise RuntimeError(f"HTTP {r.status_code}")
             r.raise_for_status()
             return r.content
         except Exception:  # noqa: BLE001
             if intento == reintentos - 1:
                 raise
-            time.sleep(2 * (intento + 1))
+            time.sleep(min(60, 3 * 2 ** intento))
     return None
 
 
@@ -125,26 +132,37 @@ def actualizar(pares: list[str] | None = None, desde: str | None = None) -> list
     sesion.headers["User-Agent"] = "trading-agents (investigación personal)"
     informe = []
     for par in pares:
-        previo = horario.cargar(MERCADO, par)
-        inicio = desde if previo.empty else (previo.index.max() - pd.Timedelta(days=35)).replace(day=1)
-        inicio = max(inicio, desde).normalize().replace(day=1)
-        trozos = []
-        for m in pd.date_range(inicio, ahora, freq="MS"):
+        try:
+            informe.append(_actualizar_par(par, desde, ahora, hora_en_curso, sesion))
+        except Exception as e:  # noqa: BLE001 - un par que falla no para los demás
+            informe.append(f"{par}: ERROR {type(e).__name__}: {str(e)[:120]}")
+        print("  " + informe[-1], flush=True)
+    return informe
+
+
+def _actualizar_par(par, desde, ahora, hora_en_curso, sesion) -> str:
+    """Descarga mes a mes; si algo falla a mitad, guarda lo descargado (la próxima vez sigue desde ahí)."""
+    previo = horario.cargar(MERCADO, par)
+    inicio = desde if previo.empty else (previo.index.max() - pd.Timedelta(days=35)).replace(day=1)
+    inicio = max(inicio, desde).normalize().replace(day=1)
+    trozos, aviso = [], ""
+    for m in pd.date_range(inicio, ahora, freq="MS"):
+        try:
             datos = None
             if (m.year, m.month) != (ahora.year, ahora.month):
                 datos = mes(par, m.year, m.month, sesion)
             if datos is None:          # mes en curso (o mensual aún no publicado): días sueltos
                 datos = dias_a_horas(par, m.year, m.month, sesion, ahora)
-            trozos.append(datos)
-        nuevo = pd.concat([t for t in trozos if t is not None and not t.empty]) if trozos else pd.DataFrame()
-        if nuevo.empty:
-            informe.append(f"{par}: sin datos nuevos")
-            continue
-        nuevo = nuevo[nuevo.index < hora_en_curso]          # nunca la vela en curso
-        comprobar(nuevo)
-        df = pd.concat([previo, nuevo]) if not previo.empty else nuevo
-        df = df[~df.index.duplicated(keep="last")].sort_index()
-        horario.guardar(df, MERCADO, par)
-        informe.append(f"{par}: {len(df)} velas, de {df.index.min():%Y-%m-%d} a {df.index.max():%Y-%m-%d %H:%M}")
-        print("  " + informe[-1], flush=True)
-    return informe
+        except Exception as e:  # noqa: BLE001
+            aviso = f" · cortado en {m:%Y-%m} ({type(e).__name__}: {str(e)[:60]})"
+            break
+        trozos.append(datos)
+    nuevo = pd.concat([t for t in trozos if t is not None and not t.empty]) if trozos else pd.DataFrame()
+    if nuevo.empty:
+        return f"{par}: sin datos nuevos{aviso}"
+    nuevo = nuevo[nuevo.index < hora_en_curso]          # nunca la vela en curso
+    comprobar(nuevo)
+    df = pd.concat([previo, nuevo]) if not previo.empty else nuevo
+    df = df[~df.index.duplicated(keep="last")].sort_index()
+    horario.guardar(df, MERCADO, par)
+    return f"{par}: {len(df)} velas, de {df.index.min():%Y-%m-%d} a {df.index.max():%Y-%m-%d %H:%M}{aviso}"

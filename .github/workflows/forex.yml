@@ -5,7 +5,12 @@ name: Datos de forex
 on:
   schedule:
     - cron: "47 5 * * 6"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      pares:
+        description: "Pares separados por espacios (vacío = todos)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -27,7 +32,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Descargar forex
         timeout-minutes: 35
-        run: python -u scripts/update_forex.py
+        run: python -u scripts/update_forex.py ${{ inputs.pares }}
       - name: Guardar datos
         if: always()
         run: |
