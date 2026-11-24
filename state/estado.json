@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-23T22:57+00:00",
+  "actualizado": "2026-11-24T07:57+00:00",
   "fecha_datos": "2026-11-23",
   "capital_eur": 1000,
   "cartera": {
@@ -147,21 +147,29 @@
       [
         "2026-11-23",
         1009.14
+      ],
+      [
+        "2026-11-24",
+        1009.14
       ]
     ]
   },
   "alpaca": {
     "modo": "paper",
     "fuente_capital": "presupuesto",
-    "capital_gestionado_usd": 1100.6,
-    "equity_cuenta_usd": 100001.78,
-    "valor_posiciones_usd": 461.02,
-    "eurusd": 1.090631,
-    "actualizado": "2026-11-23T22:57+00:00",
+    "capital_gestionado_usd": 1107.18,
+    "equity_cuenta_usd": 100000.06,
+    "valor_posiciones_usd": 459.3,
+    "eurusd": 1.097153,
+    "actualizado": "2026-11-24T07:57+00:00",
     "historial": [
       [
         "2026-11-23",
         100001.78
+      ],
+      [
+        "2026-11-24",
+        100000.06
       ]
     ]
   }
