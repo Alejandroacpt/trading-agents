@@ -29,7 +29,7 @@ from src.config import ROOT
 
 RUTA = ROOT / "research" / "cribado.csv"
 COLUMNAS = ["fecha", "idea", "tipo", "familia", "mercado", "parametros", "fuente", "url",
-            "desde", "hasta", "sharpe", "cagr", "max_dd", "operaciones", "pasa", "motivo"]
+            "desde", "hasta", "sharpe", "cagr", "max_dd", "operaciones", "correlacion", "pasa", "motivo"]
 
 CRITERIOS = {
     "sharpe_min": 0.5,          # Sharpe del periodo de desarrollo
@@ -62,8 +62,7 @@ def _veredicto(sharpe: float, cagr: float, dd: float, ops: int | None) -> tuple[
     return (not fallos), "; ".join(fallos) or "pasa al laboratorio"
 
 
-def cribar_tactico(familia_id: str, mercado: str, params: dict | None = None) -> dict:
-    """Simula una familia táctica SOLO con las velas anteriores al periodo de test."""
+def _simular_tactico(familia_id: str, mercado: str, params: dict | None = None):
     from src.tactico import laboratorio
     from src.tactico.familias import FAMILIAS_TACTICAS
     from src.tactico.simulador import simular
@@ -76,6 +75,68 @@ def cribar_tactico(familia_id: str, mercado: str, params: dict | None = None) ->
     calentamiento = 120 if fam.get("velas") == "4h" else laboratorio.CALENTAMIENTO
     res = simular(ohlc, fam["funcion"](ohlc, **params), laboratorio.parametros_simulacion(mercado),
                   calentamiento=calentamiento)
+    return res, params
+
+
+def diaria(r: pd.Series) -> pd.Series:
+    """Rentabilidades por día natural (las tácticas van por velas)."""
+    r = r.dropna()
+    return (1 + r).groupby(r.index.normalize()).prod() - 1
+
+
+_REFERENCIAS: dict = {}
+
+
+def referencias_vivo(tipo: str) -> dict[str, pd.Series]:
+    """Rentabilidad diaria, en el periodo de desarrollo, de lo que opera ahora:
+    las estrategias tácticas activas (para ideas tácticas) o las estructurales
+    (para ideas diarias, cuyo periodo de desarrollo es anterior a 2018)."""
+    if tipo in _REFERENCIAS:
+        return _REFERENCIAS[tipo]
+    refs = {}
+    try:
+        if tipo == "tactico":
+            from src.data import horario
+            for item in horario.cargar_config().get("estrategias") or []:
+                eid = item["id"] if isinstance(item, dict) else item
+                familia, mercado = eid.removeprefix("tac_").split("__")
+                refs[eid] = diaria(_simular_tactico(familia, mercado)[0].rentabilidad)
+        else:
+            from src.agents.escaner import POR_ID, cargar_sistema
+            from src.backtest.engine import run_backtest
+            from src.backtest.validator import INICIO_TEST, rent_liquidez
+            from src.config import load_universe
+            from src.data.store import close_matrix
+            universo = load_universe()
+            clases = {a["ticker"]: a["clase"] for a in universo}
+            precios = close_matrix(universo)
+            precios = precios[precios.index < INICIO_TEST]
+            for c in cargar_sistema()["estrategias"]:
+                e = POR_ID[c["id"]]
+                p = precios[[x for x in e["universo"] if x in precios.columns]].dropna(how="all")
+                res = run_backtest(p, e["senales"](p, **e["parametros"]), clases, rent_liquidez(precios, p.index))
+                refs[e["id"]] = diaria(res.rentabilidad)
+    except Exception as ex:  # noqa: BLE001 - sin referencia no se bloquea el cribado
+        print(f"  (sin correlación: {type(ex).__name__}: {ex})")
+    _REFERENCIAS[tipo] = refs
+    return refs
+
+
+def correlacion(r: pd.Series, refs: dict[str, pd.Series]) -> float:
+    """La mayor correlación (diaria) con cualquiera de las estrategias que operan."""
+    r = diaria(r)
+    valores = []
+    for ref in refs.values():
+        comun = r.index.intersection(ref.index)
+        comun = comun[(r.loc[comun] != 0) | (ref.loc[comun] != 0)]
+        if len(comun) >= 100:
+            valores.append(float(r.loc[comun].corr(ref.loc[comun])))
+    return max(valores) if valores else float("nan")
+
+
+def cribar_tactico(familia_id: str, mercado: str, params: dict | None = None) -> dict:
+    """Simula una familia táctica SOLO con las velas anteriores al periodo de test."""
+    res, params = _simular_tactico(familia_id, mercado, params)
     r = res.rentabilidad
     m = metrics.resumen(r, res.liquidez)
     ops = int(len(res.operaciones))
@@ -83,7 +144,7 @@ def cribar_tactico(familia_id: str, mercado: str, params: dict | None = None) ->
     return {"tipo": "tactico", "familia": familia_id, "mercado": mercado, "parametros": params,
             "desde": str(r.index[0].date()), "hasta": str(r.index[-1].date()),
             "sharpe": m["sharpe"], "cagr": m["cagr"], "max_dd": m["max_drawdown"], "operaciones": ops,
-            "pasa": pasa, "motivo": motivo}
+            "correlacion": correlacion(r, referencias_vivo("tactico")), "pasa": pasa, "motivo": motivo}
 
 
 def cribar_diario(familia_id: str, mercado_id: str, params: dict | None = None) -> dict:
@@ -112,7 +173,7 @@ def cribar_diario(familia_id: str, mercado_id: str, params: dict | None = None) 
     return {"tipo": "diario", "familia": familia_id, "mercado": mercado_id, "parametros": params,
             "desde": str(r.index[0].date()), "hasta": str(r.index[-1].date()),
             "sharpe": m["sharpe"], "cagr": m["cagr"], "max_dd": m["max_drawdown"], "operaciones": None,
-            "pasa": pasa, "motivo": motivo}
+            "correlacion": correlacion(r, referencias_vivo("diario")), "pasa": pasa, "motivo": motivo}
 
 
 def registrar(resultado: dict, idea: str, fuente: str = "", url: str = "", ruta: Path = RUTA) -> int:
@@ -122,7 +183,8 @@ def registrar(resultado: dict, idea: str, fuente: str = "", url: str = "", ruta:
             **{k: resultado[k] for k in ("tipo", "familia", "mercado", "desde", "hasta", "pasa", "motivo")},
             "parametros": ",".join(f"{k}={v}" for k, v in sorted(resultado["parametros"].items())),
             "sharpe": round(resultado["sharpe"], 3), "cagr": round(resultado["cagr"], 4),
-            "max_dd": round(resultado["max_dd"], 4), "operaciones": resultado["operaciones"]}
+            "max_dd": round(resultado["max_dd"], 4), "operaciones": resultado["operaciones"],
+            "correlacion": round(resultado.get("correlacion", float("nan")), 3)}
     clave = (fila["familia"], fila["mercado"], fila["parametros"])
     if len(df):
         df = df[[(f, m, str(p)) != clave for f, m, p in zip(df["familia"], df["mercado"], df["parametros"])]]

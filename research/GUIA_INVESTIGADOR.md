@@ -15,6 +15,18 @@ agresiva: 70 % táctico / 30 % estructural, con 100 €/mes de aportación). Por
   una idea con mucho Sharpe pero poca rentabilidad (tipo 5-6 % anual) no sirve ahora.
 - Caída máxima aceptable en torno al 25-30 %; más que eso no es agresivo, es temerario.
 
+Lo que más falta ahora (revisión del 24 nov 2026): el 70 % táctico depende de UNA sola estrategia
+(momentum en acciones de EEUU, solo compras). Por eso, por delante de buscar "la mejor":
+
+- **Estrategias poco relacionadas con lo que ya opera.** El cribado muestra la correlación de cada idea
+  con la estrategia táctica en vivo (columna `correlacion` de `research/cribado.csv`): por debajo de 0,3
+  es diversificación de verdad; por encima de 0,7 es casi lo mismo y aporta poco aunque sea buena.
+- **Estrategias que ganen cuando el mercado baja.** El sistema solo compra; en un mercado bajista se queda
+  en liquidez. Ideas: momentum / tendencia en ETFs inversos (SH, PSQ, SQQQ, SPXU, ya en
+  `config/investigacion.yaml`, mercado `apalancados`), activos refugio (oro, bonos largos) en caídas, o
+  reglas que solo operen con el índice por debajo de su media. (Alpaca no permite cortos con fracciones de
+  acción, así que mejor ETFs inversos que posiciones cortas.)
+
 Prioridad actual:
 
 1. **Táctico agresivo que bata al SPY**: momentum / ruptura de baja rotación aplicados a activos más
@@ -24,7 +36,8 @@ Prioridad actual:
    los costes se comen la ventaja: ver `reports/laboratorio/tactico.md`).
    Los activos que no opera el sistema pero quieras investigar van en `config/investigacion.yaml` (SÍ puedes
    editarlo): el escáner horario descarga sus velas y en el laboratorio se cargan con
-   `laboratorio.ohlc_mercado("acciones", extra=True)`. Ya incluye ETFs x3 (TQQQ, UPRO, SOXL, TECL, TNA).
+   `laboratorio.ohlc_mercado("acciones", extra=True)`. Ya incluye ETFs x3 (TQQQ, UPRO, SOXL, TECL, TNA) e inversos
+   (SH, PSQ, SQQQ, SPXU).
    Para probar una familia táctica SOLO en esos activos hay un mercado de investigación:
    `laboratorio.experimento("<familia>", "apalancados")` (velas, costes y norma PDT de acciones). Valídalo con
    `validator.validar(exp, None, {})`, regístralo con `registro.registrar([v], origen="investigador")` y
@@ -107,8 +120,8 @@ En la ficha apunta siempre la fuente y el enlace.
 7. **Subir** los cambios a `main` con un commit descriptivo (incluye `research/cribado.csv`).
 8. **Avisar a Alejandro** lanzando el workflow de notificación:
     `gh api -X POST repos/Alejandroacpt/trading-agents/actions/workflows/notificar.yml/dispatches -f ref=main -f "inputs[mensaje]=<resumen>"`
-    Resumen breve: cuántas ideas cribadas (y de qué fuentes), cuáles pasaron, veredicto de las validadas
-    y si hay algo que proponer.
+    Resumen breve: cuántas ideas cribadas (y de qué fuentes), cuáles pasaron (con su correlación con lo que
+    opera), veredicto de las validadas y si hay algo que proponer.
 
 ## Reglas que no se rompen
 

@@ -14,6 +14,11 @@ acciones:
   - SOXL   # semiconductores x3
   - TECL   # tecnología x3
   - TNA    # Russell 2000 x3
+  # ETFs inversos (suben cuando el índice baja): para estrategias que ganen en mercados bajistas
+  - SH     # S&P 500 inverso x1
+  - PSQ    # Nasdaq-100 inverso x1
+  - SQQQ   # Nasdaq-100 inverso x3
+  - SPXU   # S&P 500 inverso x3
 cripto: []
 
 # Forex intradía: velas de 1 hora de Dukascopy (gratis, sin cuenta ni datos personales).

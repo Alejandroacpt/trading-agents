@@ -47,6 +47,8 @@ def main() -> int:
     r = f(a.familia, a.mercado, params)
     total = cribado.registrar(r, a.idea, a.fuente, a.url)
     ops = f" · {r['operaciones']} operaciones" if r["operaciones"] is not None else ""
+    c = r.get("correlacion")
+    ops += f" · correlación con lo que opera {c:.2f}" if c == c else ""
     print(f"{'✅ PASA' if r['pasa'] else '❌ NO PASA'} · {a.idea} · {a.familia} en {a.mercado} "
           f"({r['desde']} a {r['hasta']}): Sharpe {r['sharpe']:.2f} · rentabilidad anual {r['cagr']:.1%} · "
           f"caída máx. {r['max_dd']:.0%}{ops}\n  {r['motivo']}\n  Ideas cribadas en total: {total}")
