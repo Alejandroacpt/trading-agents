@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-24T17:08+00:00",
+  "actualizado": "2026-11-24T18:58+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -17,9 +17,38 @@
     }
   },
   "posiciones": {},
-  "pendientes": {},
+  "pendientes": {
+    "tac_momentum_tendencia__acciones|XLY|comprar": {
+      "activo": "XLY",
+      "accion": "comprar",
+      "distancia_stop": 5.940000000000003,
+      "importe_eur": 175.0,
+      "estrategia": "tac_momentum_tendencia__acciones"
+    },
+    "tac_momentum_tendencia__acciones|XLRE|comprar": {
+      "activo": "XLRE",
+      "accion": "comprar",
+      "distancia_stop": 1.3789285714285735,
+      "importe_eur": 175.0,
+      "estrategia": "tac_momentum_tendencia__acciones"
+    },
+    "tac_momentum_tendencia__acciones|TSLA|comprar": {
+      "activo": "TSLA",
+      "accion": "comprar",
+      "distancia_stop": 37.98642857142857,
+      "importe_eur": 106.36,
+      "estrategia": "tac_momentum_tendencia__acciones"
+    },
+    "tac_momentum_tendencia__acciones|JNJ|comprar": {
+      "activo": "JNJ",
+      "accion": "comprar",
+      "distancia_stop": 12.508928571428598,
+      "importe_eur": 175.0,
+      "estrategia": "tac_momentum_tendencia__acciones"
+    }
+  },
   "cerradas": [],
-  "ultima_vela": "2026-11-24 16:00:00",
+  "ultima_vela": "2026-11-24 17:00:00",
   "valor_total_eur": 700.0,
   "historial": [
     [

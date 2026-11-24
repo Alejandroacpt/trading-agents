@@ -6,7 +6,7 @@
   "valor_posiciones_usd": 0,
   "posiciones": {},
   "eurusd": 1.097153,
-  "actualizado": "2026-11-24T17:08+00:00",
+  "actualizado": "2026-11-24T18:58+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -16,5 +16,10 @@
   "incluye_tactico": true,
   "stops": {},
   "aportacion_invertida": null,
-  "objetivo": {}
+  "objetivo": {
+    "XLY": 0.1745,
+    "XLRE": 0.1745,
+    "JNJ": 0.1745,
+    "TSLA": 0.1061
+  }
 }
