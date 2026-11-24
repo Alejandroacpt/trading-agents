@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-24T11:30+00:00",
+  "actualizado": "2026-11-24T13:01+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -11,12 +11,14 @@
     "tac_momentum_tendencia__acciones": {
       "valor_eur": 700.0,
       "liquidativo": 1.0,
-      "operaciones": 0
+      "operaciones": 0,
+      "kill_switch": "NORMAL",
+      "caida_motor": 0.0
     }
   },
   "posiciones": {},
   "pendientes": {},
   "cerradas": [],
-  "ultima_vela": "2026-11-24 10:00:00",
+  "ultima_vela": "2026-11-24 12:00:00",
   "valor_total_eur": 700.0
 }
