@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-24T20:53+00:00",
+  "actualizado": "2026-11-24T21:57+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -9,51 +9,63 @@
   "ajustes": [],
   "estrategias": {
     "tac_momentum_tendencia__acciones": {
-      "valor_eur": 700.0,
-      "liquidativo": 1.0,
+      "valor_eur": 700.18,
+      "liquidativo": 1.00025,
       "operaciones": 0,
       "kill_switch": "NORMAL",
       "caida_motor": 0.0
     }
   },
-  "posiciones": {},
-  "pendientes": {
-    "tac_momentum_tendencia__acciones|XLY|comprar": {
+  "posiciones": {
+    "tac_momentum_tendencia__acciones|XLY|2026-11-24 18:00:00": {
       "activo": "XLY",
-      "accion": "comprar",
-      "distancia_stop": 5.940000000000003,
-      "importe_eur": 175.0,
-      "estrategia": "tac_momentum_tendencia__acciones"
+      "entrada": "2026-11-24 18:00:00",
+      "precio_entrada": 117.9,
+      "stop": 111.96000000000001,
+      "peso": 0.24959828072557308,
+      "cierre": 117.74,
+      "estrategia": "tac_momentum_tendencia__acciones",
+      "importe_eur": 174.76
     },
-    "tac_momentum_tendencia__acciones|XLRE|comprar": {
+    "tac_momentum_tendencia__acciones|XLRE|2026-11-24 18:00:00": {
       "activo": "XLRE",
-      "accion": "comprar",
-      "distancia_stop": 1.3789285714285735,
-      "importe_eur": 175.0,
-      "estrategia": "tac_momentum_tendencia__acciones"
+      "entrada": "2026-11-24 18:00:00",
+      "precio_entrada": 43.32,
+      "stop": 41.941071428571426,
+      "peso": 0.25062981398309236,
+      "cierre": 43.44,
+      "estrategia": "tac_momentum_tendencia__acciones",
+      "importe_eur": 175.48
     },
-    "tac_momentum_tendencia__acciones|TSLA|comprar": {
+    "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00": {
       "activo": "TSLA",
-      "accion": "comprar",
-      "distancia_stop": 37.98642857142857,
-      "importe_eur": 106.36,
-      "estrategia": "tac_momentum_tendencia__acciones"
+      "entrada": "2026-11-24 18:00:00",
+      "precio_entrada": 384.48,
+      "stop": 346.49357142857144,
+      "peso": 0.1519741613448432,
+      "cierre": 384.96,
+      "estrategia": "tac_momentum_tendencia__acciones",
+      "importe_eur": 106.41
     },
-    "tac_momentum_tendencia__acciones|JNJ|comprar": {
+    "tac_momentum_tendencia__acciones|JNJ|2026-11-24 18:00:00": {
       "activo": "JNJ",
-      "accion": "comprar",
-      "distancia_stop": 12.508928571428598,
-      "importe_eur": 175.0,
-      "estrategia": "tac_momentum_tendencia__acciones"
+      "entrada": "2026-11-24 18:00:00",
+      "precio_entrada": 276.345,
+      "stop": 263.8360714285714,
+      "peso": 0.2500957434272526,
+      "cierre": 276.52,
+      "estrategia": "tac_momentum_tendencia__acciones",
+      "importe_eur": 175.11
     }
   },
+  "pendientes": {},
   "cerradas": [],
-  "ultima_vela": "2026-11-24 19:00:00",
-  "valor_total_eur": 700.0,
+  "ultima_vela": "2026-11-24 20:00:00",
+  "valor_total_eur": 700.18,
   "historial": [
     [
       "2026-11-24",
-      700.0
+      700.18
     ]
   ]
 }
