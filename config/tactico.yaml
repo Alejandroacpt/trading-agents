@@ -27,6 +27,8 @@ costes:                         # por operación y sentido (comisión + horquill
   cripto_limitada: 0.0015       # orden limitada (maker en Alpaca)
   acciones: 0.0005
   acciones_limitada: 0.0002
+  forex: 0.00015                # ~1,5 pips de horquilla+deslizamiento por operación en los pares principales (solo investigación)
+  forex_limitada: 0.0001
 
 # Universos (símbolos de Alpaca)
 mercados:

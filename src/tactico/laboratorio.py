@@ -20,14 +20,35 @@ from src.tactico.velas import agregar
 
 INICIO_TEST_TACTICO = "2024-07-01"
 
-# Mercados solo de investigación: activos de config/investigacion.yaml que no
-# opera el sistema, tratados como su mercado base (mismas velas, costes y PDT).
-# Uso: experimento("momentum_tendencia", "apalancados")
-MERCADOS_INVESTIGACION = {"apalancados": "acciones"}
+# Mercados solo de investigación (no los opera el sistema):
+#   apalancados: ETFs x3 de config/investigacion.yaml, tratados como acciones
+#                (mismas velas de media sesión, costes y norma PDT).
+#   forex:       pares de divisas de Dukascopy (config/investigacion.yaml -> forex),
+#                24 h como la cripto (velas de 4 h), costes de forex, sin PDT.
+# Uso: experimento("momentum_tendencia", "apalancados") / experimento(..., "forex")
+MERCADOS_INVESTIGACION = {"apalancados": "acciones", "forex": "forex"}
 
 
 def mercado_base(mercado: str) -> str:
     return MERCADOS_INVESTIGACION.get(mercado, mercado)
+
+
+def tipo_velas(mercado: str) -> str:
+    """Cómo se agregan las velas: 'cripto' (bloques de 4 h, 24 h al día) o 'acciones' (media sesión)."""
+    return "acciones" if mercado_base(mercado) == "acciones" else "cripto"
+
+
+def _activos(mercado: str, extra: bool) -> list[str]:
+    conf = horario.cargar_config()
+    if mercado == "forex":
+        from src.data import forex
+        return forex.cargar_config()["pares"]
+    if mercado in MERCADOS_INVESTIGACION:
+        return horario.activos_investigacion(mercado_base(mercado))
+    activos = list(conf["mercados"][mercado]["activos"])
+    if extra:
+        activos += [a for a in horario.activos_investigacion(mercado) if a not in activos]
+    return activos
 CALENTAMIENTO = 250
 
 
@@ -35,16 +56,9 @@ CALENTAMIENTO = 250
 def ohlc_mercado(mercado: str, extra: bool = False) -> dict:
     """Velas de 1 hora del universo táctico; con extra=True, también los
     activos solo de investigación (config/investigacion.yaml)."""
-    conf = horario.cargar_config()
     datos = {}
     base = mercado_base(mercado)
-    if mercado in MERCADOS_INVESTIGACION:
-        activos = horario.activos_investigacion(base)
-    else:
-        activos = list(conf["mercados"][mercado]["activos"])
-        if extra:
-            activos += [a for a in horario.activos_investigacion(mercado) if a not in activos]
-    for s in activos:
+    for s in _activos(mercado, extra):
         df = horario.cargar(base, s)
         if len(df) > CALENTAMIENTO * 2:
             datos[s] = df
@@ -54,7 +68,7 @@ def ohlc_mercado(mercado: str, extra: bool = False) -> dict:
 @lru_cache(maxsize=8)
 def ohlc_agregado(mercado: str, extra: bool = False) -> dict:
     """Velas de 4 h (cripto) o de media sesión (acciones)."""
-    return agregar(ohlc_mercado(mercado, extra), mercado_base(mercado))
+    return agregar(ohlc_mercado(mercado, extra), tipo_velas(mercado))
 
 
 def velas_de(familia: dict, mercado: str) -> dict:
@@ -65,16 +79,17 @@ def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
     conf = horario.cargar_config()
     r = conf["riesgo"]
     base = mercado_base(mercado)
-    clave = "cripto" if base == "cripto" else "acciones"
+    clave = base if base in ("cripto", "forex") else "acciones"
     return Parametros(
         riesgo=r["riesgo_por_operacion"], max_posiciones=r["max_posiciones"], max_peso=r["max_peso_posicion"],
         coste=conf["costes"][clave] * mult_costes,
         coste_limitada=conf["costes"].get(f"{clave}_limitada", conf["costes"][clave]) * mult_costes,
-        sin_intradia=bool(conf["mercados"][base].get("sin_operaciones_intradia", False)),
+        sin_intradia=bool(conf["mercados"].get(base, {}).get("sin_operaciones_intradia", False)),
     )
 
 
-ETIQUETA = {"cripto": "Cripto", "acciones": "Acciones y ETFs", "apalancados": "ETFs apalancados x3"}
+ETIQUETA = {"cripto": "Cripto", "acciones": "Acciones y ETFs", "apalancados": "ETFs apalancados x3",
+            "forex": "Forex (Dukascopy)"}
 
 
 def experimento(familia_id: str, mercado: str) -> dict:

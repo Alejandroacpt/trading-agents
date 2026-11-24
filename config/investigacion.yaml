@@ -15,3 +15,19 @@ acciones:
   - TECL   # tecnología x3
   - TNA    # Russell 2000 x3
 cripto: []
+
+# Forex intradía: velas de 1 hora de Dukascopy (gratis, sin cuenta ni datos personales).
+# Solo investigación y simulación: Alpaca no opera divisas.
+forex:
+  desde: "2016-01-01"
+  pares:
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - AUDUSD
+    - USDCHF
+    - USDCAD
+    - NZDUSD
+    - EURJPY
+    - GBPJPY
+    - EURGBP
