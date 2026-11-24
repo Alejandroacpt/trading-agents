@@ -96,10 +96,19 @@ def mes(par: str, anio: int, mes_1: int, sesion) -> pd.DataFrame | None:
 
 def dias_a_horas(par: str, anio: int, mes_1: int, sesion, hasta: pd.Timestamp) -> pd.DataFrame:
     """Para el mes en curso: velas de 1 minuto de cada día, agregadas a 1 hora."""
-    partes = []
-    for dia in pd.date_range(pd.Timestamp(anio, mes_1, 1), hasta.normalize(), freq="D"):
+    partes, fallos = [], 0
+    fin = min(hasta.normalize(), pd.Timestamp(anio, mes_1, 1) + pd.offsets.MonthEnd(0))
+    for dia in pd.date_range(pd.Timestamp(anio, mes_1, 1), fin, freq="D"):
+        if dia.dayofweek == 5:          # sábado: no hay mercado
+            continue
         url = URL.format(par=par, anio=anio, mes=mes_1 - 1, resto=f"{dia.day:02d}/BID_candles_min_1.bi5")
-        datos = _bajar(url, sesion)
+        try:
+            datos = _bajar(url, sesion, reintentos=3)
+        except Exception:  # noqa: BLE001 - un día suelto que no se puede bajar se salta
+            fallos += 1
+            if fallos > 5:
+                raise
+            continue
         if datos:
             partes.append(decodificar(datos, dia, par))
     if not partes:
@@ -150,8 +159,11 @@ def _actualizar_par(par, desde, ahora, hora_en_curso, sesion) -> str:
         try:
             datos = None
             if (m.year, m.month) != (ahora.year, ahora.month):
-                datos = mes(par, m.year, m.month, sesion)
-            if datos is None:          # mes en curso (o mensual aún no publicado): días sueltos
+                try:
+                    datos = mes(par, m.year, m.month, sesion)
+                except Exception:  # noqa: BLE001 - archivo mensual que falla: se reconstruye por días
+                    datos = None
+            if datos is None:          # mes en curso, mensual no publicado o roto: días sueltos
                 datos = dias_a_horas(par, m.year, m.month, sesion, ahora)
         except Exception as e:  # noqa: BLE001
             aviso = f" · cortado en {m:%Y-%m} ({type(e).__name__}: {str(e)[:60]})"
