@@ -19,8 +19,8 @@ fecha_utc,tipo,activo,accion,importe,moneda,peso_antes,peso_despues,precio_ref,e
 2026-11-24T10:38+00:00,orden,SPY,cerrar,106.49,USD,,,722.289978,canceled,89401c38-a7a5-4498-a2b0-9145e23e3940,,,,,modo paper
 2026-11-24T10:38+00:00,orden,TLT,cerrar,58.78,USD,,,81.690002,canceled,93873a1a-1ada-489c-8432-30f3c2953def,,,,,modo paper
 2026-11-24T10:38+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,canceled,e1d50d87-5224-4555-b417-434da702d209,,,,,modo paper
-2026-11-24T10:41+00:00,orden,DBC,cerrar,104.47,USD,,,29.110001,new,daba2094-c837-4303-b89e-c975fc126256,,,,,modo paper
-2026-11-24T10:41+00:00,orden,EWJ,cerrar,88.06,USD,,,86.900002,new,a457537b-a5cf-4216-b1a6-07b3168b8b94,,,,,modo paper
-2026-11-24T10:41+00:00,orden,SPY,cerrar,106.37,USD,,,722.289978,accepted,4b871950-433b-4081-a467-5a2b40cc5a77,,,,,modo paper
-2026-11-24T10:41+00:00,orden,TLT,cerrar,58.8,USD,,,81.690002,accepted,dd7db18a-dacc-4b29-abc5-36d08abda8ff,,,,,modo paper
-2026-11-24T10:41+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,new,fcfbffad-f36d-4b79-9800-a008dd3ec527,,,,,modo paper
+2026-11-24T10:41+00:00,orden,DBC,cerrar,104.47,USD,,,29.110001,filled,daba2094-c837-4303-b89e-c975fc126256,29.15,3.588717948,-0.00137,,modo paper
+2026-11-24T10:41+00:00,orden,EWJ,cerrar,88.06,USD,,,86.900002,filled,a457537b-a5cf-4216-b1a6-07b3168b8b94,87.01,1.013208282,-0.00127,,modo paper
+2026-11-24T10:41+00:00,orden,SPY,cerrar,106.37,USD,,,722.289978,filled,4b871950-433b-4081-a467-5a2b40cc5a77,715.19,0.148265193,0.00983,,modo paper
+2026-11-24T10:41+00:00,orden,TLT,cerrar,58.8,USD,,,81.690002,filled,dd7db18a-dacc-4b29-abc5-36d08abda8ff,81.72,0.718460669,-0.00037,,modo paper
+2026-11-24T10:41+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,filled,fcfbffad-f36d-4b79-9800-a008dd3ec527,84.37,1.185958928,0.00213,,modo paper

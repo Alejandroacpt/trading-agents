@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-24T14:22+00:00",
+  "actualizado": "2026-11-24T16:00+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -19,6 +19,12 @@
   "posiciones": {},
   "pendientes": {},
   "cerradas": [],
-  "ultima_vela": "2026-11-24 13:00:00",
-  "valor_total_eur": 700.0
+  "ultima_vela": "2026-11-24 14:00:00",
+  "valor_total_eur": 700.0,
+  "historial": [
+    [
+      "2026-11-24",
+      700.0
+    ]
+  ]
 }
