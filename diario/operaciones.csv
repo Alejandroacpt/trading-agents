@@ -24,7 +24,7 @@ fecha_utc,tipo,activo,accion,importe,moneda,peso_antes,peso_despues,precio_ref,e
 2026-11-24T10:41+00:00,orden,SPY,cerrar,106.37,USD,,,722.289978,filled,4b871950-433b-4081-a467-5a2b40cc5a77,715.19,0.148265193,0.00983,,modo paper
 2026-11-24T10:41+00:00,orden,TLT,cerrar,58.8,USD,,,81.690002,filled,dd7db18a-dacc-4b29-abc5-36d08abda8ff,81.72,0.718460669,-0.00037,,modo paper
 2026-11-24T10:41+00:00,orden,VGK,cerrar,99.77,USD,,,84.550003,filled,fcfbffad-f36d-4b79-9800-a008dd3ec527,84.37,1.185958928,0.00213,,modo paper
-2026-11-24T18:58+00:00,orden,JNJ,comprar,192.0,USD,,,,pending_new,612c9dcd-0dd2-4094-ae1e-4c6ddcbe9e8d,,,,,modo paper
-2026-11-24T18:58+00:00,orden,TSLA,comprar,116.69,USD,,,,pending_new,ee42063a-c570-4d3e-ba49-0b1061e21dbc,,,,,modo paper
-2026-11-24T18:58+00:00,orden,XLRE,comprar,192.0,USD,,,,pending_new,fe467132-8607-4cf0-85e2-173a9c75b49c,,,,,modo paper
-2026-11-24T18:58+00:00,orden,XLY,comprar,192.0,USD,,,,pending_new,b49eea1f-38c0-4481-a427-2e0358a502a8,,,,,modo paper
+2026-11-24T18:58+00:00,orden,JNJ,comprar,192.0,USD,,,,filled,612c9dcd-0dd2-4094-ae1e-4c6ddcbe9e8d,275.714,0.696337509,,,modo paper
+2026-11-24T18:58+00:00,orden,TSLA,comprar,116.69,USD,,,,filled,ee42063a-c570-4d3e-ba49-0b1061e21dbc,382.99,0.304655474,,,modo paper
+2026-11-24T18:58+00:00,orden,XLRE,comprar,192.0,USD,,,,filled,fe467132-8607-4cf0-85e2-173a9c75b49c,43.19,4.445241954,,,modo paper
+2026-11-24T18:58+00:00,orden,XLY,comprar,192.0,USD,,,,filled,b49eea1f-38c0-4481-a427-2e0358a502a8,117.408,1.635237803,,,modo paper
