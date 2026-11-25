@@ -108,8 +108,9 @@ footer{color:var(--dim);font-size:11.5px;text-align:center;margin-top:16px}
     <span class="fecha" id="fecha">—</span>
     <div class="counters">
       <div><b id="c-pruebas">—</b><span>Pruebas</span></div>
-      <div><b id="c-validas" style="color:var(--green)">—</b><span>Válidas</span></div>
-      <div><b id="c-descartadas" style="color:var(--amber)">—</b><span>Descartadas</span></div>
+      <div title="Han pasado el validador completo"><b id="c-aprobadas" style="color:var(--green)">—</b><span>Aprobadas</span></div>
+      <div title="Prometedoras, pero sin pasar todas las condiciones del validador"><b id="c-observacion" style="color:var(--amber)">—</b><span>Observación</span></div>
+      <div><b id="c-descartadas" style="color:var(--red)">—</b><span>Descartadas</span></div>
     </div>
   </div>
   <div id="avisos"></div>
@@ -347,7 +348,7 @@ function red() {
   s.innerHTML = g;
   $('red-titulo').textContent = `${ev.length + ideas.length} ideas · del cribado a la operación`;
   $('red-sub').textContent = `pasa el ratón por cada punto`;
-  $('c-pruebas').textContent = D.investigacion.pruebas; $('c-validas').textContent = nAp + nOb; $('c-descartadas').textContent = nRe;
+  $('c-pruebas').textContent = D.investigacion.pruebas; $('c-aprobadas').textContent = nAp; $('c-observacion').textContent = nOb; $('c-descartadas').textContent = nRe;
 }
 
 function envivo() {
