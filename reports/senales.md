@@ -1,4 +1,4 @@
-# Señales y cartera · 2026-11-24T23:00+00:00 UTC
+# Señales y cartera · 2026-11-25T07:59+00:00 UTC
 
 **Cartera virtual:** 303 € (inicio 2026-11-23 con 300 €) · máximo 303 € · kill-switch **NORMAL**
 
@@ -48,19 +48,19 @@
 
 | Activo | Fecha | Cierre | Día | En cartera de |
 |---|---|---|---|---|
-| BTC-USD Bitcoin | 2026-11-23 | 61.211 | +0.1% | — |
-| ETH-USD Ethereum | 2026-11-23 | 1.709 | -0.7% | — |
-| SOL-USD Solana | 2026-11-23 | 71,98 | +2.0% | — |
+| BTC-USD Bitcoin | 2026-11-24 | 59.748 | -2.4% | — |
+| ETH-USD Ethereum | 2026-11-24 | 1.678 | -1.8% | — |
+| SOL-USD Solana | 2026-11-24 | 69,64 | -3.3% | — |
 
 ### Forex
 
 | Activo | Fecha | Cierre | Día | En cartera de |
 |---|---|---|---|---|
-| EURUSD=X EUR/USD | 2026-11-24 | 1,0969 | -0.0% | — |
-| GBPUSD=X GBP/USD | 2026-11-24 | 1,3112 | +0.1% | — |
-| JPY=X USD/JPY | 2026-11-24 | 159,25 | +0.2% | — |
-| AUDUSD=X AUD/USD | 2026-11-24 | 0,6641 | +0.0% | — |
-| CHF=X USD/CHF | 2026-11-24 | 0,8354 | -0.7% | — |
+| EURUSD=X EUR/USD | 2026-11-24 | 1,0908 | -0.6% | — |
+| GBPUSD=X GBP/USD | 2026-11-24 | 1,3035 | -0.5% | — |
+| JPY=X USD/JPY | 2026-11-24 | 159,01 | +0.0% | — |
+| AUDUSD=X AUD/USD | 2026-11-24 | 0,6630 | -0.2% | — |
+| CHF=X USD/CHF | 2026-11-24 | 0,8415 | +0.1% | — |
 
 *Forex: ninguna estrategia activa opera divisas (la TSMOM fue rechazada).*
 
