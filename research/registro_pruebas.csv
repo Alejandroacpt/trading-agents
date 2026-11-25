@@ -177,7 +177,37 @@ tac_ruptura_tendencia__cripto|velas=60,tac_ruptura_tendencia__cripto,ruptura_ten
 "tsmom|meses=6, largo_corto=True",tsmom,tsmom,multi,"meses=6, largo_corto=True",2026-11-23,2026-11-25,0.224,0.017,biblioteca
 "tsmom|meses=9, largo_corto=False",tsmom,tsmom,multi,"meses=9, largo_corto=False",2026-11-23,2026-11-25,0.431,0.408,biblioteca
 "tsmom|meses=9, largo_corto=True",tsmom,tsmom,multi,"meses=9, largo_corto=True",2026-11-23,2026-11-25,0.246,0.387,biblioteca
+lab_momentum_mensual__cripto_ambos|meses=12,lab_momentum_mensual__cripto_ambos,momentum_mensual,cripto,meses=12,2026-11-25,2026-11-25,0.564,0.248,estudio cortos cripto
+lab_momentum_mensual__cripto_ambos|meses=3,lab_momentum_mensual__cripto_ambos,momentum_mensual,cripto,meses=3,2026-11-25,2026-11-25,0.637,0.163,estudio cortos cripto
+lab_momentum_mensual__cripto_ambos|meses=6,lab_momentum_mensual__cripto_ambos,momentum_mensual,cripto,meses=6,2026-11-25,2026-11-25,0.817,0.266,estudio cortos cripto
+lab_momentum_mensual__cripto_corto|meses=12,lab_momentum_mensual__cripto_corto,momentum_mensual,cripto,meses=12,2026-11-25,2026-11-25,0.037,-0.439,estudio cortos cripto
+lab_momentum_mensual__cripto_corto|meses=3,lab_momentum_mensual__cripto_corto,momentum_mensual,cripto,meses=3,2026-11-25,2026-11-25,-0.465,-0.448,estudio cortos cripto
+lab_momentum_mensual__cripto_corto|meses=6,lab_momentum_mensual__cripto_corto,momentum_mensual,cripto,meses=6,2026-11-25,2026-11-25,-0.362,-0.405,estudio cortos cripto
+"lab_multi_horizonte__cripto_ambos|horizontes=(1, 3, 12)",lab_multi_horizonte__cripto_ambos,multi_horizonte,cripto,"horizontes=(1, 3, 12)",2026-11-25,2026-11-25,0.768,0.303,estudio cortos cripto
+"lab_multi_horizonte__cripto_ambos|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__cripto_ambos,multi_horizonte,cripto,"horizontes=(1, 3, 6, 12)",2026-11-25,2026-11-25,0.765,0.254,estudio cortos cripto
+"lab_multi_horizonte__cripto_ambos|horizontes=(3, 6, 12)",lab_multi_horizonte__cripto_ambos,multi_horizonte,cripto,"horizontes=(3, 6, 12)",2026-11-25,2026-11-25,0.697,0.182,estudio cortos cripto
+"lab_multi_horizonte__cripto_corto|horizontes=(1, 3, 12)",lab_multi_horizonte__cripto_corto,multi_horizonte,cripto,"horizontes=(1, 3, 12)",2026-11-25,2026-11-25,-0.325,-0.302,estudio cortos cripto
+"lab_multi_horizonte__cripto_corto|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__cripto_corto,multi_horizonte,cripto,"horizontes=(1, 3, 6, 12)",2026-11-25,2026-11-25,-0.318,-0.277,estudio cortos cripto
+"lab_multi_horizonte__cripto_corto|horizontes=(3, 6, 12)",lab_multi_horizonte__cripto_corto,multi_horizonte,cripto,"horizontes=(3, 6, 12)",2026-11-25,2026-11-25,-0.438,-0.334,estudio cortos cripto
+lab_reversion_rsi2__cripto_ambos|umbral=10,lab_reversion_rsi2__cripto_ambos,reversion_rsi2,cripto,umbral=10,2026-11-25,2026-11-25,0.123,-0.054,estudio cortos cripto
+lab_reversion_rsi2__cripto_ambos|umbral=20,lab_reversion_rsi2__cripto_ambos,reversion_rsi2,cripto,umbral=20,2026-11-25,2026-11-25,0.034,-0.071,estudio cortos cripto
+lab_reversion_rsi2__cripto_ambos|umbral=5,lab_reversion_rsi2__cripto_ambos,reversion_rsi2,cripto,umbral=5,2026-11-25,2026-11-25,0.652,0.26,estudio cortos cripto
+lab_reversion_rsi2__cripto_corto|umbral=10,lab_reversion_rsi2__cripto_corto,reversion_rsi2,cripto,umbral=10,2026-11-25,2026-11-25,0.0,0.0,estudio cortos cripto
+lab_reversion_rsi2__cripto_corto|umbral=20,lab_reversion_rsi2__cripto_corto,reversion_rsi2,cripto,umbral=20,2026-11-25,2026-11-25,0.0,0.0,estudio cortos cripto
+lab_reversion_rsi2__cripto_corto|umbral=5,lab_reversion_rsi2__cripto_corto,reversion_rsi2,cripto,umbral=5,2026-11-25,2026-11-25,0.0,0.0,estudio cortos cripto
+lab_ruptura_canal__cripto_ambos|dias=100,lab_ruptura_canal__cripto_ambos,ruptura_canal,cripto,dias=100,2026-11-25,2026-11-25,0.729,0.37,estudio cortos cripto
+lab_ruptura_canal__cripto_ambos|dias=20,lab_ruptura_canal__cripto_ambos,ruptura_canal,cripto,dias=20,2026-11-25,2026-11-25,0.989,0.837,estudio cortos cripto
+lab_ruptura_canal__cripto_ambos|dias=50,lab_ruptura_canal__cripto_ambos,ruptura_canal,cripto,dias=50,2026-11-25,2026-11-25,0.772,0.736,estudio cortos cripto
+lab_ruptura_canal__cripto_corto|dias=100,lab_ruptura_canal__cripto_corto,ruptura_canal,cripto,dias=100,2026-11-25,2026-11-25,-0.394,-0.48,estudio cortos cripto
+lab_ruptura_canal__cripto_corto|dias=20,lab_ruptura_canal__cripto_corto,ruptura_canal,cripto,dias=20,2026-11-25,2026-11-25,-0.198,0.012,estudio cortos cripto
+lab_ruptura_canal__cripto_corto|dias=50,lab_ruptura_canal__cripto_corto,ruptura_canal,cripto,dias=50,2026-11-25,2026-11-25,-0.24,-0.037,estudio cortos cripto
+lab_tendencia_media__cripto_ambos|dias=100,lab_tendencia_media__cripto_ambos,tendencia_media,cripto,dias=100,2026-11-25,2026-11-25,0.868,0.597,estudio cortos cripto
+lab_tendencia_media__cripto_ambos|dias=200,lab_tendencia_media__cripto_ambos,tendencia_media,cripto,dias=200,2026-11-25,2026-11-25,1.019,0.577,estudio cortos cripto
+lab_tendencia_media__cripto_ambos|dias=50,lab_tendencia_media__cripto_ambos,tendencia_media,cripto,dias=50,2026-11-25,2026-11-25,1.174,0.962,estudio cortos cripto
+lab_tendencia_media__cripto_corto|dias=100,lab_tendencia_media__cripto_corto,tendencia_media,cripto,dias=100,2026-11-25,2026-11-25,-0.241,-0.11,estudio cortos cripto
+lab_tendencia_media__cripto_corto|dias=200,lab_tendencia_media__cripto_corto,tendencia_media,cripto,dias=200,2026-11-25,2026-11-25,-0.143,-0.138,estudio cortos cripto
+lab_tendencia_media__cripto_corto|dias=50,lab_tendencia_media__cripto_corto,tendencia_media,cripto,dias=50,2026-11-25,2026-11-25,0.021,0.138,estudio cortos cripto
+tac_momentum_tendencia__acciones|prioridad=mayor_subida_bruta,Momentum con tendencia · prioridad mayor_subida_bruta,momentum_tendencia,tactico_acciones,"velas=90, prioridad=mayor_subida_bruta",2026-11-25,2026-11-25,,-0.01,prueba de prioridad (25 nov)
+tac_momentum_tendencia__acciones|prioridad=menor_volatilidad,Momentum con tendencia · prioridad menor_volatilidad,momentum_tendencia,tactico_acciones,"velas=90, prioridad=menor_volatilidad",2026-11-25,2026-11-25,,0.59,prueba de prioridad (25 nov)
 tac_momentum_tendencia__acciones|prioridad=senal_mas_fuerte,Momentum con tendencia · prioridad senal_mas_fuerte,momentum_tendencia,tactico_acciones,"velas=90, prioridad=senal_mas_fuerte",2026-11-25,2026-11-25,,-0.06,prueba de prioridad (25 nov)
 tac_momentum_tendencia__acciones|prioridad=senal_menos_estirada,Momentum con tendencia · prioridad senal_menos_estirada,momentum_tendencia,tactico_acciones,"velas=90, prioridad=senal_menos_estirada",2026-11-25,2026-11-25,,0.57,prueba de prioridad (25 nov)
-tac_momentum_tendencia__acciones|prioridad=menor_volatilidad,Momentum con tendencia · prioridad menor_volatilidad,momentum_tendencia,tactico_acciones,"velas=90, prioridad=menor_volatilidad",2026-11-25,2026-11-25,,0.59,prueba de prioridad (25 nov)
-tac_momentum_tendencia__acciones|prioridad=mayor_subida_bruta,Momentum con tendencia · prioridad mayor_subida_bruta,momentum_tendencia,tactico_acciones,"velas=90, prioridad=mayor_subida_bruta",2026-11-25,2026-11-25,,-0.01,prueba de prioridad (25 nov)
