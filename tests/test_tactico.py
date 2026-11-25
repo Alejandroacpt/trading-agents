@@ -159,3 +159,17 @@ def test_orden_limitada_solo_si_el_precio_llega():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_con_prioridad_entra_primero_la_senal_mas_alta():
+    # Dos señales a la vez y dinero solo para una: sin prioridad entra la primera de la lista (A);
+    # con prioridad, la de prioridad más alta (B).
+    df = velas([100, 100, 100, 100, 100], amplitud=0.0)
+    p = Parametros(riesgo=1.0, max_posiciones=1, max_peso=1.0, coste=0.0)
+    sa, sb = senal(df, entradas=[1], stop=5.0), senal(df, entradas=[1], stop=5.0)
+    assert simular({"A": df, "B": df}, {"A": sa, "B": sb}, p).abiertas[0]["activo"] == "A"
+    sa["prioridad"], sb["prioridad"] = 0.5, 2.0
+    assert simular({"A": df, "B": df}, {"A": sa, "B": sb}, p).abiertas[0]["activo"] == "B"
+    # antes de priorizar_desde se respeta el orden de la lista (no reescribe lo ya operado en vivo)
+    p2 = Parametros(riesgo=1.0, max_posiciones=1, max_peso=1.0, coste=0.0, priorizar_desde="2030-01-01")
+    assert simular({"A": df, "B": df}, {"A": sa, "B": sb}, p2).abiertas[0]["activo"] == "A"

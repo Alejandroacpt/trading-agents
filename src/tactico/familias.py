@@ -10,6 +10,23 @@ se adapta a lo que se mueve cada activo, así un 1,5 % de riesgo significa
 lo mismo en Bitcoin que en un ETF de bonos.
 
 Las rejillas se fijaron ANTES de ver resultados (23 nov 2026).
+
+Prioridad entre señales simultáneas (prueba del 25 nov 2026): si salen más
+compras que dinero, entran por el orden de la lista de activos de
+config/tactico.yaml, que va de lo más diversificado a lo más concreto
+(SPY, QQQ, IWM → sectores → acciones sueltas). Se probaron, eligiendo solo con
+el periodo de ENTRENAMIENTO, cuatro reglas "por rentabilidad esperada" en la
+estrategia activa (momentum con tendencia, acciones):
+                                     entreno (Sharpe)   test (CAGR / Sharpe)
+  orden de lista (diversificado 1º)       0,93            +12,1 % / 1,00
+  señal más fuerte (momentum/vol)         0,91             −1,6 % / −0,06
+  señal menos estirada                    0,82             +6,7 % / 0,57
+  menor volatilidad                       0,85             +6,3 % / 0,59
+  mayor subida bruta                      0,86             −1,1 % / −0,01
+Ninguna mejora el orden actual en entrenamiento, así que se mantiene. El
+simulador admite la columna "prioridad" (y fuerza_momentum / fuerza_reversion
+para calcularla) para probar reglas nuevas en el laboratorio; una regla solo
+pasa a vivo si mejora en entrenamiento y lo confirma en test.
 """
 
 import numpy as np
@@ -30,13 +47,25 @@ def ema(s: pd.Series, n: int) -> pd.Series:
     return s.ewm(span=n, adjust=False, min_periods=n).mean()
 
 
-def _tabla(df, entrada, salida, stop, dinamico=np.nan, max_velas=np.nan) -> pd.DataFrame:
+def fuerza_momentum(c: pd.Series, n: int) -> pd.Series:
+    """Rendimiento de n velas en unidades de su volatilidad (tipo t-estadístico)."""
+    vol = c.pct_change().rolling(n, min_periods=max(10, n // 2)).std() * np.sqrt(n)
+    return (c / c.shift(n) - 1) / vol.replace(0, np.nan)
+
+
+def fuerza_reversion(r: pd.Series, umbral: float) -> pd.Series:
+    """Cuánto por debajo del umbral está el RSI (0 = justo en el umbral, 1 = RSI en 0)."""
+    return (umbral - r) / umbral
+
+
+def _tabla(df, entrada, salida, stop, dinamico=np.nan, max_velas=np.nan, prioridad=np.nan) -> pd.DataFrame:
     return pd.DataFrame({
         "entrada": entrada.fillna(False).astype(bool),
         "salida": salida.fillna(False).astype(bool),
         "stop": stop,
         "dinamico": dinamico if isinstance(dinamico, pd.Series) else pd.Series(dinamico, index=df.index),
         "max_velas": pd.Series(max_velas, index=df.index),
+        "prioridad": prioridad if isinstance(prioridad, pd.Series) else pd.Series(prioridad, index=df.index),
     }, index=df.index)
 
 
@@ -59,7 +88,8 @@ def reversion_horaria(ohlc: dict, umbral: float = 10) -> dict:
     out = {}
     for a, df in ohlc.items():
         c = df["close"]
-        entrada = (c > ema(c, 200)) & (rsi(c, 2) < umbral)
+        r = rsi(c, 2)
+        entrada = (c > ema(c, 200)) & (r < umbral)
         salida = c > c.rolling(5).mean()
         out[a] = _tabla(df, entrada, salida, 3 * atr(df), max_velas=48)
     return out
@@ -108,7 +138,8 @@ def retroceso_tendencia(ohlc: dict, umbral: float = 25) -> dict:
     out = {}
     for a, df in ohlc.items():
         c = df["close"]
-        entrada = tendencia_diaria(df, 50) & (c > ema(c, 50)) & (rsi(c, 3) < umbral)
+        r = rsi(c, 3)
+        entrada = tendencia_diaria(df, 50) & (c > ema(c, 50)) & (r < umbral)
         t = _tabla(df, entrada, c > c.rolling(5).mean(), 2.5 * atr(df, 14), max_velas=30)
         t["limite"] = c.where(entrada)
         out[a] = t

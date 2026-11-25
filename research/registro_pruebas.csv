@@ -177,3 +177,7 @@ tac_ruptura_tendencia__cripto|velas=60,tac_ruptura_tendencia__cripto,ruptura_ten
 "tsmom|meses=6, largo_corto=True",tsmom,tsmom,multi,"meses=6, largo_corto=True",2026-11-23,2026-11-25,0.224,0.017,biblioteca
 "tsmom|meses=9, largo_corto=False",tsmom,tsmom,multi,"meses=9, largo_corto=False",2026-11-23,2026-11-25,0.431,0.408,biblioteca
 "tsmom|meses=9, largo_corto=True",tsmom,tsmom,multi,"meses=9, largo_corto=True",2026-11-23,2026-11-25,0.246,0.387,biblioteca
+tac_momentum_tendencia__acciones|prioridad=senal_mas_fuerte,Momentum con tendencia · prioridad senal_mas_fuerte,momentum_tendencia,tactico_acciones,"velas=90, prioridad=senal_mas_fuerte",2026-11-25,2026-11-25,,-0.06,prueba de prioridad (25 nov)
+tac_momentum_tendencia__acciones|prioridad=senal_menos_estirada,Momentum con tendencia · prioridad senal_menos_estirada,momentum_tendencia,tactico_acciones,"velas=90, prioridad=senal_menos_estirada",2026-11-25,2026-11-25,,0.57,prueba de prioridad (25 nov)
+tac_momentum_tendencia__acciones|prioridad=menor_volatilidad,Momentum con tendencia · prioridad menor_volatilidad,momentum_tendencia,tactico_acciones,"velas=90, prioridad=menor_volatilidad",2026-11-25,2026-11-25,,0.59,prueba de prioridad (25 nov)
+tac_momentum_tendencia__acciones|prioridad=mayor_subida_bruta,Momentum con tendencia · prioridad mayor_subida_bruta,momentum_tendencia,tactico_acciones,"velas=90, prioridad=mayor_subida_bruta",2026-11-25,2026-11-25,,-0.01,prueba de prioridad (25 nov)
