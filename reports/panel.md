@@ -1,10 +1,10 @@
-# Panel del sistema · 25/11/2026 07:59 UTC
+# Panel del sistema · 25/11/2026 22:59 UTC
 
 ## Cartera
 
 | Cartera total | Aportado | Resultado | Caída desde máximo | Fase |
 |---|---|---|---|---|
-| **1.003 €** | 1.000 € | 3 € (+0,3 %) | +0,0 % | agresiva: 70% táctico / 30% estructural |
+| **999 €** | 1.000 € | -1 € (-0,1 %) | -0,4 % | agresiva: 70% táctico / 30% estructural |
 
 ![Cartera](panel/cartera.png)
 
@@ -14,54 +14,55 @@ Próximas aportaciones: 100 € el día 1 de cada mes. Siguiente fase al superar
 
 | Motor | Valor | Kill-switch | Estrategias |
 |---|---|---|---|
-| ⚡ Táctico (paper) | 700 € | NORMAL | Momentum con tendencia diaria (media sesión) (observacion) |
+| ⚡ Táctico (paper) | 696 € | NORMAL | Momentum con tendencia diaria (media sesión) (observacion) |
 | 🧱 Estructural | 303 € | NORMAL | Tendencia en cripto + control de volatilidad (aprobada) |
 
 ## Posiciones
 
 | Activo | Importe | Entrada | Stop | Resultado | Desde |
 |---|---|---|---|---|---|
-| ⚡ XLY | 175 € | 117.90 | 111.96 | -0,1 % | 2026-11-24 |
-| ⚡ XLRE | 175 € | 43.32 | 41.94 | +0,3 % | 2026-11-24 |
-| ⚡ TSLA | 106 € | 384.48 | 346.49 | +0,1 % | 2026-11-24 |
-| ⚡ JNJ | 175 € | 276.35 | 263.84 | +0,1 % | 2026-11-24 |
+| ⚡ XLY | 174 € | 117.90 | 111.96 | -0,4 % | 2026-11-24 |
+| ⚡ XLRE | 177 € | 43.32 | 41.97 | +1,2 % | 2026-11-24 |
+| ⚡ JNJ | 174 € | 276.35 | 263.84 | -0,9 % | 2026-11-24 |
 
-**Stops reales en Alpaca:** XLY 111.96, XLRE 41.94, TSLA 346.49, JNJ 263.84
+**Stops reales en Alpaca:** XLY 111.96, XLRE 41.97, JNJ 263.84
+
+**Señales pendientes** (se ejecutan en la próxima apertura): compra XLF
 
 ## Cuenta paper (Alpaca)
 
-Capital gestionado 1,094 $ · posiciones 694 $ · actualizado 2026-11-25 07:59 UTC
+Capital gestionado 1,096 $ · posiciones 578 $ · actualizado 2026-11-25 22:59 UTC
 
 | Activo | Real | Objetivo | Diferencia |
 |---|---|---|---|
-| JNJ | +17,8 % | +17,5 % | +0,3 % |
-| TSLA | +10,5 % | +10,6 % | -0,1 % |
-| XLRE | +17,7 % | +17,5 % | +0,2 % |
-| XLY | +17,5 % | +17,4 % | +0,0 % |
+| JNJ | +17,4 % | +17,4 % | +0,0 % |
+| XLF | +0,0 % | +17,1 % | -17,1 % ⚠️ |
+| XLRE | +17,8 % | +17,7 % | +0,0 % |
+| XLY | +17,5 % | +17,5 % | +0,1 % |
 
 ## Estrategias en vivo (último auditor)
 
 | Motor | Estrategia | Estado | Días | Resultado en vivo | Caída en vivo | Backtest: CAGR / Sharpe / peor caída | Semáforo |
 |---|---|---|---|---|---|---|---|
 | estructural | Tendencia en cripto + control de volatilidad | aprobada | 0 | +0,0 % | +0,0 % | +43,6 % / 1,28 / -40 % | ⚪ POCOS DATOS |
-| táctico | Momentum con tendencia diaria (media sesión) | observacion | 0 | +0,0 % | +0,0 % | +13,0 % / 0,95 / -20 % | ⚪ POCOS DATOS |
+| táctico | Momentum con tendencia diaria (media sesión) | observacion | 0 | +0,0 % | +0,0 % | +13,2 % / 0,96 / -20 % | ⚪ POCOS DATOS |
 
 ## Últimas órdenes
 
 | Fecha (UTC) | Activo | Acción | Importe | Estado |
 |---|---|---|---|---|
-| 2026-11-24 10:41 | EWJ | cerrar | 88 $ | filled |
-| 2026-11-24 10:41 | SPY | cerrar | 106 $ | filled |
 | 2026-11-24 10:41 | TLT | cerrar | 59 $ | filled |
 | 2026-11-24 10:41 | VGK | cerrar | 100 $ | filled |
 | 2026-11-24 18:58 | JNJ | comprar | 192 $ | filled |
 | 2026-11-24 18:58 | TSLA | comprar | 117 $ | filled |
 | 2026-11-24 18:58 | XLRE | comprar | 192 $ | filled |
 | 2026-11-24 18:58 | XLY | comprar | 192 $ | filled |
+| 2026-11-25 18:44 | TSLA | cerrar | 115 $ | filled |
+| 2026-11-25 21:57 | XLF | comprar | 186 $ | accepted |
 
 ## Investigación
 
-- Pruebas acumuladas (listón del Sharpe deflactado): **184**
+- Pruebas acumuladas (listón del Sharpe deflactado): **218**
 - Ideas cribadas: 6 · pasaron el cribado: 0
 - Informes: [laboratorio](laboratorio/ultimo.md) · [laboratorio táctico](laboratorio/tactico.md) · [auditor](auditor/ultimo.md) · [señales](senales.md)
 
