@@ -2,16 +2,16 @@
   "modo": "paper",
   "fuente_capital": "presupuesto",
   "capital_gestionado_usd": 1093.86,
-  "equity_cuenta_usd": 99998.65,
-  "valor_posiciones_usd": 692.99,
+  "equity_cuenta_usd": 99994.88,
+  "valor_posiciones_usd": 689.22,
   "posiciones": {
-    "JNJ": 194.57,
-    "TSLA": 113.9,
-    "XLRE": 193.37,
-    "XLY": 191.16
+    "JNJ": 193.34,
+    "TSLA": 113.34,
+    "XLRE": 193.01,
+    "XLY": 189.52
   },
   "eurusd": 1.09081,
-  "actualizado": "2026-11-25T11:33+00:00",
+  "actualizado": "2026-11-25T13:55+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -19,7 +19,7 @@
     ],
     [
       "2026-11-25",
-      99998.65
+      99994.88
     ]
   ],
   "incluye_tactico": true,
