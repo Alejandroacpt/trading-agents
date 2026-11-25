@@ -134,7 +134,9 @@ def test_diario_apunta_la_ejecucion_y_su_coste(tmp_path):
 
     d = diario.actualizar_ejecuciones(d, ClienteFalso())
     assert d.loc[0, "estado"] == "filled"
-    assert d.loc[0, "coste_ejecucion"] == pytest.approx(0.005)   # comprado un 0,5 % más caro
+    assert d.loc[0, "precio_ejecucion"] == pytest.approx(100.5)
+    # Sin hora de ejecución no hay vela de referencia: el coste queda sin calcular (no se usa el cierre viejo)
+    assert pd.isna(pd.to_numeric(d.loc[0, "coste_ejecucion"], errors="coerce"))
     diario.guardar(d, tmp_path / "x.csv")
     assert len(diario.cargar(tmp_path / "x.csv")) == 1
 

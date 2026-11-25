@@ -194,8 +194,9 @@ def informe_markdown(a: dict) -> str:
           "", "## Actividad de la semana", "",
           f"- Alertas: {e['alertas']}",
           f"- Órdenes paper: {e['ordenes']} (ejecutadas {e['ejecutadas']}, errores {e['errores']})",
-          f"- Diferencia media entre el precio de ejecución y el de referencia: {_pct(e['coste_medio'], 2)} "
-          "(positivo = peor para nosotros; incluye el movimiento del mercado desde el último cierre)", ""]
+          f"- Coste medio de ejecución: {_pct(e['coste_medio'], 2)} por orden "
+          "(precio real frente a la apertura de la vela de 1 hora en que se ejecutó; positivo = peor para nosotros). "
+          "El backtest supone 0,05 % en acciones y 0,25 % en cripto: si el real es mayor, el backtest es optimista.", ""]
     return "\n".join(L) + "\n"
 
 

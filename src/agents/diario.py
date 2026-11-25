@@ -6,12 +6,14 @@ Registro de todo lo que hace el sistema, en diario/operaciones.csv
   - tipo "alerta": cada cambio de la cartera ejecutable que se avisa por Telegram.
   - tipo "orden":  cada orden enviada (o simulada) a la cuenta paper de Alpaca.
 
-Para las órdenes se guarda el precio de referencia (último cierre) y,
-cuando Alpaca la ejecuta, el precio real. La columna coste_ejecucion es
-la diferencia entre ambos (positivo = peor para nosotros). Ojo: incluye
-el movimiento del mercado entre el cierre y la ejecución, no solo el
-deslizamiento; promediada en muchas órdenes, mide el coste de operar
-al día siguiente de la señal.
+Para las órdenes, cuando Alpaca la ejecuta, se guarda el precio real, la
+hora de ejecución y como referencia (precio_ref) la APERTURA DE LA VELA DE
+1 HORA en la que se ejecutó. coste_ejecucion = diferencia entre ambos
+(positivo = peor para nosotros): mide la horquilla y el deslizamiento,
+sin mezclar el movimiento del mercado de horas o días anteriores (las
+órdenes enviadas con la bolsa cerrada se ejecutan en la apertura y se
+comparan con el precio de apertura). Si el activo no tiene datos horarios
+(ETFs fuera del universo táctico), el coste queda vacío.
 Sirve para auditar el sistema y, en la fase con dinero real, como base
 para la declaración de la renta.
 """
@@ -27,7 +29,7 @@ RUTA_DIARIO = ROOT / "diario" / "operaciones.csv"
 COLUMNAS = [
     "fecha_utc", "tipo", "activo", "accion", "importe", "moneda", "peso_antes", "peso_despues",
     "precio_ref", "estado", "order_id", "precio_ejecucion", "cantidad_ejecutada", "coste_ejecucion",
-    "estrategias", "detalle",
+    "estrategias", "detalle", "fecha_ejecucion",
 ]
 ESTADOS_FINALES = {"filled", "canceled", "cancelled", "expired", "rejected", "error", "simulada", "replaced"}
 
@@ -75,10 +77,56 @@ def filas_ordenes(resultados: list[dict], cierres: dict, modo: str) -> list[dict
     } for r in resultados]
 
 
+def referencia_horaria(activo: str, fecha_ejecucion) -> float | None:
+    """Apertura de la vela de 1 hora en la que se ejecutó la orden (None si no hay datos)."""
+    from src.data import horario
+    mercado, simbolo = ("cripto", activo.replace("-", "/")) if activo.endswith("-USD") else ("acciones", activo)
+    velas = horario.cargar(mercado, simbolo)
+    if velas.empty:
+        return None
+    t = pd.Timestamp(fecha_ejecucion)
+    t = (t.tz_convert("UTC") if t.tzinfo else t.tz_localize("UTC")).tz_localize(None).floor("h")
+    return float(velas.loc[t, "open"]) if t in velas.index else None
+
+
+def _necesita_revision(fila) -> bool:
+    estado = str(fila["estado"]).lower()
+    if estado not in ESTADOS_FINALES:
+        return True
+    # Ejecutada pero sin coste calculado (sus datos horarios aún no estaban): reintentar 3 días
+    if estado == "filled" and pd.isna(pd.to_numeric(fila.get("coste_ejecucion"), errors="coerce")):
+        f = pd.to_datetime(fila.get("fecha_ejecucion") or fila["fecha_utc"], errors="coerce", utc=True)
+        return bool(pd.notna(f) and datetime.now(timezone.utc) - f.to_pydatetime() < pd.Timedelta(days=3))
+    return False
+
+
 def actualizar_ejecuciones(diario: pd.DataFrame, cliente) -> pd.DataFrame:
-    """Consulta en Alpaca las órdenes aún abiertas y apunta su precio de ejecución."""
+    """Consulta en Alpaca las órdenes aún abiertas (o sin coste calculado) y apunta su
+    precio y hora de ejecución y el coste frente a la vela de 1 hora de ese momento."""
     if diario.empty:
         return diario
+    diario = diario.reindex(columns=COLUMNAS).astype(object)
+    candidatas = diario[(diario["tipo"] == "orden") & diario["order_id"].notna() & (diario["order_id"] != "")]
+    for i, fila in candidatas.iterrows():
+        if not _necesita_revision(fila):
+            continue
+        try:
+            o = cliente.orden(str(fila["order_id"]))
+        except Exception:  # noqa: BLE001
+            continue
+        diario.at[i, "estado"] = o.get("status", fila["estado"])
+        if o.get("filled_avg_price"):
+            precio = float(o["filled_avg_price"])
+            diario.at[i, "precio_ejecucion"] = precio
+            diario.at[i, "cantidad_ejecutada"] = float(o.get("filled_qty") or 0)
+            if o.get("filled_at"):
+                diario.at[i, "fecha_ejecucion"] = str(o["filled_at"])[:19]
+                ref = referencia_horaria(str(fila["activo"]), o["filled_at"])
+                if ref:
+                    signo = 1 if fila["accion"] == "comprar" else -1  # comprar más caro / vender más barato = coste
+                    diario.at[i, "precio_ref"] = ref
+                    diario.at[i, "coste_ejecucion"] = round(signo * (precio / ref - 1), 5)
+    return diario
     pendientes = diario[(diario["tipo"] == "orden") & diario["order_id"].notna() & (diario["order_id"] != "")
                         & ~diario["estado"].astype(str).str.lower().isin(ESTADOS_FINALES)]
     for i, fila in pendientes.iterrows():

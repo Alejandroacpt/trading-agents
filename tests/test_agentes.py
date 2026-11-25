@@ -122,3 +122,24 @@ def test_cambiar_capital_reescala_la_cartera_virtual():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_coste_frente_a_la_vela_horaria(tmp_path, monkeypatch):
+    import pandas as pd
+    from src.agents import diario as dmod
+    from src.data import horario
+    velas = pd.DataFrame({"open": [100.0, 101.0], "high": [101, 102], "low": [99, 100], "close": [100.5, 101.5],
+                          "volume": [1, 1]}, index=pd.to_datetime(["2026-11-24 14:00", "2026-11-24 15:00"]))
+    monkeypatch.setattr(horario, "cargar", lambda m, s: velas if s == "AAPL" else pd.DataFrame())
+    d = pd.DataFrame([{"fecha_utc": "2026-11-24T10:00+00:00", "tipo": "orden", "activo": "AAPL", "accion": "comprar",
+                       "importe": 100, "estado": "accepted", "order_id": "o1", "precio_ref": 90.0}])
+
+    class C:
+        def orden(self, oid):
+            return {"status": "filled", "filled_avg_price": "100.05", "filled_qty": "1",
+                    "filled_at": "2026-11-24T14:30:05Z"}
+
+    r = dmod.actualizar_ejecuciones(d, C())
+    assert r.loc[0, "precio_ref"] == 100.0                     # apertura de la vela de las 14:00, no el cierre viejo
+    assert abs(r.loc[0, "coste_ejecucion"] - 0.0005) < 1e-9
+    assert r.loc[0, "fecha_ejecucion"] == "2026-11-24T14:30:05"
