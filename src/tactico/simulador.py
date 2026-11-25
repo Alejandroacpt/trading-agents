@@ -19,10 +19,6 @@ Reglas (las mismas que se aplicarán en vivo):
 8. Orden limitada opcional en la entrada (columna "limite"): solo se
    ejecuta si el precio llega al límite en la vela siguiente (si no, se
    cancela) y paga la comisión de órdenes limitadas.
-9. Prioridad (columna "prioridad", opcional): si en la misma vela hay más
-   señales de compra que huecos o dinero, entran primero las de prioridad más
-   alta (la señal más fuerte, la de más rentabilidad esperada). Sin esa
-   columna, o antes de `priorizar_desde`, se sigue el orden de la lista.
 
 Solo largos en esta versión.
 """
@@ -43,7 +39,6 @@ class Parametros:
     coste: float = 0.0025
     sin_intradia: bool = False
     coste_limitada: float | None = None   # comisión de las órdenes limitadas (None = la misma)
-    priorizar_desde: str | None = None    # fecha desde la que se ordena por prioridad (None = siempre)
 
 
 def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: Parametros,
@@ -73,8 +68,6 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     TR = matriz(senales, "dinamico")
     MV = matriz(senales, "max_velas")
     LIM = matriz(senales, "limite")
-    PR = matriz(senales, "prioridad")
-    t_prioridad = 0 if p.priorizar_desde is None else int(indice.searchsorted(pd.Timestamp(p.priorizar_desde)))
     fechas = indice.normalize()
 
     caja = 1.0
@@ -84,7 +77,6 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     t_entrada = np.full(N, -1)
     dist_pendiente = np.full(N, np.nan)
     limite_pendiente = np.full(N, np.nan)
-    prioridad_pendiente = np.full(N, np.nan)
     entrada_pendiente = np.zeros(N, dtype=bool)
     salida_pendiente = np.zeros(N, dtype=bool)
     ultimo_cierre = np.full(N, np.nan)
@@ -119,12 +111,7 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
                 continue  # regla PDT: se cierra en la siguiente sesión
             cerrar(i, t, O[t, i], "señal")
             salida_pendiente[i] = False
-        candidatas = np.where(entrada_pendiente & hay & (qty == 0))[0]
-        if t >= t_prioridad and len(candidatas) > 1:
-            # La más fuerte primero (las que no tienen prioridad, al final; empates: orden de la lista)
-            clave = np.nan_to_num(prioridad_pendiente[candidatas], nan=-np.inf)
-            candidatas = candidatas[np.argsort(-clave, kind="stable")]
-        for i in candidatas:
+        for i in np.where(entrada_pendiente & hay & (qty == 0))[0]:
             entrada_pendiente[i] = False
             d = dist_pendiente[i]
             if not (d > 0) or (qty > 0).sum() >= p.max_posiciones:
@@ -180,7 +167,6 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
                 entrada_pendiente[i] = True
                 dist_pendiente[i] = SD[t, i]
                 limite_pendiente[i] = LIM[t, i]
-                prioridad_pendiente[i] = PR[t, i]
 
         pesos[t] = valor_pos / equity[t] if equity[t] > 0 else 0
         rotacion[t] /= max(equity_prev, 1e-12)
@@ -191,11 +177,8 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     abiertas = [{"activo": activos[i], "entrada": indice[t_entrada[i]], "precio_entrada": float(precio_entrada[i]),
                  "stop": float(stop[i]), "peso": float(pesos[T - 1, i]) if T else 0.0,
                  "cierre": float(ultimo_cierre[i])} for i in np.where(qty > 0)[0]]
-    orden = np.where(entrada_pendiente)[0]
-    orden = orden[np.argsort(-np.nan_to_num(prioridad_pendiente[orden], nan=-np.inf), kind="stable")]
-    pendientes = ([{"activo": activos[i], "accion": "comprar", "distancia_stop": float(dist_pendiente[i]),
-                    "prioridad": None if np.isnan(prioridad_pendiente[i]) else round(float(prioridad_pendiente[i]), 3)}
-                   for i in orden]
+    pendientes = ([{"activo": activos[i], "accion": "comprar", "distancia_stop": float(dist_pendiente[i])}
+                   for i in np.where(entrada_pendiente)[0]]
                   + [{"activo": activos[i], "accion": "vender"} for i in np.where(salida_pendiente & (qty > 0))[0]])
 
     eq = pd.Series(equity, index=indice)
