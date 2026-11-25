@@ -1,0 +1,229 @@
+{
+ "fecha": "2026-11-25T18:42+00:00",
+ "tipo": "biblioteca",
+ "estrategias": [
+  {
+   "id": "tsmom",
+   "nombre": "Tendencia multi-activo (TSMOM)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Robustez de parámetros",
+    "Sharpe walk-forward",
+    "Sharpe deflactado (DSR)"
+   ],
+   "sharpe": 0.3792,
+   "sharpe_test": 0.2986,
+   "cagr": 0.0293,
+   "max_dd": -0.0929,
+   "operaciones": 232,
+   "aciertos": 0.375,
+   "cagr_test": 0.0373,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "dual_momentum",
+   "nombre": "Dual momentum (rotación de bolsas)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Sharpe post-publicación",
+    "Sharpe walk-forward",
+    "Sharpe con costes x2",
+    "Sharpe deflactado (DSR)",
+    "Drawdown máximo",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.2316,
+   "sharpe_test": 0.1394,
+   "cagr": 0.0402,
+   "max_dd": -0.3372,
+   "operaciones": 63,
+   "aciertos": 0.5714,
+   "cagr_test": 0.0341,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "faber",
+   "nombre": "Filtro de tendencia de 10 meses (Faber)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "OBSERVACIÓN",
+   "fallos": [
+    "Sharpe deflactado (DSR)",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.4286,
+   "sharpe_test": 0.474,
+   "cagr": 0.047,
+   "max_dd": -0.1838,
+   "operaciones": 133,
+   "aciertos": 0.4286,
+   "cagr_test": 0.0623,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "rsi2",
+   "nombre": "Reversión a la media (RSI-2)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Sharpe post-publicación",
+    "Robustez de parámetros",
+    "Sharpe walk-forward",
+    "Sharpe con costes x2",
+    "Sharpe deflactado (DSR)",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.1452,
+   "sharpe_test": -0.0288,
+   "cagr": 0.0195,
+   "max_dd": -0.1167,
+   "operaciones": 749,
+   "aciertos": 0.6649,
+   "cagr_test": 0.0228,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "crypto_trend",
+   "nombre": "Tendencia en cripto",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "OBSERVACIÓN",
+   "fallos": [
+    "Drawdown máximo"
+   ],
+   "sharpe": 1.3386,
+   "sharpe_test": 1.0507,
+   "cagr": 0.8663,
+   "max_dd": -0.7072,
+   "operaciones": 193,
+   "aciertos": 0.3938,
+   "cagr_test": 0.5593,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "faber_vol",
+   "nombre": "Filtro de 10 meses + control de volatilidad",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Sharpe deflactado (DSR)",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.3748,
+   "sharpe_test": 0.3845,
+   "cagr": 0.0376,
+   "max_dd": -0.1619,
+   "operaciones": 133,
+   "aciertos": 0.4286,
+   "cagr_test": 0.0509,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "crypto_trend_vol",
+   "nombre": "Tendencia en cripto + control de volatilidad",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "APROBADA",
+   "fallos": [],
+   "sharpe": 1.2803,
+   "sharpe_test": 0.9305,
+   "cagr": 0.4357,
+   "max_dd": -0.3972,
+   "operaciones": 193,
+   "aciertos": 0.3938,
+   "cagr_test": 0.2575,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "multi_horizonte",
+   "nombre": "Tendencia multi-horizonte (1-3-12 meses)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "OBSERVACIÓN",
+   "fallos": [
+    "Sharpe deflactado (DSR)"
+   ],
+   "sharpe": 0.5627,
+   "sharpe_test": 0.5183,
+   "cagr": 0.047,
+   "max_dd": -0.0969,
+   "operaciones": 221,
+   "aciertos": 0.3891,
+   "cagr_test": 0.0577,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "cambio_de_mes",
+   "nombre": "Efecto cambio de mes",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Sharpe post-publicación",
+    "Robustez de parámetros",
+    "Sharpe walk-forward",
+    "Sharpe con costes x2",
+    "Sharpe deflactado (DSR)",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.0628,
+   "sharpe_test": 0.0482,
+   "cagr": 0.0144,
+   "max_dd": -0.2431,
+   "operaciones": 1306,
+   "aciertos": 0.5658,
+   "cagr_test": 0.0265,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "halloween",
+   "nombre": "Efecto Halloween (noviembre-abril)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "RECHAZADA",
+   "fallos": [
+    "Sharpe en test",
+    "Sharpe deflactado (DSR)",
+    "Drawdown máximo",
+    "Bate al SPY (test)"
+   ],
+   "sharpe": 0.4119,
+   "sharpe_test": 0.2855,
+   "cagr": 0.0638,
+   "max_dd": -0.3072,
+   "operaciones": 110,
+   "aciertos": 0.7,
+   "cagr_test": 0.0584,
+   "cagr_spy_test": 0.1347
+  },
+  {
+   "id": "cartera",
+   "nombre": "Cartera: Faber + cripto (con control de volatilidad)",
+   "mercado": null,
+   "tipo": "biblioteca",
+   "veredicto": "OBSERVACIÓN",
+   "fallos": [
+    "Sharpe deflactado (DSR)"
+   ],
+   "sharpe": 1.0641,
+   "sharpe_test": 0.8351,
+   "cagr": 0.1087,
+   "max_dd": -0.1254,
+   "operaciones": 272,
+   "aciertos": 0.3971,
+   "cagr_test": 0.0945,
+   "cagr_spy_test": 0.1347
+  }
+ ]
+}

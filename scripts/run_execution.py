@@ -114,6 +114,19 @@ def main() -> int:
     for c in cambios_stops:
         print("  " + c)
 
+    # Detalle real de cada posición gestionada (para el panel): precio medio, actual y resultado
+    detalle_posiciones = {}
+    try:
+        gestion = {ejecucion.normalizar(t.replace("-", "/")) for t in universo}
+        for p in cliente.posiciones():
+            sim = ejecucion.normalizar(p["symbol"])
+            if sim in gestion:
+                detalle_posiciones[p["symbol"]] = {
+                    k: round(float(p.get(k) or 0), 6) for k in
+                    ("qty", "avg_entry_price", "current_price", "market_value", "cost_basis", "unrealized_pl", "unrealized_plpc")}
+    except Exception as e:  # noqa: BLE001
+        print(f"  (sin detalle de posiciones: {e})")
+
     # 5) Estado de la cuenta paper
     hoy = datetime.now(timezone.utc).date().isoformat()
     equity = float(cuenta.get("equity", 0))
@@ -127,6 +140,7 @@ def main() -> int:
         "equity_cuenta_usd": round(equity, 2),
         "valor_posiciones_usd": round(sum(p["valor"] for p in actuales.values()), 2),
         "posiciones": {t: round(p["valor"], 2) for t, p in actuales.items()},
+        "detalle_posiciones": detalle_posiciones,
         "eurusd": eurusd,
         "actualizado": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "historial": historial[-800:],

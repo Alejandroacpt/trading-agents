@@ -141,6 +141,8 @@ def main() -> int:
     texto = "\n".join(L) + "\n"
     (carpeta / f"{fecha}.md").write_text(texto, encoding="utf-8")
     (carpeta / "ultimo.md").write_text(texto, encoding="utf-8")
+    from src.research import resumen_json  # noqa: E402
+    resumen_json.guardar(validaciones, "diario", carpeta / "ultimo.json")
     print(texto)
 
     # Telegram: lo mejor de cada mercado y las propuestas

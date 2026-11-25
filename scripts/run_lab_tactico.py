@@ -96,6 +96,8 @@ def main() -> int:
     carpeta.mkdir(parents=True, exist_ok=True)
     texto = "\n".join(L) + "\n"
     (carpeta / "tactico.md").write_text(texto, encoding="utf-8")
+    from src.research import resumen_json  # noqa: E402
+    resumen_json.guardar(validaciones, "tactico", carpeta / "tactico.json")
     print(texto)
 
     msg = [f"⚡ Laboratorio táctico · {len(validaciones)} experimentos"]

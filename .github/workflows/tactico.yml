@@ -51,6 +51,14 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: python -u scripts/run_execution.py
+      - name: Publicar panel web
+        if: always()
+        continue-on-error: true
+        env:
+          PANEL_TOKEN: ${{ secrets.PANEL_TOKEN }}
+          PANEL_REPO: Alejandroacpt/panel-trading
+        run: bash scripts/publicar_panel.sh
+
       - name: Guardar datos y estado
         if: always()   # se guarda lo descargado aunque el paso anterior se corte
         run: |

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Red de agentes de trading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: un cuadro de mando de mesa de operaciones, claro y sin adornos.
+   IDEA: la hoja de posiciones de un trader: una cifra grande, la curva y el libro de órdenes.
+   PICTURE: el campo menta con el valor de la cartera y su curva frente a lo aportado.
+   COLOUR y TYPE: blanco y negro con un campo menta; verde/rojo solo para ganancias/pérdidas. Space Grotesk + Inter.
+   LAYOUT: cifra y curva arriba; agentes, estrategias, posiciones, investigación y actividad debajo. */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0b0c0d);--ink:light-dark(#111315,#eef1ef);--muted:light-dark(#5b6168,#9aa3a0);
+--line:light-dark(#e4e7ea,#24282a);--card:light-dark(#f6f7f8,#141718);--mint:light-dark(#b8f5d0,#0f2a1e);--mint-ink:light-dark(#0b3d24,#b8f5d0);
+--up:light-dark(#11804a,#4ade80);--down:light-dark(#c62f2f,#f87171);--warn:light-dark(#a15c00,#fbbf24)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.big{font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.01em}
+h2{font-size:clamp(22px,2.4vw,30px);line-height:1.1;margin:0 0 6px}
+h3{font-size:17px;margin:0}
+a{color:inherit}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.lead{color:var(--muted);margin:0 0 20px;max-width:70ch}
+header{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:14px max(5vw,16px);border-bottom:1px solid var(--line)}
+header h1{font-size:18px;margin:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:4px 10px;border-radius:99px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}.dot.ok{background:var(--up)}.dot.ko{background:var(--down)}.dot.wa{background:var(--warn)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+.hero .num{background:var(--mint);color:var(--mint-ink);padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.hero .curve{padding:clamp(20px,3vw,40px) max(4vw,16px)}
+.big{font-size:clamp(44px,6.4vw,76px);font-weight:700;line-height:1;margin:6px 0 12px}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px;margin-top:22px}
+.kpi b{display:block;font-size:20px;font-family:"Space Grotesk",sans-serif}.kpi span{font-size:13px;opacity:.8}
+.up{color:var(--up)}.down{color:var(--down)}.hero .num .up,.hero .num .down{color:inherit}
+.fig{position:relative;min-height:320px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-bottom:8px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);margin-top:10px}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.chip.ap{background:var(--mint);color:var(--mint-ink);border-color:transparent}.chip.ob{color:var(--warn)}.chip.re{color:var(--down)}
+.strat{display:flex;flex-direction:column;gap:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:13px}
+.stats div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.stats b{display:block;font-size:16px}
+.bar{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.bar>i{display:block;height:100%;background:var(--mint-ink)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-weight:600;font-size:12px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.empty{color:var(--muted);font-size:14px;padding:14px 0}
+.funnel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.funnel div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}.funnel b{display:block;font-size:28px;font-family:"Space Grotesk",sans-serif}
+.feed{list-style:none;margin:0;padding:0}
+.feed li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.feed time{color:var(--muted);font-size:13px}
+.warnbox{background:var(--card);border:1px solid var(--down);color:var(--ink);border-radius:12px;padding:12px 16px;margin:16px max(5vw,16px) 0}
+footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;color:var(--muted)}.stack td:empty{display:none}.feed li{grid-template-columns:1fr;gap:2px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:no-preference){.card{transition:transform .15s}.card:hover{transform:translateY(-2px)}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<header>
+  <h1>Red de agentes de trading</h1>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <span class="pill"><span class="dot" id="estado-dot"></span><span id="estado-txt">Cargando…</span></span>
+    <span class="pill" id="actualizado">—</span>
+    <span class="pill">Paper trading · sin dinero real</span>
+  </div>
+</header>
+<div id="avisos"></div>
+
+<section class="hero">
+  <div class="num">
+    <div style="font-size:14px;font-weight:600">Cartera total</div>
+    <div class="big" id="total">—</div>
+    <div id="resultado" style="font-size:18px;font-weight:600">—</div>
+    <div class="kpis">
+      <div class="kpi"><b id="aportado">—</b><span>dinero aportado</span></div>
+      <div class="kpi"><b id="real">—</b><span>resultado real en Alpaca</span></div>
+      <div class="kpi"><b id="spy">—</b><span>SPY en el mismo periodo</span></div>
+      <div class="kpi"><b id="fase">—</b><span id="fase-sub">fase de capital</span></div>
+    </div>
+  </div>
+  <div class="curve">
+    <div class="legend"><span><i style="background:var(--ink)"></i>Cartera total</span><span><i style="background:var(--muted)"></i>Dinero aportado</span></div>
+    <div class="fig" id="fig-cartera"><svg id="svg-cartera" role="img" aria-label="Evolución de la cartera frente a lo aportado"></svg></div>
+  </div>
+</section>
+
+<section class="band"><div class="wrap">
+  <h2>La red de agentes</h2>
+  <p class="lead">Cada agente es un programa que trabaja solo con su horario. El punto verde indica que se ha ejecutado cuando le tocaba.</p>
+  <div class="grid" id="agentes"></div>
+</div></section>
+
+<section class="band" style="padding-top:0"><div class="wrap">
+  <h2>Motores y estrategias</h2>
+  <p class="lead">El dinero se reparte entre dos motores según la fase. Cada motor usa estrategias que han pasado el laboratorio; las que están en observación operan para acumular historial real.</p>
+  <div class="row2" id="motores"></div>
+  <h3 style="margin:26px 0 12px">Estrategias en vivo</h3>
+  <div class="row2" id="vivas"></div>
+  <h3 style="margin:26px 0 8px">Lo que ha probado el laboratorio</h3>
+  <div id="recuento"></div>
+  <div id="candidatas"></div>
+</div></section>
+
+<section class="band" style="padding-top:0"><div class="wrap">
+  <h2>Posiciones abiertas</h2>
+  <p class="lead" id="pos-lead">Datos reales de la cuenta paper de Alpaca. El stop es el precio al que se vende automáticamente si baja.</p>
+  <div class="scroll" id="posiciones"></div>
+  <div id="pendientes" style="margin-top:12px"></div>
+  <h3 style="margin:28px 0 8px">Operaciones cerradas</h3>
+  <div class="scroll" id="cerradas"></div>
+</div></section>
+
+<section class="band" style="padding-top:0"><div class="wrap">
+  <h2>Qué está investigando</h2>
+  <p class="lead" id="inv-lead">El investigador busca ideas cada semana y las filtra: primero un cribado rápido con datos antiguos, después la validación completa. Cada prueba sube el listón para descartar la suerte.</p>
+  <div class="funnel" id="funnel"></div>
+  <div class="scroll" id="ideas"></div>
+  <div id="fichas" style="margin-top:14px"></div>
+</div></section>
+
+<section class="band" style="padding-top:0"><div class="wrap">
+  <h2>Actividad reciente</h2>
+  <ul class="feed" id="actividad"></ul>
+</div></section>
+
+<footer class="band"><div class="wrap">
+  Sistema en fase de pruebas con dinero ficticio (paper trading). Nada de esta página es una recomendación de inversión.
+  Los resultados pasados, en backtest o en vivo, no garantizan resultados futuros. Se actualiza sola cada pocos minutos.
+</div></footer>
+
+<script>
+{
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = (x, d = 0) => x == null ? '—' : new Intl.NumberFormat('es-ES', {style:'currency', currency:'EUR', maximumFractionDigits:d, minimumFractionDigits:d}).format(x);
+const usd = (x, d = 2) => x == null ? '—' : new Intl.NumberFormat('es-ES', {style:'currency', currency:'USD', maximumFractionDigits:d, minimumFractionDigits:d}).format(x);
+const pct = (x, d = 1, signo = true) => x == null ? '—' : (signo && x > 0 ? '+' : '') + new Intl.NumberFormat('es-ES', {maximumFractionDigits:d, minimumFractionDigits:d}).format(x * 100) + ' %';
+const signedEur = (x, d = 2) => x == null ? '—' : (x > 0 ? '+' : '') + eur(x, d);
+const signedUsd = x => x == null ? '—' : (x > 0 ? '+' : '') + usd(x);
+const n2 = x => x == null ? '—' : new Intl.NumberFormat('es-ES', {maximumFractionDigits:2, minimumFractionDigits:2}).format(x);
+const cls = x => x == null ? '' : x > 0 ? 'up' : x < 0 ? 'down' : '';
+const fecha = s => s ? new Date(s).toLocaleString('es-ES', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '—';
+const hace = s => { if (!s) return 'nunca'; const m = Math.round((Date.now() - new Date(s)) / 60000);
+  return m < 1 ? 'ahora' : m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} d`; };
+const chip = v => { const t = String(v || '').toUpperCase(); const c = t.startsWith('APROB') ? 'ap' : t.startsWith('OBSERV') ? 'ob' : t.startsWith('RECHAZ') ? 're' : '';
+  return `<span class="chip ${c}">${esc(v || '—')}</span>`; };
+let datos = null;
+
+function curva() {
+  const s = $('svg-cartera'); if (!datos) return;
+  const W = s.clientWidth, H = s.clientHeight, h = datos.cartera.historial || [];
+  if (!h.length) { s.innerHTML = ''; return; }
+  const series = [['aportado', 'var(--muted)', 1.6], ['total', 'var(--ink)', 2.6]];
+  const vals = h.flatMap(p => series.map(([k]) => p[k]).filter(v => v != null));
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = Math.max((hi - lo) * 0.25, hi * 0.01, 5); lo = Math.max(0, lo - pad); hi += pad;
+  const L = 52, R = 12, T = 10, B = 26, n = h.length;
+  const x = i => n === 1 ? L + (W - L - R) / 2 : L + i * (W - L - R) / (n - 1), y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  let g = '';
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4, yy = y(v);
+    g += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="var(--line)"/><text x="${L - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="var(--muted)">${esc(eur(v))}</text>`; }
+  const paso = Math.max(1, Math.ceil(n / (W < 520 ? 3 : 6)));
+  h.forEach((p, i) => { if (i % paso === 0 || i === n - 1) g += `<text x="${x(i)}" y="${H - 6}" text-anchor="${n > 1 && i === 0 ? 'start' : n > 1 && i === n - 1 ? 'end' : 'middle'}" font-size="11" fill="var(--muted)">${esc(new Date(p.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'short'}))}</text>`; });
+  for (const [k, col, w] of series) {
+    const pts = h.map((p, i) => p[k] == null ? null : [x(i), y(p[k])]).filter(Boolean);
+    if (!pts.length) continue;
+    if (pts.length === 1) g += `<circle cx="${pts[0][0]}" cy="${pts[0][1]}" r="${w + 2.5}" fill="${col}"/>`;
+    else g += `<polyline fill="none" stroke="${col}" stroke-width="${w}" stroke-linejoin="round" points="${pts.map(p => p.join(',')).join(' ')}"/>`;
+  }
+  s.innerHTML = g;
+}
+const ro = new ResizeObserver(curva); ro.observe($('fig-cartera'));
+
+function pintar(d) {
+  datos = d; const c = d.cartera, r = c.cuenta_real || {};
+  $('total').textContent = eur(c.total, 2);
+  const rp = c.aportado ? c.resultado / c.aportado : null;
+  $('resultado').textContent = `${signedEur(c.resultado)} (${pct(rp, 2)}) desde el ${new Date(c.inicio).toLocaleDateString('es-ES', {day:'numeric', month:'long'})}`;
+  $('aportado').textContent = eur(c.aportado);
+  $('real').textContent = signedUsd(r.resultado_usd);
+  $('spy').textContent = pct(c.spy_rent, 2);
+  $('fase').textContent = `${Math.round((c.reparto.tactico || 0) * 100)}/${Math.round((c.reparto.estructural || 0) * 100)}`;
+  $('fase-sub').textContent = `fase ${c.fase}: táctico/estructural` + (c.siguiente_fase_eur ? ` · cambia al pasar de ${eur(c.siguiente_fase_eur)}` : '');
+  $('actualizado').textContent = `Actualizado ${hace(d.generado)}`;
+  const malos = d.agentes.filter(a => a.al_dia === false);
+  $('estado-dot').className = 'dot ' + (d.avisos.length || malos.length ? 'ko' : 'ok');
+  $('estado-txt').textContent = d.avisos.length || malos.length ? `${d.avisos.length + malos.length} aviso(s)` : 'Todo funcionando';
+  $('avisos').innerHTML = d.avisos.length ? `<div class="warnbox"><b>Vigilante:</b> ${d.avisos.map(esc).join(' · ')}</div>` : '';
+  curva();
+
+  $('agentes').innerHTML = d.agentes.map(a => `<div class="card"><div style="display:flex;gap:8px;align-items:center"><span class="dot ${a.al_dia === true ? 'ok' : a.al_dia === false ? 'ko' : ''}"></span><h3>${esc(a.nombre)}</h3></div>
+    <p>${esc(a.que)}</p><div class="meta"><span>${esc(a.cuando)}</span><span>${esc(hace(a.ultima))}</span></div></div>`).join('');
+
+  $('motores').innerHTML = d.motores.map(m => `<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${esc(m.nombre)}</h3><b class="big" style="font-size:26px;margin:0">${esc(eur(m.valor, 2))}</b></div>
+    <p>${esc(m.descripcion)}</p><div class="meta"><span>${Math.round((m.parte || 0) * 100)} % de la cartera</span><span>Kill-switch: ${esc(m.kill_switch)}</span></div>
+    <div class="bar" style="margin-top:8px"><i style="width:${Math.round((m.parte || 0) * 100)}%"></i></div></div>`).join('');
+
+  $('vivas').innerHTML = d.estrategias.vivas.map(s => { const ref = s.ref || {};
+    return `<div class="card strat"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3>${esc(s.nombre)}</h3>${chip(s.estado === 'observacion' ? 'Observación' : 'Aprobada')}</div>
+    <p style="margin:0">${esc(s.descripcion)}</p>
+    <div class="stats"><div><b>${esc(pct(ref.cagr, 1, false))}</b>al año (backtest)</div><div><b>${esc(pct(ref.max_drawdown, 0, false))}</b>peor caída</div><div><b class="${cls(s.rent_vivo)}">${esc(pct(s.rent_vivo, 2))}</b>en vivo</div></div>
+    <div class="meta"><span>Motor ${esc(s.motor)} · ${esc(s.mercado)}${s.motor === 'estructural' && s.invertida === false ? ' · ahora en liquidez' : ''}</span><span>${esc(s.semaforo || 'Auditor: sin datos aún')}</span></div></div>`; }).join('');
+
+  const rc = d.estrategias.recuento, tot = (rc['APROBADA'] || 0) + (rc['OBSERVACIÓN'] || 0) + (rc['RECHAZADA'] || 0);
+  $('recuento').innerHTML = `<p class="lead" style="margin-bottom:10px">${tot} estrategias evaluadas en los últimos laboratorios: <b>${rc['APROBADA'] || 0}</b> aprobadas, <b>${rc['OBSERVACIÓN'] || 0}</b> en observación y <b>${rc['RECHAZADA'] || 0}</b> rechazadas. Pruebas acumuladas: <b>${d.investigacion.pruebas}</b>.</p>
+    <div class="bar" style="height:12px;display:flex">${tot ? `<i style="width:${100 * (rc['APROBADA'] || 0) / tot}%;background:var(--up)"></i><i style="width:${100 * (rc['OBSERVACIÓN'] || 0) / tot}%;background:var(--warn)"></i><i style="width:${100 * (rc['RECHAZADA'] || 0) / tot}%;background:var(--down);opacity:.55"></i>` : ''}</div>`;
+  const cand = d.estrategias.candidatas;
+  $('candidatas').innerHTML = cand.length ? `<h3 style="margin:20px 0 6px">Candidatas que aún no operan</h3><table class="stack"><thead><tr><th>Estrategia</th><th>Veredicto</th><th class="n">Rentab. anual</th><th class="n">Sharpe test</th><th>Qué falla</th></tr></thead><tbody>${
+    cand.map(s => `<tr><td>${esc(s.nombre)}</td><td>${chip(s.veredicto)}</td><td class="n">${esc(pct(s.cagr))}</td><td class="n">${esc(n2(s.sharpe_test))}</td><td>${esc((s.fallos || []).join(', ') || '—')}</td></tr>`).join('')}</tbody></table>` : '';
+
+  const pos = d.posiciones;
+  $('posiciones').innerHTML = pos.length ? `<table class="stack"><thead><tr><th>Activo</th><th>Motor</th><th>Desde</th><th class="n">Entrada</th><th class="n">Ahora</th><th class="n">Stop</th><th class="n">Invertido</th><th class="n">Resultado</th></tr></thead><tbody>${
+    pos.map(p => { const dist = p.stop && p.precio_actual ? p.stop / p.precio_actual - 1 : null;
+      return `<tr><td><b>${esc(p.activo)}</b></td><td>${esc(p.motor)}</td><td>${esc(fecha(p.entrada))}</td><td class="n">${esc(p.precio_entrada ?? '—')}</td><td class="n">${esc(p.precio_actual ?? '—')}</td>
+      <td class="n">${p.stop ? esc(p.stop.toFixed(2)) + (dist != null ? ` <span style="color:var(--muted)">(${esc(pct(dist, 1))})</span>` : '') : '—'}</td>
+      <td class="n">${esc(usd(p.invertido_usd))}</td><td class="n ${cls(p.resultado_usd)}"><b>${esc(signedUsd(p.resultado_usd))}</b> ${p.resultado_pct != null ? esc(pct(p.resultado_pct, 2)) : ''}</td></tr>`; }).join('')}</tbody></table>`
+    : `<div class="empty">No hay posiciones abiertas: el dinero está en liquidez esperando señales.</div>`;
+  const conDato = pos.filter(p => p.resultado_usd != null), tr = conDato.reduce((a, p) => a + p.resultado_usd, 0);
+  if (conDato.length) $('pos-lead').textContent = `Datos reales de la cuenta paper de Alpaca. ${pos.length} posiciones, resultado abierto ${signedUsd(tr)}. El stop es el precio al que se vende automáticamente si baja.`;
+  $('pendientes').innerHTML = d.pendientes.length ? `<b>Señales pendientes</b> (se ejecutan en la próxima apertura): ${d.pendientes.map(p => `<span class="chip">${p.accion === 'comprar' ? 'Compra' : 'Venta'} ${esc(p.activo)}${p.importe_eur ? ' · ' + esc(eur(p.importe_eur)) : ''}</span>`).join(' ')}` : '';
+  $('cerradas').innerHTML = d.cerradas.length ? `<table class="stack"><thead><tr><th>Activo</th><th>Entrada</th><th>Salida</th><th class="n">Precio entrada</th><th class="n">Precio salida</th><th class="n">Resultado</th></tr></thead><tbody>${
+    d.cerradas.map(o => `<tr><td><b>${esc(o.activo)}</b></td><td>${esc(fecha(o.entrada))}</td><td>${esc(fecha(o.salida))}</td><td class="n">${esc(o.precio_entrada)}</td><td class="n">${esc(o.precio_salida)}</td><td class="n ${cls(o.resultado_usd)}"><b>${esc(signedUsd(o.resultado_usd))}</b> ${esc(pct(o.resultado_pct, 2))}</td></tr>`).join('')}</tbody></table>`
+    : `<div class="empty">Todavía no hay operaciones cerradas.</div>`;
+
+  const inv = d.investigacion;
+  $('inv-lead').textContent = `El investigador trabaja los ${inv.proxima}: busca ideas en papers, YouTube, TradingView y foros, y las filtra. Primero un cribado rápido con datos antiguos; las que pasan, validación completa. Cada prueba sube el listón para descartar la suerte.`;
+  $('funnel').innerHTML = `<div><b>${inv.pruebas}</b>pruebas acumuladas</div><div><b>${inv.cribadas}</b>ideas cribadas</div><div><b>${inv.pasaron}</b>pasaron el cribado</div>`;
+  $('ideas').innerHTML = inv.ideas.length ? `<table class="stack"><thead><tr><th>Fecha</th><th>Idea</th><th>Fuente</th><th>Mercado</th><th class="n">Sharpe</th><th class="n">Correlación</th><th>Resultado</th></tr></thead><tbody>${
+    inv.ideas.map(i => `<tr><td>${esc(i.fecha)}</td><td>${esc(i.idea)}</td><td>${i.url ? `<a href="${esc(i.url)}" rel="noopener" target="_blank">${esc(i.fuente || 'enlace')}</a>` : esc(i.fuente || '—')}</td><td>${esc(i.mercado)}</td><td class="n">${esc(n2(i.sharpe))}</td><td class="n">${esc(n2(i.correlacion))}</td><td>${i.pasa ? '<span class="chip ap">Pasa</span>' : `<span class="chip re" title="${esc(i.motivo)}">No pasa</span>`}</td></tr>`).join('')}</tbody></table>`
+    : `<div class="empty">Aún no hay ideas cribadas. La primera sesión del investigador es el sábado.</div>`;
+  $('fichas').innerHTML = inv.fichas.length ? `<b>Últimas fichas de investigación:</b> ${inv.fichas.map(f => `<span class="chip">${esc(f.fecha)} · ${esc(f.titulo)}</span>`).join(' ')}` : '';
+
+  $('actividad').innerHTML = d.actividad.length ? d.actividad.slice(0, 15).map(a => `<li><time>${esc(fecha(a.fecha))}</time><div><b>${a.tipo === 'orden' ? 'Orden ejecutada' : 'Señal'}:</b> ${esc(a.accion)} ${esc(a.activo)} <span style="color:var(--muted)">· ${esc(a.texto)}</span></div></li>`).join('')
+    : '<li><div class="empty">Sin actividad todavía.</div></li>';
+}
+
+async function cargar() {
+  try {
+    const r = await fetch('data.json?t=' + Date.now(), {cache: 'no-store'});
+    if (!r.ok) throw new Error(r.status);
+    pintar(await r.json());
+  } catch (e) {
+    $('estado-dot').className = 'dot wa'; $('estado-txt').textContent = 'No se pudieron cargar los datos';
+  }
+}
+cargar();
+setInterval(cargar, 5 * 60 * 1000);
+setInterval(() => { if (datos) $('actualizado').textContent = `Actualizado ${hace(datos.generado)}`; }, 60000);
+}
+</script>
+</body>
+</html>

@@ -69,6 +69,15 @@ def main() -> int:
     texto = auditor.informe_markdown(a)
     (carpeta / f"{a['fecha']}.md").write_text(texto, encoding="utf-8")
     (carpeta / "ultimo.md").write_text(texto, encoding="utf-8")
+    from src.research.resumen_json import _num  # noqa: E402
+    filas = [{"id": f["id"], "nombre": f["nombre"], "motor": f.get("motor", "estructural"), "estado": f["estado"],
+              "dias": f["dias"], "rent_vivo": _num(f["rent_vivo"]), "dd_vivo": _num(f["dd_vivo"]),
+              "semaforo": f["semaforo"], "motivo": f["motivo"],
+              "ref": {k: _num(f["ref"].get(k)) for k in ("cagr", "sharpe", "max_drawdown")}} for f in a["estrategias"]]
+    (carpeta / "ultimo.json").write_text(json.dumps({"fecha": a["fecha"], "estrategias": filas,
+                                                      "ejecucion": {k: (_num(v) if isinstance(v, float) else v)
+                                                                    for k, v in a["ejecucion"].items()}},
+                                                     ensure_ascii=False, indent=1, default=str), encoding="utf-8")
 
     resumen = auditor.resumen_telegram(a)
     print(texto)

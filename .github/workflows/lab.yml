@@ -36,6 +36,14 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scripts/run_lab_tactico.py
+      - name: Publicar panel web
+        if: always()
+        continue-on-error: true
+        env:
+          PANEL_TOKEN: ${{ secrets.PANEL_TOKEN }}
+          PANEL_REPO: Alejandroacpt/panel-trading
+        run: bash scripts/publicar_panel.sh
+
       - name: Guardar resultados
         run: |
           git config user.name "github-actions[bot]"

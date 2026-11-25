@@ -36,6 +36,8 @@ def main() -> int:
         v["veredicto"] = validator.veredicto(v)
 
     ruta = informe(validaciones, REPORTS_DIR / "validacion", precios.index.max().date())
+    from src.research import resumen_json  # noqa: E402
+    resumen_json.guardar(validaciones, "biblioteca", REPORTS_DIR / "validacion" / "ultimo.json")
     print(f"\nInforme: {ruta}\n")
     for v in validaciones:
         vd = v["veredicto"]

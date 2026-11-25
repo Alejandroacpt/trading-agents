@@ -1,0 +1,44 @@
+{
+ "fecha": "2026-11-25",
+ "estrategias": [
+  {
+   "id": "crypto_trend_vol",
+   "nombre": "Tendencia en cripto + control de volatilidad",
+   "motor": "estructural",
+   "estado": "aprobada",
+   "dias": 0,
+   "rent_vivo": 0.0001,
+   "dd_vivo": 0.0,
+   "semaforo": "⚪ POCOS DATOS",
+   "motivo": "0 días en vivo: aún no se puede juzgar (mínimo 3 meses).",
+   "ref": {
+    "cagr": 0.4357,
+    "sharpe": 1.2803,
+    "max_drawdown": -0.3972
+   }
+  },
+  {
+   "id": "tac_momentum_tendencia__acciones",
+   "nombre": "Momentum con tendencia diaria (media sesión)",
+   "motor": "táctico",
+   "estado": "observacion",
+   "dias": 0,
+   "rent_vivo": 0.0,
+   "dd_vivo": 0.0,
+   "semaforo": "⚪ POCOS DATOS",
+   "motivo": "Aún sin días completos en vivo.",
+   "ref": {
+    "cagr": 0.1319,
+    "sharpe": 0.9616,
+    "max_drawdown": -0.2033
+   }
+  }
+ ],
+ "ejecucion": {
+  "ordenes": 19,
+  "ejecutadas": 14,
+  "errores": 0,
+  "coste_medio": -0.0024,
+  "alertas": 5
+ }
+}

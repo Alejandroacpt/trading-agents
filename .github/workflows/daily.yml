@@ -70,6 +70,14 @@ jobs:
         continue-on-error: true
         run: python scripts/panel.py > /dev/null
 
+      - name: Publicar panel web
+        if: always()
+        continue-on-error: true
+        env:
+          PANEL_TOKEN: ${{ secrets.PANEL_TOKEN }}
+          PANEL_REPO: Alejandroacpt/panel-trading
+        run: bash scripts/publicar_panel.sh
+
       - name: Guardar datos, estado e informes en el repositorio
         run: |
           git config user.name "github-actions[bot]"

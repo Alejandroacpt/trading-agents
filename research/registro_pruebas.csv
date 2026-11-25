@@ -1,179 +1,179 @@
 clave,estrategia,familia,mercado,parametros,primera_fecha,ultima_fecha,sharpe_completo,sharpe_test,origen
-"cambio_de_mes|antes=1, despues=2",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=2",2026-11-23,2026-11-23,0.037,-0.197,biblioteca
-"cambio_de_mes|antes=1, despues=3",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=3",2026-11-23,2026-11-23,0.045,-0.0,biblioteca
-"cambio_de_mes|antes=1, despues=4",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=4",2026-11-23,2026-11-23,-0.047,-0.024,biblioteca
-"cambio_de_mes|antes=2, despues=2",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=2",2026-11-23,2026-11-23,0.161,0.064,biblioteca
-"cambio_de_mes|antes=2, despues=3",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=3",2026-11-23,2026-11-23,0.155,0.204,biblioteca
-"cambio_de_mes|antes=2, despues=4",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=4",2026-11-23,2026-11-23,0.062,0.155,biblioteca
-cartera|tope_cripto=0.15,cartera,cartera,multi,tope_cripto=0.15,2026-11-23,2026-11-23,1.016,0.766,biblioteca
-cartera|tope_cripto=0.25,cartera,cartera,multi,tope_cripto=0.25,2026-11-23,2026-11-23,1.057,0.826,biblioteca
-cartera|tope_cripto=0.35,cartera,cartera,multi,tope_cripto=0.35,2026-11-23,2026-11-23,1.047,0.815,biblioteca
-"crypto_trend_vol|dias=100, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.3",2026-11-23,2026-11-23,1.324,0.941,biblioteca
-"crypto_trend_vol|dias=100, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.4",2026-11-23,2026-11-23,1.281,0.931,biblioteca
-"crypto_trend_vol|dias=100, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.6",2026-11-23,2026-11-23,1.243,0.899,biblioteca
-"crypto_trend_vol|dias=200, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.3",2026-11-23,2026-11-23,1.375,0.867,biblioteca
-"crypto_trend_vol|dias=200, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.4",2026-11-23,2026-11-23,1.342,0.871,biblioteca
-"crypto_trend_vol|dias=200, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.6",2026-11-23,2026-11-23,1.326,0.872,biblioteca
-"crypto_trend_vol|dias=50, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.3",2026-11-23,2026-11-23,1.654,1.264,biblioteca
-"crypto_trend_vol|dias=50, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.4",2026-11-23,2026-11-23,1.606,1.238,biblioteca
-"crypto_trend_vol|dias=50, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.6",2026-11-23,2026-11-23,1.552,1.21,biblioteca
-crypto_trend|dias=100,crypto_trend,crypto_trend,multi,dias=100,2026-11-23,2026-11-23,1.339,1.051,biblioteca
-crypto_trend|dias=150,crypto_trend,crypto_trend,multi,dias=150,2026-11-23,2026-11-23,1.414,1.033,biblioteca
-crypto_trend|dias=20,crypto_trend,crypto_trend,multi,dias=20,2026-11-23,2026-11-23,1.553,1.187,biblioteca
-crypto_trend|dias=200,crypto_trend,crypto_trend,multi,dias=200,2026-11-23,2026-11-23,1.361,0.979,biblioteca
-crypto_trend|dias=50,crypto_trend,crypto_trend,multi,dias=50,2026-11-23,2026-11-23,1.654,1.407,biblioteca
-dual_momentum|meses=12,dual_momentum,dual_momentum,multi,meses=12,2026-11-23,2026-11-23,0.223,0.118,biblioteca
-dual_momentum|meses=3,dual_momentum,dual_momentum,multi,meses=3,2026-11-23,2026-11-23,0.301,0.115,biblioteca
-dual_momentum|meses=6,dual_momentum,dual_momentum,multi,meses=6,2026-11-23,2026-11-23,0.299,0.005,biblioteca
-dual_momentum|meses=9,dual_momentum,dual_momentum,multi,meses=9,2026-11-23,2026-11-23,0.313,0.193,biblioteca
-"faber_vol|meses=10, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.1",2026-11-23,2026-11-23,0.329,0.28,biblioteca
-"faber_vol|meses=10, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.15",2026-11-23,2026-11-23,0.368,0.37,biblioteca
-"faber_vol|meses=10, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.2",2026-11-23,2026-11-23,0.378,0.407,biblioteca
-"faber_vol|meses=12, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.1",2026-11-23,2026-11-23,0.418,0.339,biblioteca
-"faber_vol|meses=12, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.15",2026-11-23,2026-11-23,0.445,0.412,biblioteca
-"faber_vol|meses=12, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.2",2026-11-23,2026-11-23,0.448,0.447,biblioteca
-"faber_vol|meses=8, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.1",2026-11-23,2026-11-23,0.439,0.392,biblioteca
-"faber_vol|meses=8, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.15",2026-11-23,2026-11-23,0.479,0.482,biblioteca
-"faber_vol|meses=8, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.2",2026-11-23,2026-11-23,0.492,0.534,biblioteca
-faber|meses=10,faber,faber,multi,meses=10,2026-11-23,2026-11-23,0.421,0.457,biblioteca
-faber|meses=12,faber,faber,multi,meses=12,2026-11-23,2026-11-23,0.464,0.492,biblioteca
-faber|meses=6,faber,faber,multi,meses=6,2026-11-23,2026-11-23,0.515,0.591,biblioteca
-faber|meses=8,faber,faber,multi,meses=8,2026-11-23,2026-11-23,0.529,0.583,biblioteca
-"halloween|entrada=10, salida=4",halloween,halloween,multi,"entrada=10, salida=4",2026-11-23,2026-11-23,0.381,0.22,biblioteca
-"halloween|entrada=10, salida=5",halloween,halloween,multi,"entrada=10, salida=5",2026-11-23,2026-11-23,0.409,0.375,biblioteca
-"halloween|entrada=11, salida=4",halloween,halloween,multi,"entrada=11, salida=4",2026-11-23,2026-11-23,0.4,0.256,biblioteca
-"halloween|entrada=11, salida=5",halloween,halloween,multi,"entrada=11, salida=5",2026-11-23,2026-11-23,0.428,0.416,biblioteca
-lab_carry_divisas__forex|modo=con_tendencia,lab_carry_divisas__forex,carry_divisas,forex,modo=con_tendencia,2026-11-23,2026-11-24,0.317,0.127,laboratorio
-lab_carry_divisas__forex|modo=ranking,lab_carry_divisas__forex,carry_divisas,forex,modo=ranking,2026-11-23,2026-11-24,0.191,0.316,laboratorio
-lab_carry_divisas__forex|modo=signo,lab_carry_divisas__forex,carry_divisas,forex,modo=signo,2026-11-23,2026-11-24,0.227,0.459,laboratorio
-lab_momentum_mensual__bonos|meses=12,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=12,2026-11-23,2026-11-24,0.289,-0.11,laboratorio
-lab_momentum_mensual__bonos|meses=3,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=3,2026-11-23,2026-11-24,0.202,-0.321,laboratorio
-lab_momentum_mensual__bonos|meses=6,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=6,2026-11-23,2026-11-24,0.114,-0.175,laboratorio
-lab_momentum_mensual__cripto|meses=12,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=12,2026-11-23,2026-11-24,1.103,0.616,laboratorio
-lab_momentum_mensual__cripto|meses=3,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=3,2026-11-23,2026-11-24,1.081,0.593,laboratorio
-lab_momentum_mensual__cripto|meses=6,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=6,2026-11-23,2026-11-24,1.192,0.677,laboratorio
-lab_momentum_mensual__forex|meses=12,lab_momentum_mensual__forex,momentum_mensual,forex,meses=12,2026-11-23,2026-11-24,-0.025,-0.132,laboratorio
-lab_momentum_mensual__forex|meses=3,lab_momentum_mensual__forex,momentum_mensual,forex,meses=3,2026-11-23,2026-11-24,0.233,-0.289,laboratorio
-lab_momentum_mensual__forex|meses=6,lab_momentum_mensual__forex,momentum_mensual,forex,meses=6,2026-11-23,2026-11-24,-0.134,-0.4,laboratorio
-lab_momentum_mensual__materias_primas|meses=12,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=12,2026-11-23,2026-11-24,0.396,0.6,laboratorio
-lab_momentum_mensual__materias_primas|meses=3,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=3,2026-11-23,2026-11-24,0.2,0.603,laboratorio
-lab_momentum_mensual__materias_primas|meses=6,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=6,2026-11-23,2026-11-24,0.429,0.691,laboratorio
-lab_momentum_mensual__renta_variable|meses=12,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=12,2026-11-23,2026-11-24,0.615,0.451,laboratorio
-lab_momentum_mensual__renta_variable|meses=3,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=3,2026-11-23,2026-11-24,0.643,0.561,laboratorio
-lab_momentum_mensual__renta_variable|meses=6,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=6,2026-11-23,2026-11-24,0.571,0.337,laboratorio
-"lab_multi_horizonte__bonos|horizontes=(1, 3, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(1, 3, 12)",2026-11-23,2026-11-24,0.215,-0.332,laboratorio
-"lab_multi_horizonte__bonos|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-24,0.194,-0.296,laboratorio
-"lab_multi_horizonte__bonos|horizontes=(3, 6, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(3, 6, 12)",2026-11-23,2026-11-24,0.218,-0.219,laboratorio
-"lab_multi_horizonte__cripto|horizontes=(1, 3, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(1, 3, 12)",2026-11-23,2026-11-24,1.175,0.684,laboratorio
-"lab_multi_horizonte__cripto|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-24,1.173,0.66,laboratorio
-"lab_multi_horizonte__cripto|horizontes=(3, 6, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(3, 6, 12)",2026-11-23,2026-11-24,1.135,0.608,laboratorio
-"lab_multi_horizonte__forex|horizontes=(1, 3, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(1, 3, 12)",2026-11-23,2026-11-24,0.124,-0.286,laboratorio
-"lab_multi_horizonte__forex|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-24,0.034,-0.342,laboratorio
-"lab_multi_horizonte__forex|horizontes=(3, 6, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(3, 6, 12)",2026-11-23,2026-11-24,0.017,-0.321,laboratorio
-"lab_multi_horizonte__materias_primas|horizontes=(1, 3, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(1, 3, 12)",2026-11-23,2026-11-24,0.427,0.695,laboratorio
-"lab_multi_horizonte__materias_primas|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-24,0.467,0.708,laboratorio
-"lab_multi_horizonte__materias_primas|horizontes=(3, 6, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(3, 6, 12)",2026-11-23,2026-11-24,0.44,0.659,laboratorio
-"lab_multi_horizonte__renta_variable|horizontes=(1, 3, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(1, 3, 12)",2026-11-23,2026-11-24,0.59,0.459,laboratorio
-"lab_multi_horizonte__renta_variable|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-24,0.582,0.435,laboratorio
-"lab_multi_horizonte__renta_variable|horizontes=(3, 6, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(3, 6, 12)",2026-11-23,2026-11-24,0.599,0.462,laboratorio
-lab_reversion_rsi2__bonos|umbral=10,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=10,2026-11-23,2026-11-24,-0.166,-0.237,laboratorio
-lab_reversion_rsi2__bonos|umbral=20,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=20,2026-11-23,2026-11-24,-0.357,-0.365,laboratorio
-lab_reversion_rsi2__bonos|umbral=5,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=5,2026-11-23,2026-11-24,-0.038,0.182,laboratorio
-lab_reversion_rsi2__cripto|umbral=10,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=10,2026-11-23,2026-11-24,0.123,-0.054,laboratorio
-lab_reversion_rsi2__cripto|umbral=20,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=20,2026-11-23,2026-11-24,0.034,-0.071,laboratorio
-lab_reversion_rsi2__cripto|umbral=5,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=5,2026-11-23,2026-11-24,0.652,0.26,laboratorio
-lab_reversion_rsi2__forex|umbral=10,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=10,2026-11-23,2026-11-24,-0.247,-0.442,laboratorio
-lab_reversion_rsi2__forex|umbral=20,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=20,2026-11-23,2026-11-24,-0.263,-0.62,laboratorio
-lab_reversion_rsi2__forex|umbral=5,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=5,2026-11-23,2026-11-24,-0.269,-0.294,laboratorio
-lab_reversion_rsi2__materias_primas|umbral=10,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=10,2026-11-23,2026-11-24,-0.209,-0.07,laboratorio
-lab_reversion_rsi2__materias_primas|umbral=20,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=20,2026-11-23,2026-11-24,-0.223,0.005,laboratorio
-lab_reversion_rsi2__materias_primas|umbral=5,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=5,2026-11-23,2026-11-24,0.015,0.368,laboratorio
-lab_reversion_rsi2__renta_variable|umbral=10,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=10,2026-11-23,2026-11-24,0.303,-0.047,laboratorio
-lab_reversion_rsi2__renta_variable|umbral=20,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=20,2026-11-23,2026-11-24,0.305,-0.084,laboratorio
-lab_reversion_rsi2__renta_variable|umbral=5,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=5,2026-11-23,2026-11-24,0.209,-0.093,laboratorio
-lab_ruptura_canal__bonos|dias=100,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=100,2026-11-23,2026-11-24,0.246,-0.074,laboratorio
-lab_ruptura_canal__bonos|dias=20,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=20,2026-11-23,2026-11-24,0.142,-0.228,laboratorio
-lab_ruptura_canal__bonos|dias=50,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=50,2026-11-23,2026-11-24,0.277,0.131,laboratorio
-lab_ruptura_canal__cripto|dias=100,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=100,2026-11-23,2026-11-24,1.207,0.993,laboratorio
-lab_ruptura_canal__cripto|dias=20,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=20,2026-11-23,2026-11-24,1.576,1.235,laboratorio
-lab_ruptura_canal__cripto|dias=50,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=50,2026-11-23,2026-11-24,1.174,1.036,laboratorio
-lab_ruptura_canal__forex|dias=100,lab_ruptura_canal__forex,ruptura_canal,forex,dias=100,2026-11-23,2026-11-24,-0.012,-0.324,laboratorio
-lab_ruptura_canal__forex|dias=20,lab_ruptura_canal__forex,ruptura_canal,forex,dias=20,2026-11-23,2026-11-24,-0.097,-0.208,laboratorio
-lab_ruptura_canal__forex|dias=50,lab_ruptura_canal__forex,ruptura_canal,forex,dias=50,2026-11-23,2026-11-24,0.089,-0.141,laboratorio
-lab_ruptura_canal__materias_primas|dias=100,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=100,2026-11-23,2026-11-24,0.559,0.596,laboratorio
-lab_ruptura_canal__materias_primas|dias=20,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=20,2026-11-23,2026-11-24,0.232,0.367,laboratorio
-lab_ruptura_canal__materias_primas|dias=50,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=50,2026-11-23,2026-11-24,0.526,0.817,laboratorio
-lab_ruptura_canal__renta_variable|dias=100,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=100,2026-11-23,2026-11-24,0.502,0.285,laboratorio
-lab_ruptura_canal__renta_variable|dias=20,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=20,2026-11-23,2026-11-24,0.28,0.374,laboratorio
-lab_ruptura_canal__renta_variable|dias=50,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=50,2026-11-23,2026-11-24,0.447,0.33,laboratorio
-lab_tendencia_media__bonos|dias=100,lab_tendencia_media__bonos,tendencia_media,bonos,dias=100,2026-11-23,2026-11-24,0.097,-0.173,laboratorio
-lab_tendencia_media__bonos|dias=200,lab_tendencia_media__bonos,tendencia_media,bonos,dias=200,2026-11-23,2026-11-24,0.067,-0.364,laboratorio
-lab_tendencia_media__bonos|dias=50,lab_tendencia_media__bonos,tendencia_media,bonos,dias=50,2026-11-23,2026-11-24,-0.043,-0.315,laboratorio
-lab_tendencia_media__cripto|dias=100,lab_tendencia_media__cripto,tendencia_media,cripto,dias=100,2026-11-23,2026-11-24,1.284,0.941,laboratorio
-lab_tendencia_media__cripto|dias=200,lab_tendencia_media__cripto,tendencia_media,cripto,dias=200,2026-11-23,2026-11-24,1.345,0.907,laboratorio
-lab_tendencia_media__cripto|dias=50,lab_tendencia_media__cripto,tendencia_media,cripto,dias=50,2026-11-23,2026-11-24,1.518,1.203,laboratorio
-lab_tendencia_media__forex|dias=100,lab_tendencia_media__forex,tendencia_media,forex,dias=100,2026-11-23,2026-11-24,0.191,-0.038,laboratorio
-lab_tendencia_media__forex|dias=200,lab_tendencia_media__forex,tendencia_media,forex,dias=200,2026-11-23,2026-11-24,0.043,-0.246,laboratorio
-lab_tendencia_media__forex|dias=50,lab_tendencia_media__forex,tendencia_media,forex,dias=50,2026-11-23,2026-11-24,-0.075,-0.343,laboratorio
-lab_tendencia_media__materias_primas|dias=100,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=100,2026-11-23,2026-11-24,0.28,0.526,laboratorio
-lab_tendencia_media__materias_primas|dias=200,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=200,2026-11-23,2026-11-24,0.471,0.501,laboratorio
-lab_tendencia_media__materias_primas|dias=50,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=50,2026-11-23,2026-11-24,0.452,0.604,laboratorio
-lab_tendencia_media__renta_variable|dias=100,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=100,2026-11-23,2026-11-24,0.476,0.458,laboratorio
-lab_tendencia_media__renta_variable|dias=200,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=200,2026-11-23,2026-11-24,0.538,0.415,laboratorio
-lab_tendencia_media__renta_variable|dias=50,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=50,2026-11-23,2026-11-24,0.35,0.268,laboratorio
-"multi_horizonte|horizontes=(1, 3, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(1, 3, 12)",2026-11-23,2026-11-23,0.557,0.505,biblioteca
-"multi_horizonte|horizontes=(1, 3, 6, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-23,0.572,0.515,biblioteca
-"multi_horizonte|horizontes=(3, 6, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(3, 6, 12)",2026-11-23,2026-11-23,0.599,0.534,biblioteca
-"rsi2|umbral=10, tendencia=150",rsi2,rsi2,multi,"umbral=10, tendencia=150",2026-11-23,2026-11-23,0.115,-0.042,biblioteca
-"rsi2|umbral=10, tendencia=200",rsi2,rsi2,multi,"umbral=10, tendencia=200",2026-11-23,2026-11-23,0.136,-0.051,biblioteca
-"rsi2|umbral=10, tendencia=250",rsi2,rsi2,multi,"umbral=10, tendencia=250",2026-11-23,2026-11-23,0.133,-0.048,biblioteca
-"rsi2|umbral=15, tendencia=150",rsi2,rsi2,multi,"umbral=15, tendencia=150",2026-11-23,2026-11-23,0.155,0.041,biblioteca
-"rsi2|umbral=15, tendencia=200",rsi2,rsi2,multi,"umbral=15, tendencia=200",2026-11-23,2026-11-23,0.134,-0.029,biblioteca
-"rsi2|umbral=15, tendencia=250",rsi2,rsi2,multi,"umbral=15, tendencia=250",2026-11-23,2026-11-23,0.114,-0.076,biblioteca
-"rsi2|umbral=5, tendencia=150",rsi2,rsi2,multi,"umbral=5, tendencia=150",2026-11-23,2026-11-23,0.218,-0.092,biblioteca
-"rsi2|umbral=5, tendencia=200",rsi2,rsi2,multi,"umbral=5, tendencia=200",2026-11-23,2026-11-23,0.137,-0.116,biblioteca
-"rsi2|umbral=5, tendencia=250",rsi2,rsi2,multi,"umbral=5, tendencia=250",2026-11-23,2026-11-23,0.159,-0.077,biblioteca
-tac_momentum_horario__acciones|velas=168,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=168,2026-11-23,2026-11-24,0.558,0.326,laboratorio_tactico
-tac_momentum_horario__acciones|velas=24,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=24,2026-11-23,2026-11-24,-0.034,-0.709,laboratorio_tactico
-tac_momentum_horario__acciones|velas=72,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=72,2026-11-23,2026-11-24,0.338,0.243,laboratorio_tactico
-tac_momentum_horario__cripto|velas=168,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=168,2026-11-23,2026-11-24,-2.404,-2.937,laboratorio_tactico
-tac_momentum_horario__cripto|velas=24,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=24,2026-11-23,2026-11-24,-4.822,-6.702,laboratorio_tactico
-tac_momentum_horario__cripto|velas=72,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=72,2026-11-23,2026-11-24,-3.434,-4.59,laboratorio_tactico
-tac_momentum_tendencia__acciones|velas=180,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=180,2026-11-23,2026-11-24,0.787,0.367,laboratorio_tactico
-tac_momentum_tendencia__acciones|velas=42,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=42,2026-11-23,2026-11-24,1.17,1.235,laboratorio_tactico
-tac_momentum_tendencia__acciones|velas=90,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=90,2026-11-23,2026-11-24,0.949,0.956,laboratorio_tactico
-tac_momentum_tendencia__cripto|velas=180,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=180,2026-11-23,2026-11-24,0.192,0.015,laboratorio_tactico
-tac_momentum_tendencia__cripto|velas=42,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=42,2026-11-23,2026-11-24,-0.06,-0.271,laboratorio_tactico
-tac_momentum_tendencia__cripto|velas=90,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=90,2026-11-23,2026-11-24,0.129,0.378,laboratorio_tactico
-tac_retroceso_tendencia__acciones|umbral=15,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=15,2026-11-23,2026-11-24,0.321,0.354,laboratorio_tactico
-tac_retroceso_tendencia__acciones|umbral=25,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=25,2026-11-23,2026-11-24,-0.259,-0.76,laboratorio_tactico
-tac_retroceso_tendencia__acciones|umbral=35,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=35,2026-11-23,2026-11-24,0.052,-0.804,laboratorio_tactico
-tac_retroceso_tendencia__cripto|umbral=15,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=15,2026-11-23,2026-11-24,-0.293,-0.222,laboratorio_tactico
-tac_retroceso_tendencia__cripto|umbral=25,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=25,2026-11-23,2026-11-24,-0.812,-1.421,laboratorio_tactico
-tac_retroceso_tendencia__cripto|umbral=35,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=35,2026-11-23,2026-11-24,-1.378,-2.465,laboratorio_tactico
-tac_reversion_horaria__acciones|umbral=10,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=10,2026-11-23,2026-11-24,-0.829,-1.221,laboratorio_tactico
-tac_reversion_horaria__acciones|umbral=20,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=20,2026-11-23,2026-11-24,-0.982,-1.777,laboratorio_tactico
-tac_reversion_horaria__acciones|umbral=5,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=5,2026-11-23,2026-11-24,-0.922,-1.597,laboratorio_tactico
-tac_reversion_horaria__cripto|umbral=10,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=10,2026-11-23,2026-11-24,-6.048,-7.814,laboratorio_tactico
-tac_reversion_horaria__cripto|umbral=20,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=20,2026-11-23,2026-11-24,-8.113,-10.422,laboratorio_tactico
-tac_reversion_horaria__cripto|umbral=5,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=5,2026-11-23,2026-11-24,-4.197,-5.604,laboratorio_tactico
-tac_ruptura_horaria__acciones|velas=24,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=24,2026-11-23,2026-11-24,0.438,0.317,laboratorio_tactico
-tac_ruptura_horaria__acciones|velas=48,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=48,2026-11-23,2026-11-24,0.412,-0.596,laboratorio_tactico
-tac_ruptura_horaria__acciones|velas=96,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=96,2026-11-23,2026-11-24,0.75,0.566,laboratorio_tactico
-tac_ruptura_horaria__cripto|velas=24,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=24,2026-11-23,2026-11-24,-1.964,-3.212,laboratorio_tactico
-tac_ruptura_horaria__cripto|velas=48,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=48,2026-11-23,2026-11-24,-1.14,-1.97,laboratorio_tactico
-tac_ruptura_horaria__cripto|velas=96,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=96,2026-11-23,2026-11-24,-0.124,-1.026,laboratorio_tactico
-tac_ruptura_tendencia__acciones|velas=120,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=120,2026-11-23,2026-11-24,0.568,-0.346,laboratorio_tactico
-tac_ruptura_tendencia__acciones|velas=30,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=30,2026-11-23,2026-11-24,1.256,0.465,laboratorio_tactico
-tac_ruptura_tendencia__acciones|velas=60,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=60,2026-11-23,2026-11-24,0.941,0.264,laboratorio_tactico
-tac_ruptura_tendencia__cripto|velas=120,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=120,2026-11-23,2026-11-24,0.238,0.076,laboratorio_tactico
-tac_ruptura_tendencia__cripto|velas=30,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=30,2026-11-23,2026-11-24,0.162,0.355,laboratorio_tactico
-tac_ruptura_tendencia__cripto|velas=60,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=60,2026-11-23,2026-11-24,0.265,0.334,laboratorio_tactico
-"tsmom|meses=12, largo_corto=False",tsmom,tsmom,multi,"meses=12, largo_corto=False",2026-11-23,2026-11-23,0.374,0.286,biblioteca
-"tsmom|meses=12, largo_corto=True",tsmom,tsmom,multi,"meses=12, largo_corto=True",2026-11-23,2026-11-23,0.181,0.185,biblioteca
-"tsmom|meses=3, largo_corto=False",tsmom,tsmom,multi,"meses=3, largo_corto=False",2026-11-23,2026-11-23,0.45,0.275,biblioteca
-"tsmom|meses=3, largo_corto=True",tsmom,tsmom,multi,"meses=3, largo_corto=True",2026-11-23,2026-11-23,0.256,0.128,biblioteca
-"tsmom|meses=6, largo_corto=False",tsmom,tsmom,multi,"meses=6, largo_corto=False",2026-11-23,2026-11-23,0.408,0.179,biblioteca
-"tsmom|meses=6, largo_corto=True",tsmom,tsmom,multi,"meses=6, largo_corto=True",2026-11-23,2026-11-23,0.22,0.005,biblioteca
-"tsmom|meses=9, largo_corto=False",tsmom,tsmom,multi,"meses=9, largo_corto=False",2026-11-23,2026-11-23,0.425,0.393,biblioteca
-"tsmom|meses=9, largo_corto=True",tsmom,tsmom,multi,"meses=9, largo_corto=True",2026-11-23,2026-11-23,0.241,0.371,biblioteca
+"cambio_de_mes|antes=1, despues=2",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=2",2026-11-23,2026-11-25,0.058,-0.143,biblioteca
+"cambio_de_mes|antes=1, despues=3",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=3",2026-11-23,2026-11-25,0.063,0.048,biblioteca
+"cambio_de_mes|antes=1, despues=4",cambio_de_mes,cambio_de_mes,multi,"antes=1, despues=4",2026-11-23,2026-11-25,-0.031,0.017,biblioteca
+"cambio_de_mes|antes=2, despues=2",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=2",2026-11-23,2026-11-25,0.215,0.217,biblioteca
+"cambio_de_mes|antes=2, despues=3",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=3",2026-11-23,2026-11-25,0.203,0.335,biblioteca
+"cambio_de_mes|antes=2, despues=4",cambio_de_mes,cambio_de_mes,multi,"antes=2, despues=4",2026-11-23,2026-11-25,0.104,0.269,biblioteca
+cartera|tope_cripto=0.15,cartera,cartera,multi,tope_cripto=0.15,2026-11-23,2026-11-25,1.024,0.777,biblioteca
+cartera|tope_cripto=0.25,cartera,cartera,multi,tope_cripto=0.25,2026-11-23,2026-11-25,1.064,0.835,biblioteca
+cartera|tope_cripto=0.35,cartera,cartera,multi,tope_cripto=0.35,2026-11-23,2026-11-25,1.054,0.824,biblioteca
+"crypto_trend_vol|dias=100, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.3",2026-11-23,2026-11-25,1.324,0.941,biblioteca
+"crypto_trend_vol|dias=100, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.4",2026-11-23,2026-11-25,1.28,0.931,biblioteca
+"crypto_trend_vol|dias=100, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=100, vol_objetivo=0.6",2026-11-23,2026-11-25,1.243,0.899,biblioteca
+"crypto_trend_vol|dias=200, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.3",2026-11-23,2026-11-25,1.374,0.867,biblioteca
+"crypto_trend_vol|dias=200, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.4",2026-11-23,2026-11-25,1.342,0.87,biblioteca
+"crypto_trend_vol|dias=200, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=200, vol_objetivo=0.6",2026-11-23,2026-11-25,1.326,0.872,biblioteca
+"crypto_trend_vol|dias=50, vol_objetivo=0.3",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.3",2026-11-23,2026-11-25,1.653,1.263,biblioteca
+"crypto_trend_vol|dias=50, vol_objetivo=0.4",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.4",2026-11-23,2026-11-25,1.605,1.238,biblioteca
+"crypto_trend_vol|dias=50, vol_objetivo=0.6",crypto_trend_vol,crypto_trend_vol,multi,"dias=50, vol_objetivo=0.6",2026-11-23,2026-11-25,1.552,1.209,biblioteca
+crypto_trend|dias=100,crypto_trend,crypto_trend,multi,dias=100,2026-11-23,2026-11-25,1.339,1.051,biblioteca
+crypto_trend|dias=150,crypto_trend,crypto_trend,multi,dias=150,2026-11-23,2026-11-25,1.413,1.032,biblioteca
+crypto_trend|dias=20,crypto_trend,crypto_trend,multi,dias=20,2026-11-23,2026-11-25,1.552,1.187,biblioteca
+crypto_trend|dias=200,crypto_trend,crypto_trend,multi,dias=200,2026-11-23,2026-11-25,1.361,0.978,biblioteca
+crypto_trend|dias=50,crypto_trend,crypto_trend,multi,dias=50,2026-11-23,2026-11-25,1.653,1.407,biblioteca
+dual_momentum|meses=12,dual_momentum,dual_momentum,multi,meses=12,2026-11-23,2026-11-25,0.232,0.139,biblioteca
+dual_momentum|meses=3,dual_momentum,dual_momentum,multi,meses=3,2026-11-23,2026-11-25,0.312,0.144,biblioteca
+dual_momentum|meses=6,dual_momentum,dual_momentum,multi,meses=6,2026-11-23,2026-11-25,0.309,0.03,biblioteca
+dual_momentum|meses=9,dual_momentum,dual_momentum,multi,meses=9,2026-11-23,2026-11-25,0.323,0.217,biblioteca
+"faber_vol|meses=10, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.1",2026-11-23,2026-11-25,0.335,0.293,biblioteca
+"faber_vol|meses=10, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.15",2026-11-23,2026-11-25,0.375,0.384,biblioteca
+"faber_vol|meses=10, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=10, vol_objetivo=0.2",2026-11-23,2026-11-25,0.385,0.424,biblioteca
+"faber_vol|meses=12, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.1",2026-11-23,2026-11-25,0.424,0.352,biblioteca
+"faber_vol|meses=12, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.15",2026-11-23,2026-11-25,0.451,0.427,biblioteca
+"faber_vol|meses=12, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=12, vol_objetivo=0.2",2026-11-23,2026-11-25,0.455,0.464,biblioteca
+"faber_vol|meses=8, vol_objetivo=0.1",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.1",2026-11-23,2026-11-25,0.443,0.405,biblioteca
+"faber_vol|meses=8, vol_objetivo=0.15",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.15",2026-11-23,2026-11-25,0.483,0.496,biblioteca
+"faber_vol|meses=8, vol_objetivo=0.2",faber_vol,faber_vol,multi,"meses=8, vol_objetivo=0.2",2026-11-23,2026-11-25,0.498,0.55,biblioteca
+faber|meses=10,faber,faber,multi,meses=10,2026-11-23,2026-11-25,0.429,0.474,biblioteca
+faber|meses=12,faber,faber,multi,meses=12,2026-11-23,2026-11-25,0.472,0.509,biblioteca
+faber|meses=6,faber,faber,multi,meses=6,2026-11-23,2026-11-25,0.518,0.597,biblioteca
+faber|meses=8,faber,faber,multi,meses=8,2026-11-23,2026-11-25,0.535,0.6,biblioteca
+"halloween|entrada=10, salida=4",halloween,halloween,multi,"entrada=10, salida=4",2026-11-23,2026-11-25,0.392,0.248,biblioteca
+"halloween|entrada=10, salida=5",halloween,halloween,multi,"entrada=10, salida=5",2026-11-23,2026-11-25,0.419,0.401,biblioteca
+"halloween|entrada=11, salida=4",halloween,halloween,multi,"entrada=11, salida=4",2026-11-23,2026-11-25,0.412,0.285,biblioteca
+"halloween|entrada=11, salida=5",halloween,halloween,multi,"entrada=11, salida=5",2026-11-23,2026-11-25,0.44,0.443,biblioteca
+lab_carry_divisas__forex|modo=con_tendencia,lab_carry_divisas__forex,carry_divisas,forex,modo=con_tendencia,2026-11-23,2026-11-25,0.318,0.133,laboratorio
+lab_carry_divisas__forex|modo=ranking,lab_carry_divisas__forex,carry_divisas,forex,modo=ranking,2026-11-23,2026-11-25,0.192,0.322,laboratorio
+lab_carry_divisas__forex|modo=signo,lab_carry_divisas__forex,carry_divisas,forex,modo=signo,2026-11-23,2026-11-25,0.228,0.464,laboratorio
+lab_momentum_mensual__bonos|meses=12,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=12,2026-11-23,2026-11-25,0.289,-0.11,laboratorio
+lab_momentum_mensual__bonos|meses=3,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=3,2026-11-23,2026-11-25,0.201,-0.323,laboratorio
+lab_momentum_mensual__bonos|meses=6,lab_momentum_mensual__bonos,momentum_mensual,bonos,meses=6,2026-11-23,2026-11-25,0.114,-0.175,laboratorio
+lab_momentum_mensual__cripto|meses=12,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=12,2026-11-23,2026-11-25,1.103,0.616,laboratorio
+lab_momentum_mensual__cripto|meses=3,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=3,2026-11-23,2026-11-25,1.077,0.588,laboratorio
+lab_momentum_mensual__cripto|meses=6,lab_momentum_mensual__cripto,momentum_mensual,cripto,meses=6,2026-11-23,2026-11-25,1.188,0.672,laboratorio
+lab_momentum_mensual__forex|meses=12,lab_momentum_mensual__forex,momentum_mensual,forex,meses=12,2026-11-23,2026-11-25,-0.025,-0.131,laboratorio
+lab_momentum_mensual__forex|meses=3,lab_momentum_mensual__forex,momentum_mensual,forex,meses=3,2026-11-23,2026-11-25,0.234,-0.284,laboratorio
+lab_momentum_mensual__forex|meses=6,lab_momentum_mensual__forex,momentum_mensual,forex,meses=6,2026-11-23,2026-11-25,-0.133,-0.394,laboratorio
+lab_momentum_mensual__materias_primas|meses=12,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=12,2026-11-23,2026-11-25,0.393,0.593,laboratorio
+lab_momentum_mensual__materias_primas|meses=3,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=3,2026-11-23,2026-11-25,0.201,0.604,laboratorio
+lab_momentum_mensual__materias_primas|meses=6,lab_momentum_mensual__materias_primas,momentum_mensual,materias_primas,meses=6,2026-11-23,2026-11-25,0.429,0.693,laboratorio
+lab_momentum_mensual__renta_variable|meses=12,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=12,2026-11-23,2026-11-25,0.613,0.445,laboratorio
+lab_momentum_mensual__renta_variable|meses=3,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=3,2026-11-23,2026-11-25,0.641,0.556,laboratorio
+lab_momentum_mensual__renta_variable|meses=6,lab_momentum_mensual__renta_variable,momentum_mensual,renta_variable,meses=6,2026-11-23,2026-11-25,0.57,0.333,laboratorio
+"lab_multi_horizonte__bonos|horizontes=(1, 3, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,0.214,-0.333,laboratorio
+"lab_multi_horizonte__bonos|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,0.194,-0.297,laboratorio
+"lab_multi_horizonte__bonos|horizontes=(3, 6, 12)",lab_multi_horizonte__bonos,multi_horizonte,bonos,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,0.218,-0.22,laboratorio
+"lab_multi_horizonte__cripto|horizontes=(1, 3, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,1.174,0.681,laboratorio
+"lab_multi_horizonte__cripto|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,1.171,0.657,laboratorio
+"lab_multi_horizonte__cripto|horizontes=(3, 6, 12)",lab_multi_horizonte__cripto,multi_horizonte,cripto,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,1.132,0.604,laboratorio
+"lab_multi_horizonte__forex|horizontes=(1, 3, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,0.125,-0.283,laboratorio
+"lab_multi_horizonte__forex|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,0.035,-0.338,laboratorio
+"lab_multi_horizonte__forex|horizontes=(3, 6, 12)",lab_multi_horizonte__forex,multi_horizonte,forex,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,0.018,-0.316,laboratorio
+"lab_multi_horizonte__materias_primas|horizontes=(1, 3, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,0.427,0.693,laboratorio
+"lab_multi_horizonte__materias_primas|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,0.467,0.707,laboratorio
+"lab_multi_horizonte__materias_primas|horizontes=(3, 6, 12)",lab_multi_horizonte__materias_primas,multi_horizonte,materias_primas,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,0.44,0.658,laboratorio
+"lab_multi_horizonte__renta_variable|horizontes=(1, 3, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,0.589,0.455,laboratorio
+"lab_multi_horizonte__renta_variable|horizontes=(1, 3, 6, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,0.581,0.431,laboratorio
+"lab_multi_horizonte__renta_variable|horizontes=(3, 6, 12)",lab_multi_horizonte__renta_variable,multi_horizonte,renta_variable,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,0.598,0.457,laboratorio
+lab_reversion_rsi2__bonos|umbral=10,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=10,2026-11-23,2026-11-25,-0.169,-0.248,laboratorio
+lab_reversion_rsi2__bonos|umbral=20,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=20,2026-11-23,2026-11-25,-0.353,-0.359,laboratorio
+lab_reversion_rsi2__bonos|umbral=5,lab_reversion_rsi2__bonos,reversion_rsi2,bonos,umbral=5,2026-11-23,2026-11-25,-0.046,0.166,laboratorio
+lab_reversion_rsi2__cripto|umbral=10,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=10,2026-11-23,2026-11-25,0.123,-0.054,laboratorio
+lab_reversion_rsi2__cripto|umbral=20,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=20,2026-11-23,2026-11-25,0.034,-0.071,laboratorio
+lab_reversion_rsi2__cripto|umbral=5,lab_reversion_rsi2__cripto,reversion_rsi2,cripto,umbral=5,2026-11-23,2026-11-25,0.652,0.26,laboratorio
+lab_reversion_rsi2__forex|umbral=10,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=10,2026-11-23,2026-11-25,-0.247,-0.442,laboratorio
+lab_reversion_rsi2__forex|umbral=20,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=20,2026-11-23,2026-11-25,-0.263,-0.62,laboratorio
+lab_reversion_rsi2__forex|umbral=5,lab_reversion_rsi2__forex,reversion_rsi2,forex,umbral=5,2026-11-23,2026-11-25,-0.269,-0.294,laboratorio
+lab_reversion_rsi2__materias_primas|umbral=10,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=10,2026-11-23,2026-11-25,-0.21,-0.073,laboratorio
+lab_reversion_rsi2__materias_primas|umbral=20,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=20,2026-11-23,2026-11-25,-0.224,0.002,laboratorio
+lab_reversion_rsi2__materias_primas|umbral=5,lab_reversion_rsi2__materias_primas,reversion_rsi2,materias_primas,umbral=5,2026-11-23,2026-11-25,0.014,0.364,laboratorio
+lab_reversion_rsi2__renta_variable|umbral=10,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=10,2026-11-23,2026-11-25,0.302,-0.051,laboratorio
+lab_reversion_rsi2__renta_variable|umbral=20,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=20,2026-11-23,2026-11-25,0.304,-0.086,laboratorio
+lab_reversion_rsi2__renta_variable|umbral=5,lab_reversion_rsi2__renta_variable,reversion_rsi2,renta_variable,umbral=5,2026-11-23,2026-11-25,0.208,-0.098,laboratorio
+lab_ruptura_canal__bonos|dias=100,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=100,2026-11-23,2026-11-25,0.246,-0.074,laboratorio
+lab_ruptura_canal__bonos|dias=20,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=20,2026-11-23,2026-11-25,0.142,-0.228,laboratorio
+lab_ruptura_canal__bonos|dias=50,lab_ruptura_canal__bonos,ruptura_canal,bonos,dias=50,2026-11-23,2026-11-25,0.277,0.129,laboratorio
+lab_ruptura_canal__cripto|dias=100,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=100,2026-11-23,2026-11-25,1.207,0.993,laboratorio
+lab_ruptura_canal__cripto|dias=20,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=20,2026-11-23,2026-11-25,1.576,1.235,laboratorio
+lab_ruptura_canal__cripto|dias=50,lab_ruptura_canal__cripto,ruptura_canal,cripto,dias=50,2026-11-23,2026-11-25,1.174,1.035,laboratorio
+lab_ruptura_canal__forex|dias=100,lab_ruptura_canal__forex,ruptura_canal,forex,dias=100,2026-11-23,2026-11-25,-0.011,-0.317,laboratorio
+lab_ruptura_canal__forex|dias=20,lab_ruptura_canal__forex,ruptura_canal,forex,dias=20,2026-11-23,2026-11-25,-0.096,-0.201,laboratorio
+lab_ruptura_canal__forex|dias=50,lab_ruptura_canal__forex,ruptura_canal,forex,dias=50,2026-11-23,2026-11-25,0.09,-0.134,laboratorio
+lab_ruptura_canal__materias_primas|dias=100,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=100,2026-11-23,2026-11-25,0.559,0.596,laboratorio
+lab_ruptura_canal__materias_primas|dias=20,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=20,2026-11-23,2026-11-25,0.232,0.367,laboratorio
+lab_ruptura_canal__materias_primas|dias=50,lab_ruptura_canal__materias_primas,ruptura_canal,materias_primas,dias=50,2026-11-23,2026-11-25,0.526,0.817,laboratorio
+lab_ruptura_canal__renta_variable|dias=100,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=100,2026-11-23,2026-11-25,0.502,0.285,laboratorio
+lab_ruptura_canal__renta_variable|dias=20,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=20,2026-11-23,2026-11-25,0.28,0.374,laboratorio
+lab_ruptura_canal__renta_variable|dias=50,lab_ruptura_canal__renta_variable,ruptura_canal,renta_variable,dias=50,2026-11-23,2026-11-25,0.447,0.33,laboratorio
+lab_tendencia_media__bonos|dias=100,lab_tendencia_media__bonos,tendencia_media,bonos,dias=100,2026-11-23,2026-11-25,0.096,-0.175,laboratorio
+lab_tendencia_media__bonos|dias=200,lab_tendencia_media__bonos,tendencia_media,bonos,dias=200,2026-11-23,2026-11-25,0.067,-0.364,laboratorio
+lab_tendencia_media__bonos|dias=50,lab_tendencia_media__bonos,tendencia_media,bonos,dias=50,2026-11-23,2026-11-25,-0.044,-0.317,laboratorio
+lab_tendencia_media__cripto|dias=100,lab_tendencia_media__cripto,tendencia_media,cripto,dias=100,2026-11-23,2026-11-25,1.284,0.94,laboratorio
+lab_tendencia_media__cripto|dias=200,lab_tendencia_media__cripto,tendencia_media,cripto,dias=200,2026-11-23,2026-11-25,1.345,0.907,laboratorio
+lab_tendencia_media__cripto|dias=50,lab_tendencia_media__cripto,tendencia_media,cripto,dias=50,2026-11-23,2026-11-25,1.518,1.203,laboratorio
+lab_tendencia_media__forex|dias=100,lab_tendencia_media__forex,tendencia_media,forex,dias=100,2026-11-23,2026-11-25,0.192,-0.032,laboratorio
+lab_tendencia_media__forex|dias=200,lab_tendencia_media__forex,tendencia_media,forex,dias=200,2026-11-23,2026-11-25,0.045,-0.24,laboratorio
+lab_tendencia_media__forex|dias=50,lab_tendencia_media__forex,tendencia_media,forex,dias=50,2026-11-23,2026-11-25,-0.074,-0.336,laboratorio
+lab_tendencia_media__materias_primas|dias=100,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=100,2026-11-23,2026-11-25,0.28,0.526,laboratorio
+lab_tendencia_media__materias_primas|dias=200,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=200,2026-11-23,2026-11-25,0.472,0.503,laboratorio
+lab_tendencia_media__materias_primas|dias=50,lab_tendencia_media__materias_primas,tendencia_media,materias_primas,dias=50,2026-11-23,2026-11-25,0.452,0.604,laboratorio
+lab_tendencia_media__renta_variable|dias=100,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=100,2026-11-23,2026-11-25,0.477,0.458,laboratorio
+lab_tendencia_media__renta_variable|dias=200,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=200,2026-11-23,2026-11-25,0.538,0.414,laboratorio
+lab_tendencia_media__renta_variable|dias=50,lab_tendencia_media__renta_variable,tendencia_media,renta_variable,dias=50,2026-11-23,2026-11-25,0.35,0.268,laboratorio
+"multi_horizonte|horizontes=(1, 3, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(1, 3, 12)",2026-11-23,2026-11-25,0.563,0.518,biblioteca
+"multi_horizonte|horizontes=(1, 3, 6, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(1, 3, 6, 12)",2026-11-23,2026-11-25,0.579,0.529,biblioteca
+"multi_horizonte|horizontes=(3, 6, 12)",multi_horizonte,multi_horizonte,multi,"horizontes=(3, 6, 12)",2026-11-23,2026-11-25,0.607,0.552,biblioteca
+"rsi2|umbral=10, tendencia=150",rsi2,rsi2,multi,"umbral=10, tendencia=150",2026-11-23,2026-11-25,0.116,-0.04,biblioteca
+"rsi2|umbral=10, tendencia=200",rsi2,rsi2,multi,"umbral=10, tendencia=200",2026-11-23,2026-11-25,0.145,-0.029,biblioteca
+"rsi2|umbral=10, tendencia=250",rsi2,rsi2,multi,"umbral=10, tendencia=250",2026-11-23,2026-11-25,0.145,-0.019,biblioteca
+"rsi2|umbral=15, tendencia=150",rsi2,rsi2,multi,"umbral=15, tendencia=150",2026-11-23,2026-11-25,0.157,0.043,biblioteca
+"rsi2|umbral=15, tendencia=200",rsi2,rsi2,multi,"umbral=15, tendencia=200",2026-11-23,2026-11-25,0.146,-0.004,biblioteca
+"rsi2|umbral=15, tendencia=250",rsi2,rsi2,multi,"umbral=15, tendencia=250",2026-11-23,2026-11-25,0.125,-0.052,biblioteca
+"rsi2|umbral=5, tendencia=150",rsi2,rsi2,multi,"umbral=5, tendencia=150",2026-11-23,2026-11-25,0.218,-0.092,biblioteca
+"rsi2|umbral=5, tendencia=200",rsi2,rsi2,multi,"umbral=5, tendencia=200",2026-11-23,2026-11-25,0.151,-0.083,biblioteca
+"rsi2|umbral=5, tendencia=250",rsi2,rsi2,multi,"umbral=5, tendencia=250",2026-11-23,2026-11-25,0.178,-0.029,biblioteca
+tac_momentum_horario__acciones|velas=168,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=168,2026-11-23,2026-11-25,0.55,0.306,laboratorio_tactico
+tac_momentum_horario__acciones|velas=24,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=24,2026-11-23,2026-11-25,-0.05,-0.749,laboratorio_tactico
+tac_momentum_horario__acciones|velas=72,tac_momentum_horario__acciones,momentum_horario,tactico_acciones,velas=72,2026-11-23,2026-11-25,0.321,0.2,laboratorio_tactico
+tac_momentum_horario__cripto|velas=168,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=168,2026-11-23,2026-11-25,-2.403,-2.935,laboratorio_tactico
+tac_momentum_horario__cripto|velas=24,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=24,2026-11-23,2026-11-25,-4.823,-6.702,laboratorio_tactico
+tac_momentum_horario__cripto|velas=72,tac_momentum_horario__cripto,momentum_horario,tactico_cripto,velas=72,2026-11-23,2026-11-25,-3.437,-4.599,laboratorio_tactico
+tac_momentum_tendencia__acciones|velas=180,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=180,2026-11-23,2026-11-25,0.8,0.403,laboratorio_tactico
+tac_momentum_tendencia__acciones|velas=42,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=42,2026-11-23,2026-11-25,1.179,1.258,laboratorio_tactico
+tac_momentum_tendencia__acciones|velas=90,tac_momentum_tendencia__acciones,momentum_tendencia,tactico_acciones,velas=90,2026-11-23,2026-11-25,0.962,0.993,laboratorio_tactico
+tac_momentum_tendencia__cripto|velas=180,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=180,2026-11-23,2026-11-25,0.192,0.015,laboratorio_tactico
+tac_momentum_tendencia__cripto|velas=42,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=42,2026-11-23,2026-11-25,-0.06,-0.271,laboratorio_tactico
+tac_momentum_tendencia__cripto|velas=90,tac_momentum_tendencia__cripto,momentum_tendencia,tactico_cripto,velas=90,2026-11-23,2026-11-25,0.129,0.378,laboratorio_tactico
+tac_retroceso_tendencia__acciones|umbral=15,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=15,2026-11-23,2026-11-25,0.321,0.354,laboratorio_tactico
+tac_retroceso_tendencia__acciones|umbral=25,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=25,2026-11-23,2026-11-25,-0.259,-0.759,laboratorio_tactico
+tac_retroceso_tendencia__acciones|umbral=35,tac_retroceso_tendencia__acciones,retroceso_tendencia,tactico_acciones,umbral=35,2026-11-23,2026-11-25,0.059,-0.784,laboratorio_tactico
+tac_retroceso_tendencia__cripto|umbral=15,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=15,2026-11-23,2026-11-25,-0.293,-0.222,laboratorio_tactico
+tac_retroceso_tendencia__cripto|umbral=25,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=25,2026-11-23,2026-11-25,-0.812,-1.42,laboratorio_tactico
+tac_retroceso_tendencia__cripto|umbral=35,tac_retroceso_tendencia__cripto,retroceso_tendencia,tactico_cripto,umbral=35,2026-11-23,2026-11-25,-1.377,-2.464,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=10,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=10,2026-11-23,2026-11-25,-0.828,-1.218,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=20,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=20,2026-11-23,2026-11-25,-0.981,-1.775,laboratorio_tactico
+tac_reversion_horaria__acciones|umbral=5,tac_reversion_horaria__acciones,reversion_horaria,tactico_acciones,umbral=5,2026-11-23,2026-11-25,-0.92,-1.591,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=10,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=10,2026-11-23,2026-11-25,-6.047,-7.81,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=20,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=20,2026-11-23,2026-11-25,-8.111,-10.416,laboratorio_tactico
+tac_reversion_horaria__cripto|umbral=5,tac_reversion_horaria__cripto,reversion_horaria,tactico_cripto,umbral=5,2026-11-23,2026-11-25,-4.196,-5.6,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=24,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=24,2026-11-23,2026-11-25,0.422,0.274,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=48,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=48,2026-11-23,2026-11-25,0.418,-0.58,laboratorio_tactico
+tac_ruptura_horaria__acciones|velas=96,tac_ruptura_horaria__acciones,ruptura_horaria,tactico_acciones,velas=96,2026-11-23,2026-11-25,0.755,0.58,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=24,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=24,2026-11-23,2026-11-25,-1.965,-3.215,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=48,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=48,2026-11-23,2026-11-25,-1.14,-1.969,laboratorio_tactico
+tac_ruptura_horaria__cripto|velas=96,tac_ruptura_horaria__cripto,ruptura_horaria,tactico_cripto,velas=96,2026-11-23,2026-11-25,-0.124,-1.025,laboratorio_tactico
+tac_ruptura_tendencia__acciones|velas=120,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=120,2026-11-23,2026-11-25,0.569,-0.343,laboratorio_tactico
+tac_ruptura_tendencia__acciones|velas=30,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=30,2026-11-23,2026-11-25,1.256,0.467,laboratorio_tactico
+tac_ruptura_tendencia__acciones|velas=60,tac_ruptura_tendencia__acciones,ruptura_tendencia,tactico_acciones,velas=60,2026-11-23,2026-11-25,0.941,0.266,laboratorio_tactico
+tac_ruptura_tendencia__cripto|velas=120,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=120,2026-11-23,2026-11-25,0.238,0.076,laboratorio_tactico
+tac_ruptura_tendencia__cripto|velas=30,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=30,2026-11-23,2026-11-25,0.162,0.354,laboratorio_tactico
+tac_ruptura_tendencia__cripto|velas=60,tac_ruptura_tendencia__cripto,ruptura_tendencia,tactico_cripto,velas=60,2026-11-23,2026-11-25,0.264,0.333,laboratorio_tactico
+"tsmom|meses=12, largo_corto=False",tsmom,tsmom,multi,"meses=12, largo_corto=False",2026-11-23,2026-11-25,0.379,0.299,biblioteca
+"tsmom|meses=12, largo_corto=True",tsmom,tsmom,multi,"meses=12, largo_corto=True",2026-11-23,2026-11-25,0.185,0.197,biblioteca
+"tsmom|meses=3, largo_corto=False",tsmom,tsmom,multi,"meses=3, largo_corto=False",2026-11-23,2026-11-25,0.453,0.284,biblioteca
+"tsmom|meses=3, largo_corto=True",tsmom,tsmom,multi,"meses=3, largo_corto=True",2026-11-23,2026-11-25,0.258,0.133,biblioteca
+"tsmom|meses=6, largo_corto=False",tsmom,tsmom,multi,"meses=6, largo_corto=False",2026-11-23,2026-11-25,0.413,0.192,biblioteca
+"tsmom|meses=6, largo_corto=True",tsmom,tsmom,multi,"meses=6, largo_corto=True",2026-11-23,2026-11-25,0.224,0.017,biblioteca
+"tsmom|meses=9, largo_corto=False",tsmom,tsmom,multi,"meses=9, largo_corto=False",2026-11-23,2026-11-25,0.431,0.408,biblioteca
+"tsmom|meses=9, largo_corto=True",tsmom,tsmom,multi,"meses=9, largo_corto=True",2026-11-23,2026-11-25,0.246,0.387,biblioteca
