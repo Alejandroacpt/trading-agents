@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-25T20:55+00:00",
+  "actualizado": "2026-11-25T21:57+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -9,11 +9,11 @@
   "ajustes": [],
   "estrategias": {
     "tac_momentum_tendencia__acciones": {
-      "valor_eur": 696.99,
-      "liquidativo": 0.995707,
-      "operaciones": 0,
+      "valor_eur": 695.9,
+      "liquidativo": 0.994143,
+      "operaciones": 1,
       "kill_switch": "NORMAL",
-      "caida_motor": -0.0045
+      "caida_motor": -0.0061
     }
   },
   "posiciones": {
@@ -22,52 +22,46 @@
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 117.9,
       "stop": 111.96000000000001,
-      "peso": 0.24935288678464904,
-      "cierre": 117.09,
+      "peso": 0.25057698620481894,
+      "cierre": 117.48,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 173.8
+      "importe_eur": 174.38
     },
     "tac_momentum_tendencia__acciones|XLRE|2026-11-24 18:00:00": {
       "activo": "XLRE",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 43.32,
       "stop": 41.96571428571428,
-      "peso": 0.2546712993940647,
-      "cierre": 43.94,
+      "peso": 0.25460752084593286,
+      "cierre": 43.86,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 177.5
-    },
-    "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00": {
-      "activo": "TSLA",
-      "entrada": "2026-11-24 18:00:00",
-      "precio_entrada": 384.48,
-      "stop": 346.49357142857144,
-      "peso": 0.14705000900700144,
-      "cierre": 370.795,
-      "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 102.49
+      "importe_eur": 177.18
     },
     "tac_momentum_tendencia__acciones|JNJ|2026-11-24 18:00:00": {
       "activo": "JNJ",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 276.345,
       "stop": 263.8360714285714,
-      "peso": 0.25077802211439104,
-      "cierre": 276.015,
+      "peso": 0.24931157785458996,
+      "cierre": 273.97,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 174.79
+      "importe_eur": 173.5
     }
   },
   "pendientes": {
-    "tac_momentum_tendencia__acciones|TSLA|vender": {
-      "activo": "TSLA",
-      "accion": "vender",
+    "tac_momentum_tendencia__acciones|XLF|comprar": {
+      "activo": "XLF",
+      "accion": "comprar",
+      "distancia_stop": 2.222142857142858,
+      "importe_eur": 170.85,
       "estrategia": "tac_momentum_tendencia__acciones"
     }
   },
-  "cerradas": [],
-  "ultima_vela": "2026-11-25 19:00:00",
-  "valor_total_eur": 696.99,
+  "cerradas": [
+    "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00|2026-11-25 18:00:00"
+  ],
+  "ultima_vela": "2026-11-25 20:00:00",
+  "valor_total_eur": 695.9,
   "historial": [
     [
       "2026-11-24",
@@ -75,7 +69,7 @@
     ],
     [
       "2026-11-25",
-      696.99
+      695.9
     ]
   ]
 }

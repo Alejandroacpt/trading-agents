@@ -1,45 +1,45 @@
 {
   "modo": "paper",
   "fuente_capital": "presupuesto",
-  "capital_gestionado_usd": 1090.38,
-  "equity_cuenta_usd": 100000.4,
-  "valor_posiciones_usd": 579.39,
+  "capital_gestionado_usd": 1089.2,
+  "equity_cuenta_usd": 99999.23,
+  "valor_posiciones_usd": 578.24,
   "posiciones": {
-    "JNJ": 191.42,
-    "XLRE": 195.39,
-    "XLY": 192.57
+    "JNJ": 191.14,
+    "XLRE": 194.97,
+    "XLY": 192.12
   },
   "detalle_posiciones": {
     "JNJ": {
       "qty": 0.696338,
       "avg_entry_price": 275.714,
-      "current_price": 274.89,
-      "market_value": 191.416218,
+      "current_price": 274.5,
+      "market_value": 191.144646,
       "cost_basis": 191.99,
-      "unrealized_pl": -0.573782,
-      "unrealized_plpc": -0.00299
+      "unrealized_pl": -0.845354,
+      "unrealized_plpc": -0.0044
     },
     "XLRE": {
       "qty": 4.445242,
       "avg_entry_price": 43.19,
-      "current_price": 43.955,
-      "market_value": 195.39061,
+      "current_price": 43.86,
+      "market_value": 194.968312,
       "cost_basis": 191.99,
-      "unrealized_pl": 3.40061,
-      "unrealized_plpc": 0.01771
+      "unrealized_pl": 2.978312,
+      "unrealized_plpc": 0.01551
     },
     "XLY": {
       "qty": 1.635238,
       "avg_entry_price": 117.408,
-      "current_price": 117.75,
-      "market_value": 192.549251,
+      "current_price": 117.49,
+      "market_value": 192.124089,
       "cost_basis": 191.99,
-      "unrealized_pl": 0.559251,
-      "unrealized_plpc": 0.00291
+      "unrealized_pl": 0.134089,
+      "unrealized_plpc": 0.0007
     }
   },
   "eurusd": 1.09081,
-  "actualizado": "2026-11-25T20:55+00:00",
+  "actualizado": "2026-11-25T21:57+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -47,7 +47,7 @@
     ],
     [
       "2026-11-25",
-      100000.4
+      99999.23
     ]
   ],
   "incluye_tactico": true,
@@ -58,8 +58,9 @@
   },
   "aportacion_invertida": null,
   "objetivo": {
-    "XLRE": 0.1776,
-    "JNJ": 0.1749,
-    "XLY": 0.1739
+    "XLRE": 0.1774,
+    "XLY": 0.1746,
+    "JNJ": 0.1738,
+    "XLF": 0.1711
   }
 }
