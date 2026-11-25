@@ -95,7 +95,8 @@ def _necesita_revision(fila) -> bool:
         return True
     # Ejecutada pero sin coste calculado (sus datos horarios aún no estaban): reintentar 3 días
     if estado == "filled" and pd.isna(pd.to_numeric(fila.get("coste_ejecucion"), errors="coerce")):
-        f = pd.to_datetime(fila.get("fecha_ejecucion") or fila["fecha_utc"], errors="coerce", utc=True)
+        fe = fila.get("fecha_ejecucion")
+        f = pd.to_datetime(fe if isinstance(fe, str) and fe else fila["fecha_utc"], errors="coerce", utc=True)
         return bool(pd.notna(f) and datetime.now(timezone.utc) - f.to_pydatetime() < pd.Timedelta(days=3))
     return False
 

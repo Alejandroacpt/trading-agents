@@ -143,3 +143,14 @@ def test_coste_frente_a_la_vela_horaria(tmp_path, monkeypatch):
     assert r.loc[0, "precio_ref"] == 100.0                     # apertura de la vela de las 14:00, no el cierre viejo
     assert abs(r.loc[0, "coste_ejecucion"] - 0.0005) < 1e-9
     assert r.loc[0, "fecha_ejecucion"] == "2026-11-24T14:30:05"
+
+
+def test_reintenta_coste_de_ordenes_ejecutadas_recientes():
+    import pandas as pd
+    from datetime import datetime, timezone
+    from src.agents import diario as dmod
+    hoy = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M+00:00")
+    fila = pd.Series({"estado": "filled", "coste_ejecucion": float("nan"), "fecha_ejecucion": float("nan"), "fecha_utc": hoy})
+    assert dmod._necesita_revision(fila)
+    vieja = fila.copy(); vieja["fecha_utc"] = "2020-01-01T00:00+00:00"
+    assert not dmod._necesita_revision(vieja)
