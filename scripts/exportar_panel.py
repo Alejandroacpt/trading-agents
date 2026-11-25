@@ -156,15 +156,32 @@ def main() -> int:
                         "invertido_usd": num(alp.get("valor_posiciones_usd"), 2)},
     }
 
-    # --- Motores
+    # --- Motores (con resultado, caída y riesgo abierto)
+    est_t = list((tac.get("estrategias") or {}).values())
+    liq = [e.get("liquidativo") for e in est_t if e.get("liquidativo")]
+    rent_t = (sum(liq) / len(liq) - 1) if liq else 0.0
+    valor_t = tac.get("valor_total_eur") or 0.0
+    riesgo_t = 0.0
+    for p in (tac.get("posiciones") or {}).values():
+        if p.get("stop") and p.get("precio_entrada"):
+            riesgo_t += (p.get("importe_eur") or 0) * max(0.0, 1 - p["stop"] / p["precio_entrada"])
+    v_est = est.get("virtual") or {}
+    cap_e = est.get("capital_eur") or v_est.get("valor") or 0.0
     motores = [
-        {"id": "tactico", "nombre": "Motor táctico", "valor": num(tac.get("valor_total_eur"), 2),
+        {"id": "tactico", "nombre": "Motor táctico", "valor": num(valor_t, 2),
+         "resultado_eur": num(valor_t - valor_t / (1 + rent_t), 2), "resultado_pct": num(rent_t),
          "parte": cartera["reparto"].get("tactico"), "modo": conf_tac.get("modo"),
-         "kill_switch": ", ".join(sorted({e.get("kill_switch", "NORMAL") for e in (tac.get("estrategias") or {}).values()})) or "NORMAL",
+         "operaciones": sum(e.get("operaciones") or 0 for e in est_t), "abiertas": len(tac.get("posiciones") or {}),
+         "caida": num(min([e.get("caida_motor") or 0 for e in est_t] or [0])), "riesgo_abierto_eur": num(riesgo_t, 2),
+         "kill_switch": ", ".join(sorted({e.get("kill_switch", "NORMAL") for e in est_t})) or "NORMAL",
          "descripcion": "Operaciones de días a semanas en acciones y ETFs de EEUU (velas de media sesión)."},
-        {"id": "estructural", "nombre": "Motor estructural", "valor": num((est.get("virtual") or {}).get("valor"), 2),
+        {"id": "estructural", "nombre": "Motor estructural", "valor": num(v_est.get("valor"), 2),
+         "resultado_eur": num((v_est.get("valor") or 0) - cap_e, 2),
+         "resultado_pct": num((v_est.get("valor") or 0) / cap_e - 1 if cap_e else 0),
          "parte": cartera["reparto"].get("estructural"), "modo": "paper",
-         "kill_switch": est.get("kill_switch", "NORMAL"),
+         "operaciones": None, "abiertas": len(est.get("cartera") or {}),
+         "caida": num((v_est.get("valor") or 0) / v_est["maximo"] - 1 if v_est.get("maximo") else 0),
+         "riesgo_abierto_eur": None, "kill_switch": est.get("kill_switch", "NORMAL"),
          "descripcion": "Tendencias largas con datos diarios. En la fase agresiva, solo cripto."},
     ]
 
@@ -289,7 +306,10 @@ def main() -> int:
 
     datos = {
         "generado": ahora.isoformat(timespec="minutes"), "cartera": cartera, "motores": motores,
-        "estrategias": {"vivas": vivas, "candidatas": cand[:10], "recuento": recuento, "rechazadas": rechazadas},
+        "estrategias": {"vivas": vivas, "candidatas": cand[:10], "recuento": recuento, "rechazadas": rechazadas,
+                        "evaluadas": [{"nombre": s.get("nombre"), "veredicto": s.get("veredicto"), "tipo": s.get("tipo"),
+                                       "mercado": s.get("mercado"), "sharpe_test": s.get("sharpe_test"), "cagr": s.get("cagr"),
+                                       "vivo": s.get("id") in ids_vivos} for s in todas]},
         "posiciones": posiciones, "pendientes": pendientes, "cerradas": cerradas[:30], "actividad": actividad,
         "investigacion": investigacion, "agentes": agentes,
         "avisos": [v["texto"] for v in (vig.get("activos") or {}).values()],
