@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-26T09:45+00:00",
+  "actualizado": "2026-11-26T11:30+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -19,6 +19,7 @@
   "posiciones": {
     "tac_momentum_tendencia__acciones|XLY|2026-11-24 18:00:00": {
       "activo": "XLY",
+      "lado": "largo",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 117.9,
       "stop": 111.96000000000001,
@@ -29,6 +30,7 @@
     },
     "tac_momentum_tendencia__acciones|XLRE|2026-11-24 18:00:00": {
       "activo": "XLRE",
+      "lado": "largo",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 43.32,
       "stop": 41.96571428571428,
@@ -39,6 +41,7 @@
     },
     "tac_momentum_tendencia__acciones|JNJ|2026-11-24 18:00:00": {
       "activo": "JNJ",
+      "lado": "largo",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 276.345,
       "stop": 263.8360714285714,
@@ -60,7 +63,7 @@
   "cerradas": [
     "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00|2026-11-25 18:00:00"
   ],
-  "ultima_vela": "2026-11-26 08:00:00",
+  "ultima_vela": "2026-11-26 10:00:00",
   "valor_total_eur": 695.9,
   "historial": [
     [
