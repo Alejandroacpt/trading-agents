@@ -1,4 +1,4 @@
-# Señales y cartera · 2026-11-26T07:58+00:00 UTC
+# Señales y cartera · 2026-11-26T23:01+00:00 UTC
 
 **Cartera virtual:** 303 € (inicio 2026-11-23 con 300 €) · máximo 303 € · kill-switch **NORMAL**
 
@@ -56,11 +56,11 @@
 
 | Activo | Fecha | Cierre | Día | En cartera de |
 |---|---|---|---|---|
-| EURUSD=X EUR/USD | 2026-11-25 | 1,0962 | +0.5% | — |
-| GBPUSD=X GBP/USD | 2026-11-25 | 1,3112 | +0.6% | — |
-| JPY=X USD/JPY | 2026-11-25 | 159,26 | +0.2% | — |
-| AUDUSD=X AUD/USD | 2026-11-25 | 0,6634 | +0.1% | — |
-| CHF=X USD/CHF | 2026-11-25 | 0,8358 | -0.7% | — |
+| EURUSD=X EUR/USD | 2026-11-26 | 1,0973 | +0.1% | — |
+| GBPUSD=X GBP/USD | 2026-11-26 | 1,3104 | -0.1% | — |
+| JPY=X USD/JPY | 2026-11-26 | 159,26 | -0.0% | — |
+| AUDUSD=X AUD/USD | 2026-11-26 | 0,6633 | -0.0% | — |
+| CHF=X USD/CHF | 2026-11-26 | 0,8343 | -0.2% | — |
 
 *Forex: ninguna estrategia activa opera divisas (la TSMOM fue rechazada).*
 

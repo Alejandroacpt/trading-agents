@@ -1,4 +1,4 @@
-# Panel del sistema · 26/11/2026 07:58 UTC
+# Panel del sistema · 26/11/2026 23:01 UTC
 
 ## Cartera
 
@@ -31,14 +31,14 @@ Próximas aportaciones: 100 € el día 1 de cada mes. Siguiente fase al superar
 
 ## Cuenta paper (Alpaca)
 
-Capital gestionado 1,095 $ · posiciones 578 $ · actualizado 2026-11-26 07:58 UTC
+Capital gestionado 1,096 $ · posiciones 578 $ · actualizado 2026-11-26 23:01 UTC
 
 | Activo | Real | Objetivo | Diferencia |
 |---|---|---|---|
 | JNJ | +17,4 % | +17,4 % | +0,0 % |
 | XLF | +0,0 % | +17,1 % | -17,1 % ⚠️ |
 | XLRE | +17,8 % | +17,7 % | +0,1 % |
-| XLY | +17,6 % | +17,5 % | +0,1 % |
+| XLY | +17,5 % | +17,5 % | +0,1 % |
 
 ## Estrategias en vivo (último auditor)
 
@@ -62,7 +62,8 @@ Capital gestionado 1,095 $ · posiciones 578 $ · actualizado 2026-11-26 07:58 U
 
 ## Investigación
 
-- Pruebas acumuladas (listón del Sharpe deflactado): **218**
-- Ideas cribadas: 6 · pasaron el cribado: 0
+- Pruebas acumuladas (listón del Sharpe deflactado): **226**
+- Ideas cribadas: 14 · pasaron el cribado: 0
+- Últimas fichas: [patrones_graficos](../research/fichas/patrones_graficos.md), [2026-11-26-propuesta-sma200-apalancados](../research/fichas/2026-11-26-propuesta-sma200-apalancados.md), [2026-11-26-cortos-cripto-corto_ruptura_bajista](../research/fichas/2026-11-26-cortos-cripto-corto_ruptura_bajista.md), [2026-11-26-cortos-cripto-corto_rebote](../research/fichas/2026-11-26-cortos-cripto-corto_rebote.md), [2026-11-26-cortos-cripto-corto_debilidad_relativa](../research/fichas/2026-11-26-cortos-cripto-corto_debilidad_relativa.md)
 - Informes: [laboratorio](laboratorio/ultimo.md) · [laboratorio táctico](laboratorio/tactico.md) · [auditor](auditor/ultimo.md) · [señales](senales.md)
 

@@ -16,11 +16,11 @@
 | ✅ | BTC-USD | Bitcoin | crypto | 2014-09-17 | 2026-11-25 | 4453 | 60,378.1992 | +1.06% | yahoo |
 | ✅ | ETH-USD | Ethereum | crypto | 2017-11-09 | 2026-11-25 | 3304 | 1,690.7690 | +0.78% | yahoo |
 | ✅ | SOL-USD | Solana | crypto | 2020-04-10 | 2026-11-25 | 2421 | 70.3932 | +1.09% | yahoo |
-| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-25 | 5964 | 1.0962 | +0.50% | yahoo |
-| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-25 | 5976 | 1.3112 | +0.59% | yahoo |
-| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-25 | 7798 | 159.2620 | +0.16% | yahoo |
-| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-25 | 5340 | 0.6634 | +0.06% | yahoo |
-| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-25 | 6030 | 0.8358 | -0.68% | yahoo |
+| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-26 | 5965 | 1.0973 | +0.10% | yahoo |
+| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-26 | 5977 | 1.3104 | -0.06% | yahoo |
+| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-26 | 7799 | 159.2550 | -0.00% | yahoo |
+| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-26 | 5341 | 0.6633 | -0.01% | yahoo |
+| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-26 | 6031 | 0.8343 | -0.18% | yahoo |
 | ✅ | BIL | Letras del Tesoro 1-3 meses (liquidez) | cash | 2007-05-30 | 2026-11-25 | 4906 | 91.6400 | +0.03% | yahoo |
 
 ## Avisos de los últimos 30 días
