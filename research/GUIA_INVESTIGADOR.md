@@ -80,6 +80,10 @@ devuelve después); `corto_debilidad_relativa` Sharpe −0,66. Las tres tienen c
 opera (−0,14 a −0,18), pero ninguna tiene ventaja ni antes de costes salvo la ruptura (Sharpe bruto 0,40).
 No se validan ni se repiten con otros parámetros. Encargo cerrado salvo que Alejandro pida otra cosa.
 
+**Presupuesto de la semana del 23-29 nov:** ya usados 8 cribados (5 el 26 nov por la mañana y 3 en la
+ejecución extra del 26 nov: patrones de gráfico en acciones+inversos, cripto y forex, todos rechazados) y 0
+validaciones completas. **Para el sábado 28 quedan 2 cribados y 3 validaciones.**
+
 Prioridad actual:
 
 1. **Táctico agresivo que bata al SPY**: momentum / ruptura de baja rotación aplicados a activos más

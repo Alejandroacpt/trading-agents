@@ -206,6 +206,54 @@ def corto_debilidad_relativa(ohlc: dict, velas: int = 90, referencia: str = "BTC
     return out
 
 
+# ----------------------------------------------------------------------
+# PATRONES DE GRÁFICO (Lo, Mamaysky y Wang, 2000). Ficha propuesta por
+# Alejandro el 26 nov 2026: research/fichas/patrones_graficos.md
+# ----------------------------------------------------------------------
+
+INVERSOS = {"SPY": "SH", "QQQ": "PSQ"}   # patrones bajistas del índice -> compra del ETF inverso
+
+
+def _vigente(valor: pd.Series, velas: int) -> pd.Series:
+    """Último valor no nulo, durante como mucho `velas` velas."""
+    return valor.ffill(limit=velas)
+
+
+def patrones_graficos(ohlc: dict, ventana: int = 38, tolerancia: float = 0.015, patrones: str = "todos") -> dict:
+    """Hombro-cabeza-hombro (normal e invertido) y doble techo/suelo, detectados
+    con regresión kernel sobre las últimas `ventana` velas (sin mirar al futuro).
+    - Alcistas (IHS, DBOT): compra cuando el cierre supera la línea clavicular
+      (como mucho 10 velas después de confirmar el patrón).
+    - Bajistas (HS, DTOP): cierran el largo del activo; en SPY y QQQ, compra del
+      ETF inverso (SH, PSQ) si está en el universo.
+    - Stop bajo la cabeza / el suelo más bajo (como mucho 3 ATR); objetivo =
+      movimiento medido (salida al cierre que lo alcanza); salida por tiempo, 20 velas.
+    patrones: "todos" o uno de HS, IHS, DTOP, DBOT."""
+    from src.tactico import patrones as pt
+
+    elegidos = ("HS", "IHS", "DTOP", "DBOT") if patrones == "todos" else (patrones,)
+    det = {a: pt.senales(df["close"].to_numpy(), ventana, tolerancia, elegidos) for a, df in ohlc.items()}
+    out = {}
+    for a, df in ohlc.items():
+        c, a_t, s = df["close"], atr(df, 14), det[a]
+        ser = {k: pd.Series(v, index=df.index) for k, v in s.items()}
+        indice = next((i for i, inv in INVERSOS.items() if inv == a and i in ohlc), None)
+        if indice:
+            # ETF inverso: solo opera los patrones bajistas de su índice
+            si = {k: pd.Series(v, index=ohlc[indice].index).reindex(df.index) for k, v in det[indice].items()}
+            ci = ohlc[indice]["close"].reindex(df.index)
+            entrada = si["bajista"].fillna(False).astype(bool)
+            riesgo_pct = (si["cabeza_bajista"] - ci) / ci
+            stop = np.minimum(c * riesgo_pct.where(riesgo_pct > 0), 3 * a_t).fillna(3 * a_t)
+            salida = ci <= _vigente(si["objetivo_bajista"], 20)
+        else:
+            entrada = ser["alcista"]
+            stop = np.minimum((c - ser["cabeza_alcista"]).where(c > ser["cabeza_alcista"]), 3 * a_t).fillna(3 * a_t)
+            salida = (c >= _vigente(ser["objetivo_alcista"], 20)) | ser["bajista"]
+        out[a] = _tabla(df, entrada, salida, stop.where(entrada, 3 * a_t), max_velas=20)
+    return out
+
+
 FAMILIAS_TACTICAS = {
     "ruptura_horaria": {
         "nombre": "Ruptura horaria (canal de N velas)",
@@ -292,5 +340,17 @@ FAMILIAS_TACTICAS = {
         "publicacion": "2022-01-01",
         "parametros": {"velas": 90},
         "rejilla": [{"velas": v} for v in (42, 90, 180)],
+    },
+    # --- patrones de gráfico (ficha de Alejandro, 26 nov 2026) ---
+    "patrones_graficos": {
+        "nombre": "Patrones de gráfico: HCH y doble techo/suelo (4 h)",
+        "funcion": patrones_graficos,
+        "velas": "4h",
+        "mercados": ["acciones_inversos", "cripto", "forex"],
+        "laboratorio": False,   # rechazada en el cribado (26 nov 2026): el laboratorio semanal no la prueba
+        "referencia": "Lo, Mamaysky y Wang (2000), Foundations of Technical Analysis, JF; Osler y Chang (1995)",
+        "publicacion": "2000-08-01",
+        "parametros": {"ventana": 38, "tolerancia": 0.015, "patrones": "todos"},
+        "rejilla": [{"ventana": v, "tolerancia": 0.015, "patrones": "todos"} for v in (25, 38, 60)],
     },
 }

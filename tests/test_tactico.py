@@ -251,3 +251,37 @@ def test_debilidad_relativa_solo_corta_las_mas_debiles_y_nunca_btc():
     assert not out["C"]["entrada"].any() and not out["D"]["entrada"].any()
     assert not out["C"]["salida"].iloc[-1]                         # 3.ª peor: se mantendría
     assert out["D"]["salida"].iloc[-1]                             # fuera de las 3 peores
+
+
+def test_patrones_graficos_no_miran_al_futuro():
+    """La señal en t no cambia al añadir velas posteriores (suavizado y extremos solo con datos hasta t)."""
+    from src.tactico import patrones as pt
+
+    rng = np.random.default_rng(3)
+    precios = 100 * np.exp(np.cumsum(rng.normal(0, 0.01, 1500)))
+    n = 1200
+    corta, larga = pt.senales(precios[:n]), pt.senales(precios)
+    assert corta["alcista"].sum() + corta["bajista"].sum() > 0
+    for k in corta:
+        np.testing.assert_array_equal(corta[k], larga[k][:n], err_msg=k)
+    # Lo mismo con la familia completa (incluido el ETF inverso que sigue al SPY)
+    idx = pd.date_range("2024-01-01", periods=1500, freq="4h")
+    ohlc = {a: velas(100 * np.exp(np.cumsum(rng.normal(0, 0.01, 1500))), freq="4h").set_axis(idx)
+            for a in ("SPY", "SH", "BTC")}
+    larga = familias.patrones_graficos(ohlc)
+    corta = familias.patrones_graficos({a: df.iloc[:n] for a, df in ohlc.items()})
+    for a in ohlc:
+        pd.testing.assert_frame_equal(corta[a], larga[a].iloc[:n], check_freq=False)
+    assert larga["SH"]["entrada"].sum() > 0
+
+
+def test_patron_hombro_cabeza_hombro_invertido():
+    from src.tactico import patrones as pt
+
+    # Extremos: mínimo 100, máximo 110, cabeza 90, máximo 110, mínimo 100 -> IHS con clavicular en 110
+    ext = [(10, -1, 100.0), (17, 1, 110.0), (24, -1, 90.0), (30, 1, 110.5), (35, -1, 100.5)]
+    p = pt.buscar_patrones(ext, ventana=38, d=3, tol=0.015)
+    assert [x["tipo"] for x in p] == ["IHS"]
+    assert p[0]["cabeza"] == 90.0 and pt.clavicular_en(p[0], 17) == 110.0
+    # Si el último extremo es antiguo (no está en las 3 últimas velas), no se confirma nada
+    assert pt.buscar_patrones(ext[:-1] + [(32, -1, 100.5)], ventana=38, d=3, tol=0.015) == []

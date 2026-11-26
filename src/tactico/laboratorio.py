@@ -26,7 +26,10 @@ INICIO_TEST_TACTICO = "2024-07-01"
 #   forex:       pares de divisas de Dukascopy (config/investigacion.yaml -> forex),
 #                24 h como la cripto (velas de 4 h), costes de forex, sin PDT.
 # Uso: experimento("momentum_tendencia", "apalancados") / experimento(..., "forex")
-MERCADOS_INVESTIGACION = {"apalancados": "acciones", "forex": "forex"}
+#   acciones_inversos: el universo de acciones del sistema + SH y PSQ (ETFs inversos
+#                del S&P 500 y del Nasdaq-100), para familias que compran el inverso
+#                cuando el índice da una señal bajista (p. ej. patrones_graficos).
+MERCADOS_INVESTIGACION = {"apalancados": "acciones", "forex": "forex", "acciones_inversos": "acciones"}
 
 
 def mercado_base(mercado: str) -> str:
@@ -43,6 +46,8 @@ def _activos(mercado: str, extra: bool) -> list[str]:
     if mercado == "forex":
         from src.data import forex
         return forex.cargar_config()["pares"]
+    if mercado == "acciones_inversos":
+        return list(conf["mercados"]["acciones"]["activos"]) + ["SH", "PSQ"]
     if mercado in MERCADOS_INVESTIGACION:
         return horario.activos_investigacion(mercado_base(mercado))
     activos = list(conf["mercados"][mercado]["activos"])
@@ -89,7 +94,7 @@ def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
     )
 
 
-ETIQUETA = {"cripto": "Cripto", "acciones": "Acciones y ETFs", "apalancados": "ETFs apalancados x3",
+ETIQUETA = {"cripto": "Cripto", "acciones": "Acciones y ETFs", "acciones_inversos": "Acciones y ETFs (+ inversos)", "apalancados": "ETFs apalancados x3",
             "forex": "Forex (Dukascopy)"}
 
 
@@ -107,7 +112,8 @@ def experimento(familia_id: str, mercado: str) -> dict:
         "id": f"tac_{familia_id}__{mercado}",
         "nombre": (f"{fam['nombre']} · {ETIQUETA.get(mercado, mercado)}"
                    .replace("(4 h) · Acciones y ETFs", "(media sesión) · Acciones y ETFs")
-                   .replace("(4 h) · ETFs apalancados x3", "(media sesión) · ETFs apalancados x3")),
+                   .replace("(4 h) · ETFs apalancados x3", "(media sesión) · ETFs apalancados x3")
+                   .replace("(4 h) · Acciones y ETFs (+ inversos)", "(media sesión) · Acciones y ETFs (+ inversos)")),
         "familia": familia_id,
         "mercado": f"tactico_{mercado}",
         "papel": "táctico",
