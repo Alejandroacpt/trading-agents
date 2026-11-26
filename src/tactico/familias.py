@@ -30,13 +30,16 @@ def ema(s: pd.Series, n: int) -> pd.Series:
     return s.ewm(span=n, adjust=False, min_periods=n).mean()
 
 
-def _tabla(df, entrada, salida, stop, dinamico=np.nan, max_velas=np.nan) -> pd.DataFrame:
+def _tabla(df, entrada, salida, stop, dinamico=np.nan, max_velas=np.nan, corto=False) -> pd.DataFrame:
+    """corto=True: todas las entradas de la tabla son ventas en corto (solo investigación;
+    el simulador refleja stop, stop dinámico y orden limitada, y cobra la financiación)."""
     return pd.DataFrame({
         "entrada": entrada.fillna(False).astype(bool),
         "salida": salida.fillna(False).astype(bool),
         "stop": stop,
         "dinamico": dinamico if isinstance(dinamico, pd.Series) else pd.Series(dinamico, index=df.index),
         "max_velas": pd.Series(max_velas, index=df.index),
+        "corto": pd.Series(bool(corto), index=df.index),
     }, index=df.index)
 
 

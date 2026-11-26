@@ -29,6 +29,11 @@ costes:                         # por operación y sentido (comisión + horquill
   acciones_limitada: 0.0002
   forex: 0.00015                # ~1,5 pips de horquilla+deslizamiento por operación en los pares principales (solo investigación)
   forex_limitada: 0.0001
+  # Coste anual de mantener un CORTO (solo investigación: Alpaca no opera cortos en cripto).
+  # Cripto: prudente, como pagar la financiación de los perpetuos en contra o la comisión
+  # y el desgaste de un ETF inverso (BITI ~1 % + desgaste por reajuste diario).
+  financiacion_corto_cripto: 0.10
+  financiacion_corto_acciones: 0.03   # préstamo de acciones/ETFs líquidos
 
 # Universos (símbolos de Alpaca)
 mercados:

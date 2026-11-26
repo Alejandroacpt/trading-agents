@@ -159,3 +159,57 @@ def test_orden_limitada_solo_si_el_precio_llega():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --- Cortos (solo investigación) ---
+
+def senal_corta(df, **kw):
+    s = senal(df, **kw)
+    s["corto"] = True
+    return s
+
+
+def test_corto_gana_si_el_precio_baja():
+    df = velas([100, 100, 100, 90, 90], amplitud=0.0)
+    res = simular({"A": df}, {"A": senal_corta(df, entradas=[1], salidas=[3], stop=5.0)}, P0)
+    op = res.operaciones.iloc[0]
+    assert op["lado"] == "corto" and op["resultado"] == pytest.approx(0.10)
+    # posición del 20 % (riesgo 1 % con stop a 5 $) que gana un 10 % -> +2 %
+    assert res.equity.iloc[-1] == pytest.approx(1.02)
+    assert res.pesos["A"].iloc[2] == pytest.approx(-0.20)   # peso negativo mientras está abierto
+
+
+def test_stop_del_corto_salta_por_arriba_y_el_hueco_se_paga():
+    df = velas([100, 100, 100, 110, 110], amplitud=0.0)
+    res = simular({"A": df}, {"A": senal_corta(df, entradas=[1], stop=5.0)}, P0)
+    op = res.operaciones.iloc[0]
+    assert op["motivo"] == "stop"
+    assert res.equity.iloc[-1] == pytest.approx(0.99)        # salta en 105: pierde el 1 %
+    df2 = velas([100, 100, 100, 100], amplitud=0.0)
+    df2.loc[df2.index[3], ["open", "high", "low", "close"]] = [120, 120, 120, 120]
+    res2 = simular({"A": df2}, {"A": senal_corta(df2, entradas=[1], stop=5.0)}, P0)
+    assert res2.equity.iloc[-1] == pytest.approx(1 - 0.20 * 0.20)  # abre en 120: se recompra a 120
+
+
+def test_stop_dinamico_del_corto_baja_con_el_precio():
+    df = velas([100, 100, 100, 80, 60, 75], amplitud=0.0)
+    res = simular({"A": df}, {"A": senal_corta(df, entradas=[1], stop=5.0, dinamico=10.0)}, P0)
+    op = res.operaciones.iloc[0]
+    assert op["motivo"] == "stop" and op["resultado"] == pytest.approx((100 - 70) / 100)
+
+
+def test_financiacion_del_corto_se_cobra_por_tiempo():
+    df = velas([100] * 26, freq="D", amplitud=0.0)
+    p = Parametros(riesgo=0.01, max_posiciones=5, max_peso=1.0, coste=0.0, financiacion_corto=0.365)
+    res = simular({"A": df}, {"A": senal_corta(df, entradas=[0], stop=5.0)}, p)
+    # posición del 20 % abierta 24 días a un 36,5 % anual (0,1 % diario) -> 0,2 × 0,1 % × 24
+    assert res.equity.iloc[-1] == pytest.approx(1 - 0.20 * 0.001 * 24)
+
+
+def test_largos_sin_cambios_con_columna_corto_falsa():
+    df = velas([100, 100, 100, 110, 110], amplitud=0.0)
+    s = senal(df, entradas=[1], salidas=[3], stop=5.0)
+    s["corto"] = False
+    res = simular({"A": df}, {"A": s}, P0)
+    assert res.operaciones.iloc[0]["lado"] == "largo"
+    assert res.equity.iloc[-1] == pytest.approx(1.02)

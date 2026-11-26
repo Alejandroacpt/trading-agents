@@ -19,6 +19,11 @@ acciones:
   - PSQ    # Nasdaq-100 inverso x1
   - SQQQ   # Nasdaq-100 inverso x3
   - SPXU   # S&P 500 inverso x3
+  # ETFs inversos de cripto (forma de ejecutar en Alpaca un corto en BTC/ETH: se COMPRAN como acciones).
+  # Solo cotizan en horario de bolsa y pierden valor si se mantienen mucho (reajuste diario).
+  - BITI   # Bitcoin inverso x1 (desde jun-2022)
+  - SBIT   # Bitcoin inverso x2 (desde abr-2024)
+  - SETH   # Ether inverso x1
 cripto: []
 
 # Forex intradía: velas de 1 hora de Dukascopy (gratis, sin cuenta ni datos personales).

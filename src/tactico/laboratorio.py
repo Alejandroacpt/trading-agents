@@ -85,6 +85,7 @@ def parametros_simulacion(mercado: str, mult_costes: float = 1.0) -> Parametros:
         coste=conf["costes"][clave] * mult_costes,
         coste_limitada=conf["costes"].get(f"{clave}_limitada", conf["costes"][clave]) * mult_costes,
         sin_intradia=bool(conf["mercados"].get(base, {}).get("sin_operaciones_intradia", False)),
+        financiacion_corto=float(conf["costes"].get(f"financiacion_corto_{clave}", 0.0)),
     )
 
 

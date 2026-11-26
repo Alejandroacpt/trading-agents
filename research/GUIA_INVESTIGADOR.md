@@ -27,6 +27,53 @@ Lo que más falta ahora (revisión del 24 nov 2026): el 70 % táctico depende de
   reglas que solo operen con el índice por debajo de su media. (Alpaca no permite cortos con fracciones de
   acción, así que mejor ETFs inversos que posiciones cortas.)
 
+## Encargo de Alejandro: cortos en cripto (26 nov 2026)
+
+Alejandro quiere estudiar entradas **en corto en cripto cuando la tendencia es bajista**. Si al final no
+merece la pena, no se incluye y ya está: el encargo es investigarlo con honestidad, no forzar un aprobado.
+
+**Lo que ya se sabe (25 nov, 30 variantes en el registro, origen «estudio cortos cripto»):** dar la vuelta
+a las familias diarias de tendencia (media móvil, Donchian, momentum mensual, multi-horizonte) en BTC/ETH/SOL
+**pierde dinero**: −9 a −28 % anual y caídas del −80 al −98 %, aunque ganan mucho en 2022 (+34 a +61 %).
+La cripto sube a largo plazo y dentro de las tendencias bajistas hay rebotes del +30-50 % en días. No
+repitas esas pruebas: hacen falta reglas más finas.
+
+**Herramientas ya preparadas:**
+- El simulador táctico admite cortos: columna `corto` = True (en las familias, `_tabla(..., corto=True)`).
+  Stop por encima de la entrada, stop dinámico que baja con el precio, orden limitada de venta y
+  **financiación del corto** del 10 % anual en cripto (`config/tactico.yaml` → `financiacion_corto_cripto`,
+  prudente: perpetuos en contra o desgaste de un ETF inverso).
+- ETFs inversos de cripto en `config/investigacion.yaml` (BITI −1x BTC, SBIT −2x BTC, SETH −1x ETH): es la
+  única forma de ejecutar un corto en Alpaca (se compran como acciones, solo en horario de bolsa).
+
+**Las 3 ideas, con la rejilla FIJADA HOY (antes de ver resultados).** Mercado `cripto` (8 monedas), velas
+de 4 h (`"velas": "4h"`), una familia por idea, solo cortos. Pasan por el cribado normal (solo datos antes
+de jul-2024) y, si lo pasan, a la validación completa con el validador táctico de siempre (mínimo 100
+operaciones, caída ≤ 25 %, listón del SPY). Si una idea da menos de 100 operaciones, se anota como
+rechazada: no se baja el mínimo.
+
+1. `corto_rebote` — **vender los rebotes en tendencia bajista.** Régimen bajista: cierre diario de AYER
+   por debajo de su media de 50 días (sin mirar el día en curso, como `tendencia_diaria`). Entrada: el
+   máximo de la vela toca la media exponencial de N velas de 4 h, pero la vela cierra por debajo de ella
+   y en negativo (cierre < apertura). Salida: cierre por encima de la media de N velas, o 30 velas
+   (5 días). Stop 2 ATR(14), stop dinámico 3 ATR. Rejilla N ∈ {20, **50**, 100}.
+2. `corto_ruptura_bajista` — **ruptura a la baja con la tendencia bajista confirmada.** Régimen: cierre
+   diario de ayer por debajo de su media de 200 días Y esa media por debajo de la de hace 20 días.
+   Entrada: cierre por debajo del mínimo de las N velas anteriores. Salida: cierre por encima del máximo
+   de N/2 velas o fin del régimen. Stop 3 ATR(14), stop dinámico 4 ATR. Rejilla N ∈ {30, **60**, 120}.
+3. `corto_debilidad_relativa` — **las monedas más débiles frente a BTC.** Régimen: BTC con cierre diario
+   de ayer por debajo de su media de 50 días. Cada vela, ordenar las 7 monedas que no son BTC por su
+   rendimiento de N velas MENOS el de BTC; entrada en corto en las 2 peores; salida cuando una deja de
+   estar entre las 3 peores o termina el régimen. Stop 3 ATR(14). Rejilla N ∈ {42, **90**, 180}.
+
+Para cada una, en la ficha: veredicto, Sharpe, rentabilidad frente al SPY, peor caída, número de
+operaciones, resultado en 2022 y en 2025-26 por separado, y **correlación con lo que opera** (un corto que
+gane cuando el momentum en acciones pierde vale mucho aunque rinda menos). Si alguna aprueba, antes de
+proponerla comprueba con los datos de BITI/SETH cuánto se pierde al ejecutarla con ETFs inversos (horario
+de bolsa, desgaste), porque así es como se operaría en Alpaca. Este encargo va primero el sábado 28 nov:
+las 3 ideas entran en el cribado (que admite hasta 10 ideas, así que caben otras) y las que lo pasen ocupan
+las validaciones completas de esa semana.
+
 Prioridad actual:
 
 1. **Táctico agresivo que bata al SPY**: momentum / ruptura de baja rotación aplicados a activos más

@@ -19,8 +19,16 @@ Reglas (las mismas que se aplicarán en vivo):
 8. Orden limitada opcional en la entrada (columna "limite"): solo se
    ejecuta si el precio llega al límite en la vela siguiente (si no, se
    cancela) y paga la comisión de órdenes limitadas.
-
-Solo largos en esta versión.
+9. Cortos opcionales (columna "corto" = True en la vela de entrada): la
+   operación gana si el precio baja. Todo se refleja: el stop va por
+   encima de la entrada (salta si el MÁXIMO lo toca), el stop dinámico
+   baja con el precio y nunca sube, y la orden limitada vende si el precio
+   SUBE hasta el límite. Paga además una financiación anual sobre el valor
+   de la posición (préstamo del activo / tasa de los perpetuos), cobrada
+   vela a vela.
+   SOLO INVESTIGACIÓN: Alpaca no permite cortos en cripto ni con fracciones,
+   así que la ejecución en vivo no sabe operar cortos (se haría con ETFs
+   inversos o en otro bróker).
 """
 
 from dataclasses import dataclass
@@ -39,6 +47,7 @@ class Parametros:
     coste: float = 0.0025
     sin_intradia: bool = False
     coste_limitada: float | None = None   # comisión de las órdenes limitadas (None = la misma)
+    financiacion_corto: float = 0.0       # coste anual de mantener un corto (fracción del valor)
 
 
 def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: Parametros,
@@ -50,7 +59,9 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
                  salida  (bool)  -> cerrar al cierre de esta vela
                  stop    (float) -> distancia del stop inicial en precio
                  dinamico(float, opcional) -> distancia del stop dinámico (NaN = sin él)
-                 max_velas (float, opcional) -> salida por tiempo (NaN = sin límite)}
+                 max_velas (float, opcional) -> salida por tiempo (NaN = sin límite)
+                 limite (float, opcional)    -> precio límite de la entrada (NaN = a mercado)
+                 corto (bool, opcional)      -> la entrada de esta vela es en corto}
     calentamiento : velas iniciales que no cuentan en el resultado (indicadores aún sin datos).
     """
     activos = [a for a in ohlc if a in senales and not ohlc[a].empty]
@@ -68,10 +79,13 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     TR = matriz(senales, "dinamico")
     MV = matriz(senales, "max_velas")
     LIM = matriz(senales, "limite")
+    CO = np.nan_to_num(matriz(senales, "corto", 0.0)).astype(bool)
     fechas = indice.normalize()
 
     caja = 1.0
     qty = np.zeros(N)
+    lado = np.ones(N)                 # +1 largo, -1 corto
+    corto_pendiente = np.zeros(N, dtype=bool)
     precio_entrada = np.zeros(N)
     stop = np.zeros(N)
     t_entrada = np.full(N, -1)
@@ -88,16 +102,25 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
     operaciones = []
     equity_prev = 1.0
 
+    def valor_posicion(i, precio):
+        # Largo: cantidad × precio. Corto: lo que se puso de garantía más (o menos) lo ganado al bajar.
+        return qty[i] * precio if lado[i] > 0 else qty[i] * (2 * precio_entrada[i] - precio)
+
     def cerrar(i, t, precio, motivo):
         nonlocal caja
-        valor = qty[i] * precio
-        coste = valor * p.coste
+        valor = valor_posicion(i, precio)
+        coste = qty[i] * precio * p.coste
         caja += valor - coste
-        rotacion[t] += valor
+        rotacion[t] += qty[i] * precio
         costes[t] += coste
+        if lado[i] > 0:
+            resultado = (precio * (1 - p.coste)) / (precio_entrada[i] * (1 + p.coste)) - 1
+        else:
+            resultado = (precio_entrada[i] * (1 - p.coste) - precio * (1 + p.coste)) / precio_entrada[i]
         operaciones.append({
-            "activo": activos[i], "entrada": indice[t_entrada[i]], "salida": indice[t], "lado": "largo",
-            "resultado": float((precio * (1 - p.coste)) / (precio_entrada[i] * (1 + p.coste)) - 1),
+            "activo": activos[i], "entrada": indice[t_entrada[i]], "salida": indice[t],
+            "lado": "largo" if lado[i] > 0 else "corto",
+            "resultado": float(resultado),
             "dias": float((indice[t] - indice[t_entrada[i]]).total_seconds() / 86400), "motivo": motivo,
         })
         qty[i] = 0.0
@@ -119,11 +142,12 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
             coste_e = p.coste
             precio = O[t, i]
             lim = limite_pendiente[i]
+            s = -1.0 if corto_pendiente[i] else 1.0
             if not np.isnan(lim):
-                if O[t, i] <= lim:
-                    precio = O[t, i]          # abrió por debajo del límite: se compra a la apertura
-                elif L[t, i] <= lim:
-                    precio = lim              # el precio bajó hasta el límite durante la vela
+                if s * O[t, i] <= s * lim:
+                    precio = O[t, i]          # abrió mejor que el límite: se ejecuta a la apertura
+                elif (s > 0 and L[t, i] <= lim) or (s < 0 and H[t, i] >= lim):
+                    precio = lim              # el precio llegó al límite durante la vela
                 else:
                     continue                  # no llegó: la orden se cancela
                 coste_e = p.coste if p.coste_limitada is None else p.coste_limitada
@@ -135,7 +159,8 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
             rotacion[t] += valor
             costes[t] += valor * coste_e
             precio_entrada[i] = precio
-            stop[i] = precio - d
+            lado[i] = s
+            stop[i] = precio - s * d
             t_entrada[i] = t
         entrada_pendiente[:] = False
 
@@ -143,17 +168,33 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
         for i in np.where((qty > 0) & ~np.isnan(L[t]))[0]:
             if p.sin_intradia and fechas[t] == fechas[t_entrada[i]]:
                 continue
-            if L[t, i] <= stop[i]:
+            if lado[i] > 0 and L[t, i] <= stop[i]:
                 cerrar(i, t, min(O[t, i], stop[i]), "stop")
                 salida_pendiente[i] = False
+            elif lado[i] < 0 and H[t, i] >= stop[i]:
+                cerrar(i, t, max(O[t, i], stop[i]), "stop")
+                salida_pendiente[i] = False
+
+        # Financiación de los cortos: proporcional al tiempo desde la vela anterior
+        if p.financiacion_corto and t > 0:
+            anios = (indice[t] - indice[t - 1]).total_seconds() / (365 * 86400)
+            for i in np.where((qty > 0) & (lado < 0) & (t_entrada < t))[0]:   # no la vela en que se abre
+                coste_f = qty[i] * np.nan_to_num(ultimo_cierre[i], nan=precio_entrada[i]) * p.financiacion_corto * anios
+                caja -= coste_f
+                costes[t] += coste_f
 
         # 3) Valoración al cierre, stop dinámico y salida por tiempo
         ultimo_cierre = np.where(np.isnan(C[t]), ultimo_cierre, C[t])
-        valor_pos = qty * np.nan_to_num(ultimo_cierre)
+        cierre_ok = np.nan_to_num(ultimo_cierre)
+        valor_pos = np.where(lado > 0, qty * cierre_ok, qty * (2 * precio_entrada - cierre_ok))
+        valor_pos = np.where(qty > 0, valor_pos, 0.0)
         equity[t] = caja + valor_pos.sum()
         for i in np.where(qty > 0)[0]:
             if not np.isnan(TR[t, i]) and not np.isnan(C[t, i]):
-                stop[i] = max(stop[i], C[t, i] - TR[t, i])
+                if lado[i] > 0:
+                    stop[i] = max(stop[i], C[t, i] - TR[t, i])
+                else:
+                    stop[i] = min(stop[i], C[t, i] + TR[t, i])
             if not np.isnan(MV[t, i]) and t - t_entrada[i] >= MV[t, i]:
                 salida_pendiente[i] = True
 
@@ -167,17 +208,21 @@ def simular(ohlc: dict[str, pd.DataFrame], senales: dict[str, pd.DataFrame], p: 
                 entrada_pendiente[i] = True
                 dist_pendiente[i] = SD[t, i]
                 limite_pendiente[i] = LIM[t, i]
+                corto_pendiente[i] = CO[t, i]
 
-        pesos[t] = valor_pos / equity[t] if equity[t] > 0 else 0
+        # Peso con signo: negativo en los cortos
+        pesos[t] = np.where(lado > 0, 1.0, -1.0) * qty * cierre_ok / equity[t] if equity[t] > 0 else 0
         rotacion[t] /= max(equity_prev, 1e-12)
         costes[t] /= max(equity_prev, 1e-12)
         equity_prev = equity[t]
 
     # Foto final para el escáner en vivo: posiciones abiertas y órdenes para la próxima vela
-    abiertas = [{"activo": activos[i], "entrada": indice[t_entrada[i]], "precio_entrada": float(precio_entrada[i]),
+    abiertas = [{"activo": activos[i], "lado": "largo" if lado[i] > 0 else "corto",
+                 "entrada": indice[t_entrada[i]], "precio_entrada": float(precio_entrada[i]),
                  "stop": float(stop[i]), "peso": float(pesos[T - 1, i]) if T else 0.0,
                  "cierre": float(ultimo_cierre[i])} for i in np.where(qty > 0)[0]]
-    pendientes = ([{"activo": activos[i], "accion": "comprar", "distancia_stop": float(dist_pendiente[i])}
+    pendientes = ([{"activo": activos[i], "accion": "vender en corto" if corto_pendiente[i] else "comprar",
+                    "distancia_stop": float(dist_pendiente[i])}
                    for i in np.where(entrada_pendiente)[0]]
                   + [{"activo": activos[i], "accion": "vender"} for i in np.where(salida_pendiente & (qty > 0))[0]])
 
