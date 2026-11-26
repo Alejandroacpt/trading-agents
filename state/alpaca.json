@@ -1,7 +1,7 @@
 {
   "modo": "paper",
   "fuente_capital": "presupuesto",
-  "capital_gestionado_usd": 1096.31,
+  "capital_gestionado_usd": 1094.6,
   "equity_cuenta_usd": 99998.84,
   "valor_posiciones_usd": 577.85,
   "posiciones": {
@@ -38,8 +38,8 @@
       "unrealized_plpc": 0.0007
     }
   },
-  "eurusd": 1.097936,
-  "actualizado": "2026-11-26T05:37+00:00",
+  "eurusd": 1.096227,
+  "actualizado": "2026-11-26T07:58+00:00",
   "historial": [
     [
       "2026-11-24",
