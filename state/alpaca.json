@@ -2,31 +2,31 @@
   "modo": "paper",
   "fuente_capital": "presupuesto",
   "capital_gestionado_usd": 1096.31,
-  "equity_cuenta_usd": 99998.9,
-  "valor_posiciones_usd": 577.91,
+  "equity_cuenta_usd": 99999.51,
+  "valor_posiciones_usd": 578.52,
   "posiciones": {
-    "JNJ": 190.87,
-    "XLRE": 194.92,
+    "JNJ": 190.89,
+    "XLRE": 195.5,
     "XLY": 192.12
   },
   "detalle_posiciones": {
     "JNJ": {
       "qty": 0.696338,
       "avg_entry_price": 275.714,
-      "current_price": 274.1,
-      "market_value": 190.866111,
+      "current_price": 274.14,
+      "market_value": 190.893965,
       "cost_basis": 191.99,
-      "unrealized_pl": -1.123889,
-      "unrealized_plpc": -0.00585
+      "unrealized_pl": -1.096035,
+      "unrealized_plpc": -0.00571
     },
     "XLRE": {
       "qty": 4.445242,
       "avg_entry_price": 43.19,
-      "current_price": 43.85,
-      "market_value": 194.92386,
+      "current_price": 43.98,
+      "market_value": 195.501741,
       "cost_basis": 191.99,
-      "unrealized_pl": 2.93386,
-      "unrealized_plpc": 0.01528
+      "unrealized_pl": 3.511741,
+      "unrealized_plpc": 0.01829
     },
     "XLY": {
       "qty": 1.635238,
@@ -39,7 +39,7 @@
     }
   },
   "eurusd": 1.097936,
-  "actualizado": "2026-11-25T22:59+00:00",
+  "actualizado": "2026-11-26T00:29+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -48,6 +48,10 @@
     [
       "2026-11-25",
       99998.9
+    ],
+    [
+      "2026-11-26",
+      99999.51
     ]
   ],
   "incluye_tactico": true,
