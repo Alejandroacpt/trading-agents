@@ -55,3 +55,21 @@ def tendencia_diaria(df: pd.DataFrame, dias: int = 50) -> pd.Series:
     cierre_dia = df["close"].groupby(dia).last()
     alcista = (cierre_dia > cierre_dia.rolling(dias, min_periods=dias).mean()).shift(1)
     return pd.Series(alcista.reindex(dia).to_numpy(), index=df.index).fillna(False).astype(bool)
+
+
+def _a_velas(df: pd.DataFrame, serie_diaria: pd.Series) -> pd.Series:
+    """Lleva una serie diaria (ya desplazada) a las velas del activo."""
+    dia = df.index.normalize()
+    return pd.Series(serie_diaria.reindex(dia).to_numpy(), index=df.index).fillna(False).astype(bool)
+
+
+def regimen_bajista(df: pd.DataFrame, dias: int = 50, pendiente: int = 0) -> pd.Series:
+    """True si el cierre del día ANTERIOR estaba por DEBAJO de su media de N días.
+    Con pendiente=k exige además que esa media (la de ayer) esté por debajo de la
+    de k días antes (media bajando). Nunca usa el cierre del día en curso."""
+    cierre_dia = df["close"].groupby(df.index.normalize()).last()
+    media = cierre_dia.rolling(dias, min_periods=dias).mean()
+    bajista = cierre_dia < media
+    if pendiente:
+        bajista = bajista & (media < media.shift(pendiente))
+    return _a_velas(df, bajista.shift(1))

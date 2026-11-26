@@ -125,7 +125,10 @@ def experimento(familia_id: str, mercado: str) -> dict:
 
 
 def todos_los_experimentos() -> list[dict]:
-    return [experimento(f, m) for m in ("cripto", "acciones") for f in FAMILIAS_TACTICAS if ohlc_mercado(m)]
+    # Una familia con campo "mercados" solo se prueba en esos mercados (p. ej. los cortos en cripto),
+    # y con "laboratorio": False no se prueba (rechazada en el cribado: no sumar pruebas sin motivo).
+    return [experimento(f, m) for m in ("cripto", "acciones") for f, fam in FAMILIAS_TACTICAS.items()
+            if ohlc_mercado(m) and m in fam.get("mercados", (m,)) and fam.get("laboratorio", True)]
 
 
 def simular_en_vivo(estrategia_id: str, inicio_vivo: str):

@@ -95,13 +95,20 @@ def test_familias_devuelven_las_columnas_esperadas():
     rng = np.random.default_rng(0)
     corto = velas(100 * np.exp(np.cumsum(rng.normal(0.0002, 0.01, 800))))
     largo = agregar_cripto(velas(100 * np.exp(np.cumsum(rng.normal(0.0002, 0.01, 24 * 400)))))
+    # Para los cortos: varias monedas (incluido BTC) con tendencia bajista
+    bajista = {a: agregar_cripto(velas(100 * np.exp(np.cumsum(rng.normal(-0.0002, 0.01, 24 * 400)))))
+               for a in ("BTC/USD", "ETH/USD", "SOL/USD", "DOGE/USD")}
     for nombre, fam in familias.FAMILIAS_TACTICAS.items():
         df = largo if fam.get("velas") == "4h" else corto
-        out = fam["funcion"]({"A": df}, **fam["parametros"])["A"]
-        assert {"entrada", "salida", "stop", "dinamico", "max_velas"} <= set(out.columns), nombre
-        assert out["entrada"].dtype == bool
-        assert (out["stop"].dropna() > 0).all()
-        assert out["entrada"].sum() > 0, nombre
+        ohlc = bajista if nombre.startswith("corto_") else {"A": df}
+        res = fam["funcion"](ohlc, **fam["parametros"])
+        for out in res.values():
+            assert {"entrada", "salida", "stop", "dinamico", "max_velas"} <= set(out.columns), nombre
+            assert out["entrada"].dtype == bool
+            assert (out["stop"].dropna() > 0).all()
+        assert sum(out["entrada"].sum() for out in res.values()) > 0, nombre
+        if nombre.startswith("corto_"):
+            assert all(out["corto"].all() for out in res.values()), nombre
 
 
 def test_datos_horarios_sesion_regular_y_vela_en_curso():
@@ -213,3 +220,34 @@ def test_largos_sin_cambios_con_columna_corto_falsa():
     res = simular({"A": df}, {"A": s}, P0)
     assert res.operaciones.iloc[0]["lado"] == "largo"
     assert res.equity.iloc[-1] == pytest.approx(1.02)
+
+
+def test_regimen_bajista_no_mira_el_dia_en_curso():
+    from src.tactico.velas import regimen_bajista
+
+    idx = pd.date_range("2024-01-01", periods=24 * 60, freq="h")
+    precio = pd.Series(100.0, index=idx)
+    precio[idx >= "2024-02-25"] = 50.0                            # caída el día 25
+    df = pd.DataFrame({"open": precio, "high": precio, "low": precio, "close": precio})
+    r = regimen_bajista(df, dias=5)
+    assert not r[idx.normalize() == pd.Timestamp("2024-02-25")].any()
+    assert r[idx.normalize() == pd.Timestamp("2024-02-26")].all()
+    # Con pendiente: exige además que la media de ayer esté por debajo de la de 3 días antes
+    assert regimen_bajista(df, dias=5, pendiente=3)[idx.normalize() == pd.Timestamp("2024-02-26")].all()
+    assert not regimen_bajista(df, dias=5, pendiente=3)[idx.normalize() == pd.Timestamp("2024-02-20")].any()
+
+
+def test_debilidad_relativa_solo_corta_las_mas_debiles_y_nunca_btc():
+    idx = pd.date_range("2024-01-01", periods=6 * 120, freq="4h")
+    n = len(idx)
+    base = np.linspace(100, 60, n)                                # BTC bajando: régimen bajista
+    precios = {"BTC/USD": base, "A": base * np.linspace(1, 0.5, n),   # A, la más débil
+               "B": base * np.linspace(1, 0.8, n), "C": base * np.linspace(1, 1.2, n),
+               "D": base * np.linspace(1, 1.5, n)}
+    ohlc = {k: velas(v, freq="4h") for k, v in precios.items()}
+    out = familias.corto_debilidad_relativa(ohlc, velas=42)
+    assert not out["BTC/USD"]["entrada"].any()
+    assert out["A"]["entrada"].iloc[-1] and out["B"]["entrada"].iloc[-1]
+    assert not out["C"]["entrada"].any() and not out["D"]["entrada"].any()
+    assert not out["C"]["salida"].iloc[-1]                         # 3.ª peor: se mantendría
+    assert out["D"]["salida"].iloc[-1]                             # fuera de las 3 peores

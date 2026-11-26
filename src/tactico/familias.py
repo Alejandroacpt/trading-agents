@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 
 from src.strategies.indicadores import rsi
-from src.tactico.velas import tendencia_diaria
+from src.tactico.velas import regimen_bajista, tendencia_diaria
 
 
 def atr(df: pd.DataFrame, n: int = 24) -> pd.Series:
@@ -132,6 +132,80 @@ def momentum_tendencia(ohlc: dict, velas: int = 90) -> dict:
     return out
 
 
+# ----------------------------------------------------------------------
+# CORTOS EN CRIPTO (encargo de Alejandro, 26 nov 2026). Solo investigación:
+# Alpaca no opera cortos en cripto (se ejecutarían con ETFs inversos).
+# Reglas y rejillas fijadas en research/GUIA_INVESTIGADOR.md ANTES de ver
+# resultados. Velas de 4 h, solo mercado cripto.
+# ----------------------------------------------------------------------
+
+def corto_rebote(ohlc: dict, velas: int = 50) -> dict:
+    """Vender los rebotes en tendencia bajista. Régimen: cierre diario de ayer
+    por debajo de su media de 50 días. Entrada en corto: el máximo de la vela
+    toca la media exponencial de N velas pero la vela cierra por debajo de ella
+    y en negativo. Salida: cierre por encima de la media, o 30 velas (5 días).
+    Stop 2 ATR(14) por encima de la entrada, stop dinámico 3 ATR."""
+    out = {}
+    for a, df in ohlc.items():
+        c = df["close"]
+        m = ema(c, velas)
+        entrada = regimen_bajista(df, 50) & (df["high"] >= m) & (c < m) & (c < df["open"])
+        a_t = atr(df, 14)
+        out[a] = _tabla(df, entrada, c > m, 2 * a_t, dinamico=3 * a_t, max_velas=30, corto=True)
+    return out
+
+
+def corto_ruptura_bajista(ohlc: dict, velas: int = 60) -> dict:
+    """Ruptura a la baja con la tendencia bajista confirmada. Régimen: cierre
+    diario de ayer por debajo de su media de 200 días Y esa media por debajo de
+    la de hace 20 días. Entrada en corto: cierre por debajo del mínimo de las N
+    velas anteriores. Salida: cierre por encima del máximo de N/2 velas o fin del
+    régimen. Stop 3 ATR(14), stop dinámico 4 ATR."""
+    salida_n = max(6, velas // 2)
+    out = {}
+    for a, df in ohlc.items():
+        c = df["close"]
+        regimen = regimen_bajista(df, 200, pendiente=20)
+        minimo = df["low"].rolling(velas).min().shift(1)
+        maximo = df["high"].rolling(salida_n).max().shift(1)
+        a_t = atr(df, 14)
+        out[a] = _tabla(df, regimen & (c < minimo), (c > maximo) | ~regimen, 3 * a_t,
+                        dinamico=4 * a_t, corto=True)
+    return out
+
+
+def corto_debilidad_relativa(ohlc: dict, velas: int = 90, referencia: str = "BTC/USD",
+                             peores: int = 2, salida_fuera_de: int = 3) -> dict:
+    """Las monedas más débiles frente a BTC. Régimen: BTC con cierre diario de
+    ayer por debajo de su media de 50 días. En cada vela se ordenan las monedas
+    (menos BTC) por su rendimiento de N velas MENOS el de BTC; entrada en corto
+    en las 2 peores; salida cuando una deja de estar entre las 3 peores o
+    termina el régimen. Stop 3 ATR(14). BTC no se opera."""
+    if referencia not in ohlc:
+        return {a: _tabla(df, pd.Series(False, index=df.index), pd.Series(False, index=df.index),
+                          atr(df, 14), corto=True) for a, df in ohlc.items()}
+    btc = ohlc[referencia]
+    otras = [a for a in ohlc if a != referencia]
+    indice = pd.DatetimeIndex(sorted(set().union(*[ohlc[a].index for a in ohlc])))
+    rend_btc = (btc["close"] / btc["close"].shift(velas) - 1).reindex(indice)
+    regimen = regimen_bajista(btc, 50).reindex(indice).fillna(False).astype(bool)
+    relativo = pd.DataFrame({a: (ohlc[a]["close"] / ohlc[a]["close"].shift(velas) - 1).reindex(indice) - rend_btc
+                             for a in otras})
+    puesto = relativo.rank(axis=1, ascending=True, method="first")   # 1 = la más débil
+    out = {}
+    for a, df in ohlc.items():
+        if a == referencia:
+            nada = pd.Series(False, index=df.index)
+            out[a] = _tabla(df, nada, nada, atr(df, 14), corto=True)
+            continue
+        p_a = puesto[a].reindex(df.index)
+        reg = regimen.reindex(df.index).fillna(False).astype(bool)
+        entrada = reg & (p_a <= peores)
+        salida = ~reg | (p_a > salida_fuera_de) | p_a.isna()
+        out[a] = _tabla(df, entrada, salida, 3 * atr(df, 14), corto=True)
+    return out
+
+
 FAMILIAS_TACTICAS = {
     "ruptura_horaria": {
         "nombre": "Ruptura horaria (canal de N velas)",
@@ -182,6 +256,40 @@ FAMILIAS_TACTICAS = {
         "velas": "4h",
         "referencia": "Moskowitz, Ooi y Pedersen (2012); Hurst, Ooi y Pedersen (2017)",
         "publicacion": "2012-05-01",
+        "parametros": {"velas": 90},
+        "rejilla": [{"velas": v} for v in (42, 90, 180)],
+    },
+    # --- cortos en cripto (solo investigación; velas de 4 h) ---
+    "corto_rebote": {
+        "nombre": "Corto: vender rebotes en tendencia bajista (4 h)",
+        "funcion": corto_rebote,
+        "velas": "4h",
+        "mercados": ["cripto"],
+        "laboratorio": False,   # rechazada en el cribado (26 nov 2026): el laboratorio semanal no la prueba
+        "referencia": "Encargo de Alejandro (26 nov 2026); venta de rebotes a la media en tendencia bajista (Elder, Trading for a Living, 1993)",
+        "publicacion": "1993-01-01",
+        "parametros": {"velas": 50},
+        "rejilla": [{"velas": v} for v in (20, 50, 100)],
+    },
+    "corto_ruptura_bajista": {
+        "nombre": "Corto: ruptura bajista con tendencia confirmada (4 h)",
+        "funcion": corto_ruptura_bajista,
+        "velas": "4h",
+        "mercados": ["cripto"],
+        "laboratorio": False,   # rechazada en el cribado (26 nov 2026): el laboratorio semanal no la prueba
+        "referencia": "Encargo de Alejandro (26 nov 2026); Donchian a la baja (Faith, 2007) con media de 200 días bajando",
+        "publicacion": "2007-01-01",
+        "parametros": {"velas": 60},
+        "rejilla": [{"velas": v} for v in (30, 60, 120)],
+    },
+    "corto_debilidad_relativa": {
+        "nombre": "Corto: monedas más débiles frente a BTC (4 h)",
+        "funcion": corto_debilidad_relativa,
+        "velas": "4h",
+        "mercados": ["cripto"],
+        "laboratorio": False,   # rechazada en el cribado (26 nov 2026): el laboratorio semanal no la prueba
+        "referencia": "Encargo de Alejandro (26 nov 2026); momentum transversal en cripto (Liu, Tsyvinski y Wu, 2022, JF), lado corto",
+        "publicacion": "2022-01-01",
         "parametros": {"velas": 90},
         "rejilla": [{"velas": v} for v in (42, 90, 180)],
     },

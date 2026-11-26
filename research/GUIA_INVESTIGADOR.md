@@ -74,6 +74,12 @@ de bolsa, desgaste), porque así es como se operaría en Alpaca. Este encargo va
 las 3 ideas entran en el cribado (que admite hasta 10 ideas, así que caben otras) y las que lo pasen ocupan
 las validaciones completas de esa semana.
 
+**Resultado del cribado (26 nov 2026): las 3 ideas rechazadas** (fichas `research/fichas/2026-11-26-cortos-cripto-*`).
+`corto_rebote` Sharpe −2,13 (−53 % anual); `corto_ruptura_bajista` Sharpe 0,18 (+39 % en 2022, pero lo
+devuelve después); `corto_debilidad_relativa` Sharpe −0,66. Las tres tienen correlación negativa con lo que
+opera (−0,14 a −0,18), pero ninguna tiene ventaja ni antes de costes salvo la ruptura (Sharpe bruto 0,40).
+No se validan ni se repiten con otros parámetros. Encargo cerrado salvo que Alejandro pida otra cosa.
+
 Prioridad actual:
 
 1. **Táctico agresivo que bata al SPY**: momentum / ruptura de baja rotación aplicados a activos más
