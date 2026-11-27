@@ -1,4 +1,4 @@
-# Estado de los datos · 2026-11-26
+# Estado de los datos · 2026-11-27
 
 | Estado | Ticker | Activo | Clase | Desde | Hasta | Días | Último cierre | Var. día | Fuente |
 |---|---|---|---|---|---|---|---|---|---|
@@ -13,14 +13,14 @@
 | ✅ | SLV | Plata | commodities | 2006-04-28 | 2026-11-25 | 5178 | 37.1000 | +0.71% | yahoo |
 | ✅ | USO | Petróleo (ETF) | commodities | 2006-04-10 | 2026-11-25 | 5191 | 139.8900 | +3.29% | yahoo |
 | ✅ | DBC | Cesta de materias primas | commodities | 2006-02-06 | 2026-11-25 | 5235 | 29.2700 | +0.83% | yahoo |
-| ✅ | BTC-USD | Bitcoin | crypto | 2014-09-17 | 2026-11-25 | 4453 | 60,378.1992 | +1.06% | yahoo |
-| ✅ | ETH-USD | Ethereum | crypto | 2017-11-09 | 2026-11-25 | 3304 | 1,690.7690 | +0.78% | yahoo |
-| ✅ | SOL-USD | Solana | crypto | 2020-04-10 | 2026-11-25 | 2421 | 70.3932 | +1.09% | yahoo |
-| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-26 | 5965 | 1.0973 | +0.10% | yahoo |
-| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-26 | 5977 | 1.3104 | -0.06% | yahoo |
-| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-26 | 7799 | 159.2550 | -0.00% | yahoo |
-| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-26 | 5341 | 0.6633 | -0.01% | yahoo |
-| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-26 | 6031 | 0.8343 | -0.18% | yahoo |
+| ✅ | BTC-USD | Bitcoin | crypto | 2014-09-17 | 2026-11-26 | 4454 | 60,494.7109 | +0.19% | yahoo |
+| ✅ | ETH-USD | Ethereum | crypto | 2017-11-09 | 2026-11-26 | 3305 | 1,687.7418 | -0.18% | yahoo |
+| ✅ | SOL-USD | Solana | crypto | 2020-04-10 | 2026-11-26 | 2422 | 70.9328 | +0.77% | yahoo |
+| ✅ | EURUSD=X | EUR/USD | forex | 2003-12-01 | 2026-11-26 | 5965 | 1.0970 | +0.07% | yahoo |
+| ✅ | GBPUSD=X | GBP/USD | forex | 2003-12-01 | 2026-11-26 | 5977 | 1.3113 | +0.01% | yahoo |
+| ✅ | JPY=X | USD/JPY | forex | 1996-10-30 | 2026-11-26 | 7799 | 159.2150 | -0.03% | yahoo |
+| ✅ | AUDUSD=X | AUD/USD | forex | 2006-05-16 | 2026-11-26 | 5341 | 0.6628 | -0.09% | yahoo |
+| ✅ | CHF=X | USD/CHF | forex | 2003-09-17 | 2026-11-26 | 6031 | 0.8312 | -0.55% | yahoo |
 | ✅ | BIL | Letras del Tesoro 1-3 meses (liquidez) | cash | 2007-05-30 | 2026-11-25 | 4906 | 91.6400 | +0.03% | yahoo |
 
 ## Avisos de los últimos 30 días
