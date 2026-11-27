@@ -29,4 +29,4 @@ fecha_utc,tipo,activo,accion,importe,moneda,peso_antes,peso_despues,precio_ref,e
 2026-11-24T18:58+00:00,orden,XLRE,comprar,192.0,USD,,,43.32,filled,fe467132-8607-4cf0-85e2-173a9c75b49c,43.19,4.445241954,-0.003,,modo paper,2026-11-24T18:58:47
 2026-11-24T18:58+00:00,orden,XLY,comprar,192.0,USD,,,117.9,filled,b49eea1f-38c0-4481-a427-2e0358a502a8,117.408,1.635237803,-0.00417,,modo paper,2026-11-24T18:58:45
 2026-11-25T18:44+00:00,orden,TSLA,cerrar,115.34,USD,,,370.78,filled,cac651ba-f942-44dc-8675-0a518cfdc8b2,378.562,0.304655474,-0.02099,,modo paper,2026-11-25T18:44:15
-2026-11-25T21:57+00:00,orden,XLF,comprar,186.36,USD,,,,new,ff02a60e-1972-4469-893a-b0ed75ca0ab2,,,,,modo paper,
+2026-11-25T21:57+00:00,orden,XLF,comprar,186.36,USD,,,56.985,filled,ff02a60e-1972-4469-893a-b0ed75ca0ab2,57.06,3.265860497,0.00132,,modo paper,2026-11-27T14:31:00
