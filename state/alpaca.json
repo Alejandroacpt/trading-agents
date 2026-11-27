@@ -2,54 +2,54 @@
   "modo": "paper",
   "fuente_capital": "presupuesto",
   "capital_gestionado_usd": 1102.27,
-  "equity_cuenta_usd": 100007.73,
-  "valor_posiciones_usd": 773.11,
+  "equity_cuenta_usd": 100008.42,
+  "valor_posiciones_usd": 773.8,
   "posiciones": {
-    "JNJ": 192.88,
-    "XLF": 187.04,
-    "XLRE": 197.01,
-    "XLY": 196.18
+    "JNJ": 192.2,
+    "XLF": 187.49,
+    "XLRE": 197.32,
+    "XLY": 196.78
   },
   "detalle_posiciones": {
     "JNJ": {
       "qty": 0.696338,
       "avg_entry_price": 275.714,
-      "current_price": 276.99,
-      "market_value": 192.878527,
+      "current_price": 276.01,
+      "market_value": 192.196116,
       "cost_basis": 191.99,
-      "unrealized_pl": 0.888527,
-      "unrealized_plpc": 0.00463
+      "unrealized_pl": 0.206116,
+      "unrealized_plpc": 0.00107
     },
     "XLF": {
       "qty": 3.26586,
       "avg_entry_price": 57.06,
-      "current_price": 57.27,
-      "market_value": 187.035831,
+      "current_price": 57.41,
+      "market_value": 187.493051,
       "cost_basis": 186.35,
-      "unrealized_pl": 0.685831,
-      "unrealized_plpc": 0.00368
+      "unrealized_pl": 1.143051,
+      "unrealized_plpc": 0.00613
     },
     "XLRE": {
       "qty": 4.445242,
       "avg_entry_price": 43.19,
-      "current_price": 44.32,
-      "market_value": 197.013123,
+      "current_price": 44.39,
+      "market_value": 197.32429,
       "cost_basis": 191.99,
-      "unrealized_pl": 5.023123,
-      "unrealized_plpc": 0.02616
+      "unrealized_pl": 5.33429,
+      "unrealized_plpc": 0.02778
     },
     "XLY": {
       "qty": 1.635238,
       "avg_entry_price": 117.408,
-      "current_price": 119.97,
-      "market_value": 196.179479,
+      "current_price": 120.34,
+      "market_value": 196.784517,
       "cost_basis": 191.99,
-      "unrealized_pl": 4.189479,
-      "unrealized_plpc": 0.02182
+      "unrealized_pl": 4.794517,
+      "unrealized_plpc": 0.02497
     }
   },
   "eurusd": 1.097008,
-  "actualizado": "2026-11-27T20:56+00:00",
+  "actualizado": "2026-11-27T21:55+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -65,7 +65,7 @@
     ],
     [
       "2026-11-27",
-      100007.73
+      100008.42
     ]
   ],
   "incluye_tactico": true,
