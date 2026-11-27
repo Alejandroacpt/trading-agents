@@ -1,55 +1,55 @@
 {
   "modo": "paper",
   "fuente_capital": "presupuesto",
-  "capital_gestionado_usd": 1095.38,
-  "equity_cuenta_usd": 100004.87,
-  "valor_posiciones_usd": 770.25,
+  "capital_gestionado_usd": 1102.27,
+  "equity_cuenta_usd": 100005.45,
+  "valor_posiciones_usd": 770.83,
   "posiciones": {
-    "JNJ": 191.83,
-    "XLF": 186.58,
-    "XLRE": 196.08,
-    "XLY": 195.75
+    "JNJ": 191.66,
+    "XLF": 186.84,
+    "XLRE": 196.21,
+    "XLY": 196.11
   },
   "detalle_posiciones": {
     "JNJ": {
       "qty": 0.696338,
       "avg_entry_price": 275.714,
-      "current_price": 275.49,
-      "market_value": 191.83402,
+      "current_price": 275.2449,
+      "market_value": 191.663348,
       "cost_basis": 191.99,
-      "unrealized_pl": -0.15598,
-      "unrealized_plpc": -0.00081
+      "unrealized_pl": -0.326652,
+      "unrealized_plpc": -0.0017
     },
     "XLF": {
       "qty": 3.26586,
       "avg_entry_price": 57.06,
-      "current_price": 57.13,
-      "market_value": 186.57861,
+      "current_price": 57.2097,
+      "market_value": 186.838899,
       "cost_basis": 186.35,
-      "unrealized_pl": 0.22861,
-      "unrealized_plpc": 0.00123
+      "unrealized_pl": 0.488899,
+      "unrealized_plpc": 0.00262
     },
     "XLRE": {
       "qty": 4.445242,
       "avg_entry_price": 43.19,
-      "current_price": 44.11,
-      "market_value": 196.079623,
+      "current_price": 44.14,
+      "market_value": 196.21298,
       "cost_basis": 191.99,
-      "unrealized_pl": 4.089623,
-      "unrealized_plpc": 0.0213
+      "unrealized_pl": 4.22298,
+      "unrealized_plpc": 0.022
     },
     "XLY": {
       "qty": 1.635238,
       "avg_entry_price": 117.408,
-      "current_price": 119.71,
-      "market_value": 195.754317,
+      "current_price": 119.93,
+      "market_value": 196.11407,
       "cost_basis": 191.99,
-      "unrealized_pl": 3.764317,
-      "unrealized_plpc": 0.01961
+      "unrealized_pl": 4.12407,
+      "unrealized_plpc": 0.02148
     }
   },
   "eurusd": 1.097008,
-  "actualizado": "2026-11-27T17:57+00:00",
+  "actualizado": "2026-11-27T19:00+00:00",
   "historial": [
     [
       "2026-11-24",
@@ -65,20 +65,20 @@
     ],
     [
       "2026-11-27",
-      100004.87
+      100005.45
     ]
   ],
   "incluye_tactico": true,
   "stops": {
     "XLY": 111.96,
-    "XLRE": 41.9657,
+    "XLRE": 42.2129,
     "JNJ": 263.8361
   },
   "aportacion_invertida": null,
   "objetivo": {
-    "XLRE": 0.1774,
-    "XLY": 0.1746,
-    "JNJ": 0.1738,
-    "XLF": 0.1711
+    "XLRE": 0.1775,
+    "XLY": 0.1771,
+    "JNJ": 0.1737,
+    "XLF": 0.1705
   }
 }

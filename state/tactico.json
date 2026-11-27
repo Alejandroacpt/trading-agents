@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-27T17:57+00:00",
+  "actualizado": "2026-11-27T19:00+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -9,35 +9,46 @@
   "ajustes": [],
   "estrategias": {
     "tac_momentum_tendencia__acciones": {
-      "valor_eur": 695.9,
-      "liquidativo": 0.994143,
+      "valor_eur": 702.18,
+      "liquidativo": 1.003111,
       "operaciones": 1,
       "kill_switch": "NORMAL",
-      "caida_motor": -0.0061
+      "caida_motor": 0.0
     }
   },
   "posiciones": {
+    "tac_momentum_tendencia__acciones|XLF|2026-11-27 14:00:00": {
+      "activo": "XLF",
+      "lado": "largo",
+      "entrada": "2026-11-27 14:00:00",
+      "precio_entrada": 56.985,
+      "stop": 54.76285714285714,
+      "peso": 0.24401961229910865,
+      "cierre": 57.18,
+      "estrategia": "tac_momentum_tendencia__acciones",
+      "importe_eur": 171.35
+    },
     "tac_momentum_tendencia__acciones|XLY|2026-11-24 18:00:00": {
       "activo": "XLY",
       "lado": "largo",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 117.9,
       "stop": 111.96000000000001,
-      "peso": 0.25057698620481894,
-      "cierre": 117.48,
+      "peso": 0.25341001987535094,
+      "cierre": 119.88,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 174.38
+      "importe_eur": 177.94
     },
     "tac_momentum_tendencia__acciones|XLRE|2026-11-24 18:00:00": {
       "activo": "XLRE",
       "lado": "largo",
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 43.32,
-      "stop": 41.96571428571428,
-      "peso": 0.25460752084593286,
-      "cierre": 43.86,
+      "stop": 42.21285714285714,
+      "peso": 0.2539996474057287,
+      "cierre": 44.15,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 177.18
+      "importe_eur": 178.35
     },
     "tac_momentum_tendencia__acciones|JNJ|2026-11-24 18:00:00": {
       "activo": "JNJ",
@@ -45,26 +56,18 @@
       "entrada": "2026-11-24 18:00:00",
       "precio_entrada": 276.345,
       "stop": 263.8360714285714,
-      "peso": 0.24931157785458996,
-      "cierre": 273.97,
+      "peso": 0.2485707204198117,
+      "cierre": 275.62,
       "estrategia": "tac_momentum_tendencia__acciones",
-      "importe_eur": 173.5
+      "importe_eur": 174.54
     }
   },
-  "pendientes": {
-    "tac_momentum_tendencia__acciones|XLF|comprar": {
-      "activo": "XLF",
-      "accion": "comprar",
-      "distancia_stop": 2.222142857142858,
-      "importe_eur": 170.85,
-      "estrategia": "tac_momentum_tendencia__acciones"
-    }
-  },
+  "pendientes": {},
   "cerradas": [
     "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00|2026-11-25 18:00:00"
   ],
-  "ultima_vela": "2026-11-27 16:00:00",
-  "valor_total_eur": 695.9,
+  "ultima_vela": "2026-11-27 18:00:00",
+  "valor_total_eur": 702.18,
   "historial": [
     [
       "2026-11-24",
@@ -80,7 +83,7 @@
     ],
     [
       "2026-11-27",
-      695.9
+      702.18
     ]
   ]
 }
