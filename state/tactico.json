@@ -1,5 +1,5 @@
 {
-  "actualizado": "2026-11-28T04:36+00:00",
+  "actualizado": "2026-11-28T06:32+00:00",
   "modo": "paper",
   "reparto_fase": 0.7,
   "unidades": {
@@ -66,7 +66,7 @@
   "cerradas": [
     "tac_momentum_tendencia__acciones|TSLA|2026-11-24 18:00:00|2026-11-25 18:00:00"
   ],
-  "ultima_vela": "2026-11-28 03:00:00",
+  "ultima_vela": "2026-11-28 05:00:00",
   "valor_total_eur": 702.18,
   "historial": [
     [
