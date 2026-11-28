@@ -1,4 +1,4 @@
-# Panel del sistema · 27/11/2026 23:00 UTC
+# Panel del sistema · 28/11/2026 07:51 UTC
 
 ## Cartera
 
@@ -26,17 +26,17 @@ Próximas aportaciones: 100 € el día 1 de cada mes. Siguiente fase al superar
 | ⚡ XLRE | 178 € | 43.32 | 42.21 | +1,9 % | 2026-11-24 |
 | ⚡ JNJ | 175 € | 276.35 | 263.84 | -0,3 % | 2026-11-24 |
 
-**Stops reales en Alpaca:** XLY 111.96, XLRE 42.21, JNJ 263.84
+**Stops reales en Alpaca:** XLF 54.76, XLY 111.96, XLRE 42.21, JNJ 263.84
 
 ## Cuenta paper (Alpaca)
 
-Capital gestionado 1,099 $ · posiciones 771 $ · actualizado 2026-11-27 23:00 UTC
+Capital gestionado 1,102 $ · posiciones 771 $ · actualizado 2026-11-28 07:51 UTC
 
 | Activo | Real | Objetivo | Diferencia |
 |---|---|---|---|
-| JNJ | +17,5 % | +17,4 % | +0,1 % |
-| XLF | +17,0 % | +17,1 % | -0,1 % |
-| XLRE | +17,9 % | +17,8 % | +0,1 % |
+| JNJ | +17,4 % | +17,4 % | +0,0 % |
+| XLF | +16,9 % | +17,1 % | -0,1 % |
+| XLRE | +17,8 % | +17,8 % | +0,0 % |
 | XLY | +17,8 % | +17,7 % | +0,1 % |
 
 ## Estrategias en vivo (último auditor)
