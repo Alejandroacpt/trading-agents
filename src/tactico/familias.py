@@ -207,6 +207,34 @@ def corto_debilidad_relativa(ohlc: dict, velas: int = 90, referencia: str = "BTC
 
 
 # ----------------------------------------------------------------------
+# MOMENTUM TRANSVERSAL EN CRIPTO (Liu, Tsyvinski y Wu, 2022, JF). Investigador
+# 28 nov 2026: research/fichas/2026-11-28-momentum-transversal-cripto.md
+# ----------------------------------------------------------------------
+
+def momentum_transversal(ohlc: dict, velas: int = 126, mejores: int = 2) -> dict:
+    """Rotación semanal hacia las monedas más fuertes. En la primera vela de
+    cada semana (lunes, UTC) se ordenan TODAS las monedas por su rendimiento de
+    las últimas N velas (126 velas de 4 h = 3 semanas); se compran las `mejores`
+    y se vende la que deja de estar entre ellas en el siguiente rebalanceo.
+    Solo compras (Alpaca no permite cortos en cripto). Stop 3 ATR(14) como el
+    resto de familias de 4 h; tras un stop solo se vuelve a entrar en un rebalanceo."""
+    indice = pd.DatetimeIndex(sorted(set().union(*[df.index for df in ohlc.values()])))
+    semana = indice.to_period("W")
+    rebalanceo = pd.Series(np.r_[False, semana[1:] != semana[:-1]], index=indice)
+    rend = pd.DataFrame({a: (df["close"] / df["close"].shift(velas) - 1).reindex(indice)
+                         for a, df in ohlc.items()})
+    puesto = rend.rank(axis=1, ascending=False, method="first")   # 1 = la más fuerte
+    out = {}
+    for a, df in ohlc.items():
+        reb = rebalanceo.reindex(df.index).fillna(False).astype(bool)
+        p_a = puesto[a].reindex(df.index)
+        entrada = reb & (p_a <= mejores)
+        salida = reb & ((p_a > mejores) | p_a.isna())
+        out[a] = _tabla(df, entrada, salida, 3 * atr(df, 14))
+    return out
+
+
+# ----------------------------------------------------------------------
 # PATRONES DE GRÁFICO (Lo, Mamaysky y Wang, 2000). Ficha propuesta por
 # Alejandro el 26 nov 2026: research/fichas/patrones_graficos.md
 # ----------------------------------------------------------------------
@@ -352,5 +380,17 @@ FAMILIAS_TACTICAS = {
         "publicacion": "2000-08-01",
         "parametros": {"ventana": 38, "tolerancia": 0.015, "patrones": "todos"},
         "rejilla": [{"ventana": v, "tolerancia": 0.015, "patrones": "todos"} for v in (25, 38, 60)],
+    },
+    # --- investigador 28 nov 2026 ---
+    "momentum_transversal": {
+        "nombre": "Momentum transversal semanal (4 h)",
+        "funcion": momentum_transversal,
+        "velas": "4h",
+        "mercados": ["cripto"],
+        "laboratorio": False,   # solo cribado; si pasa, se valida con la rejilla fijada en la ficha
+        "referencia": "Liu, Tsyvinski y Wu (2022), Common Risk Factors in Cryptocurrency, JF 77(2)",
+        "publicacion": "2019-05-01",
+        "parametros": {"velas": 126, "mejores": 2},
+        "rejilla": [{"velas": v, "mejores": 2} for v in (42, 126, 168)],
     },
 }

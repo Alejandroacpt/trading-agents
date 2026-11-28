@@ -83,6 +83,11 @@ No se validan ni se repiten con otros parámetros. Encargo cerrado salvo que Ale
 **Presupuesto de la semana del 23-29 nov:** ya usados 8 cribados (5 el 26 nov por la mañana y 3 en la
 ejecución extra del 26 nov: patrones de gráfico en acciones+inversos, cripto y forex, todos rechazados) y 0
 validaciones completas. **Para el sábado 28 quedan 2 cribados y 3 validaciones.**
+**Sábado 28 nov (cerrada la semana: 10 de 10 cribados, 1 de 3 validaciones):** `vaa-g4` (Keller y Keuning 2017,
+asignación vigilante con refugio en bonos, mercado de investigación `multiactivo`) pasó el cribado
+(Sharpe 0,61 antes de 2018) y se rechazó en la validación (test 2018-26: 3,7 % anual frente al 13,6 % del
+SPY, Sharpe 0,15). `momentum-transversal-cripto` (Liu, Tsyvinski y Wu 2022, las 2 monedas más fuertes cada
+semana) no pasó el cribado (Sharpe 0,13, caída −51 %). Fichas `research/fichas/2026-11-28-*`.
 
 Prioridad actual:
 

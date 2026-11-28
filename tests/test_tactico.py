@@ -285,3 +285,16 @@ def test_patron_hombro_cabeza_hombro_invertido():
     assert p[0]["cabeza"] == 90.0 and pt.clavicular_en(p[0], 17) == 110.0
     # Si el último extremo es antiguo (no está en las 3 últimas velas), no se confirma nada
     assert pt.buscar_patrones(ext[:-1] + [(32, -1, 100.5)], ventana=38, d=3, tol=0.015) == []
+
+
+def test_momentum_transversal_compra_la_mas_fuerte_solo_los_lunes():
+    idx = pd.date_range("2024-01-01", periods=6 * 60, freq="4h")
+    def vela(c):
+        c = pd.Series(c, index=idx)
+        return pd.DataFrame({"open": c, "high": c * 1.01, "low": c * 0.99, "close": c})
+    ohlc = {"A": vela(np.linspace(100, 200, len(idx))), "B": vela(np.linspace(100, 90, len(idx))),
+            "C": vela(np.linspace(100, 120, len(idx)))}
+    out = familias.momentum_transversal(ohlc, velas=42, mejores=1)
+    entradas = out["A"].index[out["A"]["entrada"]]
+    assert len(entradas) > 0 and all(t.dayofweek == 0 and t.hour == 0 for t in entradas)
+    assert not out["B"]["entrada"].any()

@@ -34,10 +34,20 @@ MERCADOS = {
               "largo_corto": True, "max_dd": 0.20, "min_activos": 4},
 }
 
+# Mercados SOLO para el investigador: mezclan clases de activo (p. ej. acciones
+# + bonos de refugio). El laboratorio semanal no los recorre: solo se prueban
+# las familias que los declaran en su campo "mercados", con el cribado.
+MERCADOS_INVESTIGACION = {
+    # VAA-G4 con los ETFs que ya descargamos: SPY, VGK (en lugar de EFA/VEA),
+    # EEM y IEF (en lugar de AGG/BND) como ofensivos; IEF y BIL (en lugar de SHY) de refugio.
+    "multiactivo": {"nombre": "Multiactivo (acciones + bonos)", "activos": ["SPY", "VGK", "EEM", "IEF"],
+                    "largo_corto": False, "max_dd": 0.30, "min_activos": 4},
+}
+
 
 def experimento(familia_id: str, mercado_id: str) -> dict:
     """Construye una 'estrategia' validable: familia aplicada a un mercado."""
-    fam, mer = FAMILIAS[familia_id], MERCADOS[mercado_id]
+    fam, mer = FAMILIAS[familia_id], {**MERCADOS, **MERCADOS_INVESTIGACION}[mercado_id]
     funcion = partial(fam["funcion"], activos=mer["activos"], largo_corto=mer["largo_corto"])
 
     def senales(precios, **params):

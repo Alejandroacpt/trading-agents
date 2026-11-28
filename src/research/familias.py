@@ -168,6 +168,39 @@ def carry_divisas(precios, activos, largo_corto=True, modo="signo"):
     return _a_objetivos(senal, precios, activos)
 
 
+def asignacion_vigilante(precios, activos, largo_corto=False, ofensivos=None,
+                         defensivos=("IEF", "BIL"), top=1, amplitud=1):
+    """Asignación vigilante (VAA, Keller y Keuning 2017). Cada fin de mes:
+      - Momentum 13612W de cada activo: 12·r1 + 4·r3 + 2·r6 + 1·r12
+        (rendimientos de 1, 3, 6 y 12 meses; pesa mucho el último mes).
+      - b = nº de activos ofensivos con momentum ≤ 0. Fracción en refugio
+        CF = floor(b·top/amplitud)/top (con top=1 y amplitud=1: basta UNO
+        en negativo para ir 100 % al refugio: "protección por amplitud").
+      - (1 - CF) se reparte a partes iguales entre los `top` ofensivos con
+        más momentum; CF va al defensivo con más momentum.
+    100 % invertido en 1 o 2 activos (sin reparto por volatilidad: así lo
+    define la fuente). `activos` son los ofensivos si no se indican."""
+    ofensivos = list(ofensivos or activos)
+    defensivos = list(defensivos)
+    todos = [a for a in dict.fromkeys(ofensivos + defensivos) if a in precios.columns]
+    p_m = precios_fin_de_mes(precios[todos])
+    mom = sum(w * (p_m / p_m.shift(m) - 1) for w, m in ((12, 1), (4, 3), (2, 6), (1, 12)))
+    filas = {}
+    for fecha, fila in mom.iterrows():
+        off, dfn = fila.reindex(ofensivos), fila.reindex(defensivos).dropna()
+        if off.isna().any() or dfn.empty:
+            continue   # aún no hay 12 meses de historia en todos
+        b = int((off <= 0).sum())
+        cf = min(1.0, np.floor(b * top / amplitud) / top)
+        pesos = pd.Series(0.0, index=precios.columns)
+        for a in off.sort_values(ascending=False).index[:top]:
+            pesos[a] += (1 - cf) / top
+        pesos[dfn.idxmax()] += cf
+        filas[fecha] = pesos
+    obj = pd.DataFrame(filas).T.reindex(columns=precios.columns)
+    return obj.reindex(precios.index)   # NaN entre fines de mes = no tocar
+
+
 # ----------------------------------------------------------------------
 # Catálogo (las rejillas se fijan ANTES de ver resultados)
 # ----------------------------------------------------------------------
@@ -227,5 +260,16 @@ FAMILIAS = {
         "rejilla": [{"modo": m} for m in ("signo", "ranking", "con_tendencia")],
         "mercados": ["forex"],   # solo tiene sentido en divisas
         "anadida": "2026-11-23",
+    },
+    "asignacion_vigilante": {
+        "nombre": "Asignación vigilante (VAA-G4)",
+        "funcion": asignacion_vigilante,
+        "referencia": "Keller y Keuning (2017), Breadth Momentum and the Vigilant Asset Allocation (VAA), SSRN 3002624",
+        "publicacion": "2017-07-14",
+        "parametros": {"top": 1, "amplitud": 1},
+        # rejilla fijada en la ficha (28 nov 2026) ANTES de la validación completa
+        "rejilla": [{"top": 1, "amplitud": 1}, {"top": 2, "amplitud": 1}, {"top": 1, "amplitud": 2}],
+        "mercados": ["multiactivo"],   # solo tiene sentido con ofensivos + refugio juntos
+        "anadida": "2026-11-28",
     },
 }

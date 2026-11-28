@@ -60,7 +60,9 @@ def test_ruptura_entra_en_maximos():
 
 def test_todos_los_experimentos_estan_bien_formados():
     exps = laboratorio.todos_los_experimentos()
-    esperados = sum(len(d.get("mercados", laboratorio.MERCADOS)) for d in familias.FAMILIAS.values())
+    # los mercados solo de investigación (MERCADOS_INVESTIGACION) no entran en el laboratorio semanal
+    esperados = sum(len([m for m in d.get("mercados", laboratorio.MERCADOS) if m in laboratorio.MERCADOS])
+                    for d in familias.FAMILIAS.values())
     assert len(exps) == esperados
     assert len({e["id"] for e in exps}) == len(exps)
     for e in exps:
@@ -108,3 +110,19 @@ def test_carry_solo_en_forex():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ---------------------------------------------------------------- VAA
+
+def test_vaa_va_al_refugio_si_un_ofensivo_cae():
+    idx = pd.bdate_range("2010-01-01", "2012-12-31")
+    n = len(idx)
+    p = pd.DataFrame({"A": np.linspace(100, 200, n), "B": np.linspace(100, 150, n),
+                      "C": np.linspace(100, 300, n), "R": np.linspace(100, 105, n),
+                      "BIL": np.linspace(100, 101, n)}, index=idx)
+    obj = familias.asignacion_vigilante(p, ["A", "B", "C"], defensivos=("R", "BIL")).dropna(how="all")
+    assert obj.iloc[-1]["C"] == 1.0                     # todos suben: el de más momentum
+    p.loc[p.index >= "2012-11-01", "B"] = np.linspace(150, 120, (p.index >= "2012-11-01").sum())
+    obj = familias.asignacion_vigilante(p, ["A", "B", "C"], defensivos=("R", "BIL")).dropna(how="all")
+    assert obj.iloc[-1]["R"] == 1.0                     # uno cae: 100 % al mejor refugio
+    assert obj.iloc[-1][["A", "B", "C"]].sum() == 0.0
